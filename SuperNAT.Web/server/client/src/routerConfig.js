@@ -8,7 +8,6 @@ import Entities from '@/pages/Entities';
 import Repository from '@/pages/Repository';
 import Generalization from '@/pages/Generalization';
 import Function from '@/pages/Function';
-import Publish from '@/pages/Publish';
 import Analysis from '@/pages/Analysis';
 import Setting from '@/pages/Setting';
 import NotFound from '@/pages/NotFound';
@@ -68,10 +67,6 @@ const routerConfig = [
       {
         path: '/function',
         component: Function,
-      },
-      {
-        path: '/publish',
-        component: Publish,
       },
       {
         path: '/analysis',

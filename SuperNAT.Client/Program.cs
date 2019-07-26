@@ -20,7 +20,7 @@ namespace SuperNAT.Client
         public static EasyClient<NatPackageInfo> NatClient { get; set; }
         public static EasyClient<NatPackageInfo> HttpClient { get; set; }
         public static string NatAddress { get; set; }
-        public static string RemoteHost { get; set; } = AppConfig.GetSetting("RemoteHost");
+        public static string RemoteHost { get; set; } = "127.0.0.1"; //AppConfig.GetSetting("RemoteHost");//139.155.104.69
         public static int RemoteWebPort { get; set; } = 10005;
         public static int RemoteNatPort { get; set; } = 10006;
         public static string Token { get; set; } = "3d951d8b2275425887e1e9d1e53c5fa5";

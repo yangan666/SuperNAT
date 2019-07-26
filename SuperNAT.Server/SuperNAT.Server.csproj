@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,7 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSuperSocket.All" Version="2.1.2.8" />
+    <PackageReference Include="Dynamic.Core" Version="2.1.6.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.2.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
+    <PackageReference Include="SocketSecretPool" Version="1.0.0.3" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    <PackageReference Include="YangAn.CSuperSocket.All" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,10 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="iot3rd.p12">
+    <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="log4net.config">
+    <None Update="iot3rd.p12">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

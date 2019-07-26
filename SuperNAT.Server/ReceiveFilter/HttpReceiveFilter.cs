@@ -20,7 +20,9 @@ namespace SuperNAT.Server
         public MyRequestInfo Filter(byte[] readBuffer, int offset, int length, bool toBeCopied, out int rest)
         {
             rest = 0;
-            return new MyRequestInfo(null, null, readBuffer.CloneRange(offset, length));
+            var bodyBytes = new byte[length];
+            Array.Copy(readBuffer, offset, bodyBytes, 0, length);
+            return new MyRequestInfo(null, null, bodyBytes);
         }
 
         public void Reset()
@@ -29,3 +31,4 @@ namespace SuperNAT.Server
         }
     }
 }
+  

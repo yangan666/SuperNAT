@@ -1,5 +1,4 @@
 ﻿using SuperNAT.Common;
-using CSuperSocket.Common;
 using CSuperSocket.SocketBase;
 using CSuperSocket.SocketBase.Config;
 using System;
@@ -11,6 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CSuperSocket.ProtoBase;
 
 namespace SuperNAT.Server
 {
@@ -28,6 +28,7 @@ namespace SuperNAT.Server
                 Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
                 Log4netUtil.Info(log);
             };
+            Startup.Init();
             WebServer = new HttpAppServer();
             bool setup = WebServer.Setup(new RootConfig()
             {
@@ -120,7 +121,7 @@ namespace SuperNAT.Server
                                         if (session.Token != Token)
                                         {
                                             HandleLog.WriteLine($"Token非法，关闭连接【{session.RemoteEndPoint}】");
-                                            session.Close(CloseReason.ServerClosing);
+                                            session.Close(CSuperSocket.SocketBase.CloseReason.ServerClosing);
                                             return;
                                         }
                                         var client = NATServer.GetSessions(c => c.Host == host[1]).ToList();
@@ -144,7 +145,7 @@ namespace SuperNAT.Server
                                         if (session.Token != Token)
                                         {
                                             HandleLog.WriteLine($"Token非法，关闭连接【{session.RemoteEndPoint}】");
-                                            session.Close(CloseReason.ServerClosing);
+                                            session.Close(CSuperSocket.SocketBase.CloseReason.ServerClosing);
                                             return;
                                         }
                                         HandleLog.WriteLine($"收到{session.RemoteEndPoint}的心跳包");
@@ -155,7 +156,7 @@ namespace SuperNAT.Server
                                         //响应请求
                                         var packJson = JsonHelper.Instance.Deserialize<PackJson>(requestInfo.BodyRaw);
                                         int count = 0;
-                                        mark:
+                                    mark:
                                         var webSession = WebServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
                                         if (webSession == null)
                                         {
@@ -317,7 +318,7 @@ namespace SuperNAT.Server
             });
         }
 
-        private static void WebServer_SessionClosed(WebAppSession session, CloseReason value)
+        private static void WebServer_SessionClosed(WebAppSession session, CSuperSocket.SocketBase.CloseReason value)
         {
             //HandleLog.WriteLine($"客户端【{session.SessionID}】已下线：{value}");
         }

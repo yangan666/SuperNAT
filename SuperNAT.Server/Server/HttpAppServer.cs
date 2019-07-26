@@ -17,10 +17,5 @@ namespace SuperNAT.Server
         {
 
         }
-
-        protected override bool ValidateClientCertificate(WebAppSession session, object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-        {
-            return true;
-        }
     }
 }

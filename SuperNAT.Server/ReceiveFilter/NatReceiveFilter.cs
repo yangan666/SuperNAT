@@ -31,7 +31,8 @@ namespace SuperNAT.Server
         protected override int GetBodyLengthFromHeader(byte[] header, int offset, int length)
         {
             //正文数据长度
-            var bytes = header.CloneRange(offset + 2, 4);
+            var bytes = new byte[length];
+            Array.Copy(header, offset + 2, bytes, 0, 4);
             var len = bytes[0] * 256 * 256 * 256 + bytes[1] * 256 * 256 + bytes[2] * 256 + bytes[3];
             return len;
         }
@@ -42,8 +43,10 @@ namespace SuperNAT.Server
             //预先分配大小，分配多少就是多少个。预先分配的大小一定要大于等于加进去的元素数量。否则，说不定比不分配更加糟糕。
             List<byte> listData = new List<byte>() { Capacity = len };
             listData.AddRange(header.ToArray());
-            listData.AddRange(bodyBuffer.CloneRange(offset, length));
-            return new MyRequestInfo(header.ToArray(), bodyBuffer.CloneRange(offset, length), listData.ToArray());
+            var bodyBytes = new byte[length];
+            Array.Copy(bodyBuffer, offset, bodyBytes, 0, length);
+            listData.AddRange(bodyBytes.ToList());
+            return new MyRequestInfo(header.ToArray(), bodyBytes, listData.ToArray());
         }
     }
 }
