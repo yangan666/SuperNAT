@@ -42,7 +42,7 @@ const routerConfig = [
     children: [
       {
         path: '/dashboard',
-        component: Projects,
+        component: Analysis,
       },
       {
         path: '/userlist',

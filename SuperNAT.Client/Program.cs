@@ -20,7 +20,7 @@ namespace SuperNAT.Client
         public static EasyClient<NatPackageInfo> NatClient { get; set; }
         public static EasyClient<NatPackageInfo> HttpClient { get; set; }
         public static string NatAddress { get; set; }
-        public static string RemoteHost { get; set; } = "127.0.0.1"; //AppConfig.GetSetting("RemoteHost");//139.155.104.69
+        public static string RemoteHost { get; set; } = AppConfig.GetSetting("RemoteHost");
         public static int RemoteWebPort { get; set; } = 10005;
         public static int RemoteNatPort { get; set; } = 10006;
         public static string Token { get; set; } = "3d951d8b2275425887e1e9d1e53c5fa5";
@@ -29,32 +29,38 @@ namespace SuperNAT.Client
         public static int LocalPort { get; set; }
         static void Main(string[] args)
         {
-            HandleLog.WriteLog += (log) =>
+            try
             {
-                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
-                Log4netUtil.Info(log);
-            };
+                HandleLog.WriteLog += (log) =>
+                {
+                    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
+                    Log4netUtil.Info(log);
+                };
             mark:
-            Console.Write("请输入本地映射端口：");
-            var port = Console.ReadLine();
-            var tryParse = int.TryParse(port, out int readPort);
-            if (!tryParse)
-            {
-                Console.WriteLine("请输入正确的端口！");
-                Console.WriteLine("按任意键继续...");
-                Console.ReadKey();
-                goto mark;
+                Console.Write("请输入本地映射端口：");
+                var port = Console.ReadLine();
+                var tryParse = int.TryParse(port, out int readPort);
+                if (!tryParse)
+                {
+                    Console.WriteLine("请输入正确的端口！");
+                    Console.WriteLine("按任意键继续...");
+                    Console.ReadKey();
+                    goto mark;
+                }
+                LocalPort = readPort;
+                NatAddress = $"http://localhost:{readPort}";
+                ConnectNatServer();
+
+                Thread reConnectThread = new Thread(ReConnect) { IsBackground = true };
+                reConnectThread.Start();
+
+                Thread heartThread = new Thread(SendHeart) { IsBackground = true };
+                heartThread.Start();
             }
-            LocalPort = readPort;
-            NatAddress = $"http://localhost:{readPort}";//http://localhost:8080/WinTar-I-EMS/
-            //HandleLog.WriteLine("开始连接服务器...");
-            ConnectNatServer();
-
-            Thread reConnectThread = new Thread(ReConnect) { IsBackground = true };
-            reConnectThread.Start();
-
-            Thread heartThread = new Thread(SendHeart) { IsBackground = true };
-            heartThread.Start();
+            catch (Exception ex)
+            {
+                HandleLog.WriteLine($"{ex}");
+            }
 
             Console.ReadKey();
         }
@@ -78,8 +84,11 @@ namespace SuperNAT.Client
             NatClient.NewPackageReceived += OnPackageReceived;
             NatClient.Error += OnClientError;
             NatClient.Closed += OnClientClosed;
+            //解析主机名
+            IPHostEntry ipInfo = Dns.GetHostEntry(RemoteHost);
+            var serverIp = ipInfo.AddressList.Any() ? ipInfo.AddressList[0].ToString() : throw new Exception($"域名【{RemoteHost}】无法解析");
             //连接NAT转发服务
-            NatClient.ConnectAsync(new IPEndPoint(IPAddress.Parse(RemoteHost), RemoteNatPort));
+            NatClient.ConnectAsync(new IPEndPoint(IPAddress.Parse(serverIp), RemoteNatPort));
         }
 
         static void ReConnect()
