@@ -8,11 +8,79 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using SuperNAT.Server.Extions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace SuperNAT.Server
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc(option =>
+            {
+                option.EnableEndpointRouting = false;
+            })
+            .AddNewtonsoftJson();
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
+
+            //app.UseRouting(routes =>
+            //{
+            //    routes.MapControllers();
+            //});
+
+            app.UseAuthorization();
+
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+                builder.AllowAnyOrigin();
+            });
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Show}/{action=Index}/{id?}");
+            });
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                //FileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory()),
+                //设置不限制content-type 该设置可以下载所有类型的文件，但是不建议这么设置，因为不安全
+                //ServeUnknownFileTypes = true 
+                //下面设置可以下载apk和nupkg类型的文件
+                ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string>
+                    {
+                        { ".apk","application/vnd.android.package-archive"},
+                        { ".nupkg","application/zip"}
+                    })
+            });
+            app.UseStaticFiles();
+        }
+
+
+
         public static void Init()
         {
             var builder = new ConfigurationBuilder()

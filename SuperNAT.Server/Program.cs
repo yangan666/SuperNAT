@@ -11,6 +11,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CSuperSocket.ProtoBase;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace SuperNAT.Server
 {
@@ -23,12 +26,17 @@ namespace SuperNAT.Server
         static NatAppServer NATServer { get; set; }
         static void Main(string[] args)
         {
+            Dapper.SimpleCRUD.SetDialect(Dapper.SimpleCRUD.Dialect.MySQL);
             HandleLog.WriteLog += (log) =>
             {
                 Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
                 Log4netUtil.Info(log);
             };
             Startup.Init();
+            Task.Run(() =>
+            {
+                CreateHostBuilder(args).Build().Run();
+            });
             WebServer = new HttpAppServer();
             bool setup = WebServer.Setup(new RootConfig()
             {
@@ -156,7 +164,7 @@ namespace SuperNAT.Server
                                         //响应请求
                                         var packJson = JsonHelper.Instance.Deserialize<PackJson>(requestInfo.BodyRaw);
                                         int count = 0;
-                                    mark:
+                                        mark:
                                         var webSession = WebServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
                                         if (webSession == null)
                                         {
@@ -198,6 +206,28 @@ namespace SuperNAT.Server
 
             Console.ReadKey();
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>()
+                        .UseKestrel(options =>
+                        {
+                            options.Limits.MaxConcurrentConnections = 100;
+                            options.Limits.MaxConcurrentUpgradedConnections = 100;
+                            options.Limits.MaxRequestBodySize = 10 * 1024;
+                            options.Limits.MinRequestBodyDataRate =
+                                new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
+                            options.Limits.MinResponseDataRate =
+                                new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
+                            options.Listen(IPAddress.Loopback, 8088);
+                            //options.Listen(IPAddress.Loopback, 5001, listenOptions =>
+                            //{
+                            //    listenOptions.UseHttps("testCert.pfx", "testPassword");
+                            //});
+                        });
+            });
 
         private static void WebServer_NewSessionConnected(WebAppSession session)
         {
