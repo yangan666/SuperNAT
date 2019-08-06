@@ -27,5 +27,24 @@ namespace SuperNAT.Common.Bll
 
             return rst;
         }
+
+        public ReturnResult<List<User>> GetList(User model)
+        {
+            var rst = new ReturnResult<List<User>>();
+
+            try
+            {
+                rst.Data = conn.GetList<User>("", model).ToList();
+                rst.Result = true;
+                rst.Message = "获取成功";
+            }
+            catch (Exception ex)
+            {
+                rst.Message = $"获取失败：{ex.InnerException ?? ex}";
+                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+            }
+
+            return rst;
+        }
     }
 }

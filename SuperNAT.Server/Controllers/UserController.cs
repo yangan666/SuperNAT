@@ -20,5 +20,14 @@ namespace SuperNAT.Server.Controllers
             var rst = bll.Add(model);
             return new JsonResult(rst);
         }
+
+        [HttpPost]
+        [Route("GetList")]
+        public IActionResult GetList(User model)
+        {
+            using var bll = new UserBll();
+            var rst = bll.GetList(model);
+            return new JsonResult(rst);
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace SuperNAT.Server
             {
                 option.EnableEndpointRouting = false;
             })
-            .AddNewtonsoftJson();
+            .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -133,6 +133,14 @@ namespace SuperNAT.Server
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(ex.Message);
             Console.ForegroundColor = oldColor;
+        }
+    }
+
+    public class DefaultContractResolver : Newtonsoft.Json.Serialization.DefaultContractResolver
+    {
+        protected override string ResolvePropertyName(string propertyName)
+        {
+            return propertyName;
         }
     }
 }
