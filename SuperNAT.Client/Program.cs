@@ -20,6 +20,7 @@ namespace SuperNAT.Client
         public static EasyClient<NatPackageInfo> NatClient { get; set; }
         public static EasyClient<NatPackageInfo> HttpClient { get; set; }
         public static string NatAddress { get; set; }
+        public static string ProxyHost { get; set; } = AppConfig.GetSetting("ProxyHost");
         public static string RemoteHost { get; set; } = AppConfig.GetSetting("RemoteHost");
         public static int RemoteWebPort { get; set; } = 10005;
         public static int RemoteNatPort { get; set; } = 10006;
@@ -36,7 +37,7 @@ namespace SuperNAT.Client
                     Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
                     Log4netUtil.Info(log);
                 };
-            mark:
+                mark:
                 Console.Write("请输入本地映射端口：");
                 var port = Console.ReadLine();
                 var tryParse = int.TryParse(port, out int readPort);
@@ -48,7 +49,7 @@ namespace SuperNAT.Client
                     goto mark;
                 }
                 LocalPort = readPort;
-                NatAddress = $"http://localhost:{readPort}";
+                NatAddress = $"http://{ProxyHost}:{readPort}";
                 ConnectNatServer();
 
                 Thread reConnectThread = new Thread(ReConnect) { IsBackground = true };
