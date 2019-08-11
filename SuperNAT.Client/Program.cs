@@ -68,28 +68,35 @@ namespace SuperNAT.Client
 
         static void ConnectNatServer()
         {
-            NatClient?.Close();
-            NatClient = null;
-            NatClient = new EasyClient<NatPackageInfo>
+            try
             {
-                Security = new SecurityOption()
+                NatClient?.Close();
+                NatClient = null;
+                NatClient = new EasyClient<NatPackageInfo>
                 {
-                    EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12,
-                    AllowNameMismatchCertificate = true,
-                    AllowCertificateChainErrors = true,
-                    AllowUnstrustedCertificate = true
-                }
-            };
-            NatClient.Initialize(new NatReceiveFilter());
-            NatClient.Connected += OnClientConnected;
-            NatClient.NewPackageReceived += OnPackageReceived;
-            NatClient.Error += OnClientError;
-            NatClient.Closed += OnClientClosed;
-            //解析主机名
-            IPHostEntry ipInfo = Dns.GetHostEntry(RemoteHost);
-            var serverIp = ipInfo.AddressList.Any() ? ipInfo.AddressList[0].ToString() : throw new Exception($"域名【{RemoteHost}】无法解析");
-            //连接NAT转发服务
-            NatClient.ConnectAsync(new IPEndPoint(IPAddress.Parse(serverIp), RemoteNatPort));
+                    Security = new SecurityOption()
+                    {
+                        EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12,
+                        AllowNameMismatchCertificate = true,
+                        AllowCertificateChainErrors = true,
+                        AllowUnstrustedCertificate = true
+                    }
+                };
+                NatClient.Initialize(new NatReceiveFilter());
+                NatClient.Connected += OnClientConnected;
+                NatClient.NewPackageReceived += OnPackageReceived;
+                NatClient.Error += OnClientError;
+                NatClient.Closed += OnClientClosed;
+                //解析主机名
+                IPHostEntry ipInfo = Dns.GetHostEntry(RemoteHost);
+                var serverIp = ipInfo.AddressList.Any() ? ipInfo.AddressList[0].ToString() : throw new Exception($"域名【{RemoteHost}】无法解析");
+                //连接NAT转发服务
+                NatClient.ConnectAsync(new IPEndPoint(IPAddress.Parse(serverIp), RemoteNatPort));
+            }
+            catch (Exception ex)
+            {
+                HandleLog.WriteLine($"连接服务器失败：{ex}");
+            }
         }
 
         static void ReConnect()
