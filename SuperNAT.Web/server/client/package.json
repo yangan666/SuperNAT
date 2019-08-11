@@ -5,6 +5,7 @@
   "dependencies": {
     "@alifd/next": "^1.x",
     "@icedesign/container": "^1.x",
+    "@icedesign/data-binder": "^1.0.5",
     "@icedesign/form-binder": "^0.1.7",
     "@icedesign/foundation-symbol": "^1.x",
     "@icedesign/img": "^1.x",
@@ -12,8 +13,10 @@
     "@icedesign/layout": "^1.x",
     "@icedesign/panel": "^1.x",
     "@icedesign/theme": "^1.x",
+    "axios": "^0.19.0",
     "bizcharts": "^3.2.4",
     "classnames": "^2.2.5",
+    "js-cookie": "^2.2.1",
     "moment": "^2.23.0",
     "prop-types": "^15.5.8",
     "react": "^16.4.1",
