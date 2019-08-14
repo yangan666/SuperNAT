@@ -16,8 +16,38 @@ namespace SuperNAT.Server.Controllers
         [Route("Add")]
         public IActionResult Add(User model)
         {
+            var rst = new ReturnResult<bool>();
+
             using var bll = new UserBll();
-            var rst = bll.Add(model);
+            if (model.id == 0)
+            {
+                model.token = Guid.NewGuid().ToString("N");
+                rst = bll.Add(model);
+            }
+            else
+            {
+                rst = bll.Update(model);
+            }
+
+            return new JsonResult(rst);
+        }
+
+
+        [HttpPost]
+        [Route("GetOne")]
+        public IActionResult GetOne(User model)
+        {
+            if (model.id == 0)
+            {
+                var defalut = new ReturnResult<User>()
+                {
+                    Result = true,
+                    Data = new User()
+                };
+                return new JsonResult(defalut);
+            }
+            using var bll = new UserBll();
+            var rst = bll.GetOne(model);
             return new JsonResult(rst);
         }
 

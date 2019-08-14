@@ -2,38 +2,17 @@ import React from 'react';
 import { Input, Table, Dialog } from '@alifd/next';
 import styles from './index.module.scss';
 
-export default function UsersTable({ data }) {
-  const handleEdit = () => {
-    Dialog.confirm({
-      title: '提示',
-      content: '只有管理员权限才能编辑',
-    });
-  };
-
-  const handleDisabled = () => {
-    Dialog.confirm({
-      title: '提示',
-      content: '只有管理员权限才能禁用',
-    });
-  };
-
-  const handleDelete = () => {
-    Dialog.confirm({
-      title: '提示',
-      content: '只有管理员权限才能删除',
-    });
-  };
-
-  const renderOper = () => {
+export default function UsersTable({ data, operate }) {
+  const renderOper = (value, index, record) => {
     return (
       <div className={styles.oper}>
-        <a className={styles.button} onClick={handleEdit}>
+        <a className={styles.button} onClick={() => { operate('edit', record.id) }}>
           编辑
         </a>
-        <a className={styles.button} onClick={handleDisabled}>
+        <a className={styles.button} onClick={() => { operate('disable', record.id) }}>
           禁用
         </a>
-        <a className={styles.button} onClick={handleDelete}>
+        <a className={styles.button} onClick={() => { operate('delete', record.id) }}>
           删除
         </a>
       </div>
@@ -42,7 +21,7 @@ export default function UsersTable({ data }) {
   return (
     <div>
       <div className={styles.searchBar}>
-        <div className={styles.info}>总共 {data.length} 个用户</div>
+        <div className={styles.info}>共 {data.length} 条记录</div>
         <Input
           style={{ width: '300px' }}
           placeholder="请输入关键字"
@@ -52,7 +31,7 @@ export default function UsersTable({ data }) {
         <Table.Column title="用户名" dataIndex="user_name" />
         <Table.Column title="微信号" dataIndex="wechat" />
         <Table.Column title="手机号码" dataIndex="tel" />
-        <Table.Column title="状态" dataIndex="is_disabled" />
+        <Table.Column title="状态" dataIndex="is_disabled_str" />
         <Table.Column title="操作" cell={renderOper} />
       </Table>
     </div>
