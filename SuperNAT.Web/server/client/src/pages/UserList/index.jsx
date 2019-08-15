@@ -3,17 +3,18 @@ import TopBar from '@/components/TopBar';
 import UsersTable from './components/UsersTable';
 import UserDialog from './components/UserDialog';
 import DataBinder from '@icedesign/data-binder';
-import request from '@/utils/request'
+import CustomDataBinder from '@/utils/databinder'
 import { Dialog, Input, Message, Button } from '@alifd/next';
 
-@DataBinder({
+@CustomDataBinder({
   userList: {
     url: '/Api/User/GetList',
     method: 'POST',
     data: {},
     defaultBindingData: {
       dataSource: []
-    }
+    },
+    showSuccessToast: false
   },
   userData: {
     url: '/Api/User/GetOne',
@@ -21,7 +22,8 @@ import { Dialog, Input, Message, Button } from '@alifd/next';
     data: {},
     defaultBindingData: {
       dataSource: {}
-    }
+    },
+    showSuccessToast: false
   },
   addUser: {
     url: '/Api/User/Add',
@@ -30,8 +32,24 @@ import { Dialog, Input, Message, Button } from '@alifd/next';
     defaultBindingData: {
       dataSource: {}
     }
+  },
+  delUser: {
+    url: '/Api/User/Delete',
+    method: 'POST',
+    data: {},
+    defaultBindingData: {
+      dataSource: {}
+    }
+  },
+  diable: {
+    url: '/Api/User/Diable',
+    method: 'POST',
+    data: {},
+    defaultBindingData: {
+      dataSource: {}
+    }
   }
-}, { requestClient: request })
+})
 export default class UserList extends Component {
   constructor(props) {
     super(props);
@@ -64,20 +82,52 @@ export default class UserList extends Component {
         this.props.updateBindingData('userData', {
           data: {}
         }, (res) => {
-          this.setState({ user: res.data.dataSource || {} })
+          this.setState({ user: res.data.dataSource })
         });
       }
       this.setState({ dialogVisible: value })
     }
-    const operate = (type, id) => {
-      console.log(type, id)
+    const operate = (type, record) => {
       switch (type) {
         case 'edit':
           this.props.updateBindingData('userData', {
-            data: { id }
+            data: { id: record.id }
           }, (res) => {
             this.setState({ user: res.data.dataSource || {}, dialogVisible: true })
-            console.log(this.state.user);
+          });
+          break;
+        case 'disable':
+          Dialog.confirm({
+            title: '提示',
+            content: `确定${record.is_disabled ? '启用' : '禁用'}用户[${record.user_name}]吗`,
+            onOk: () => {
+              this.props.updateBindingData('diable', {
+                data: record
+              }, (res) => {
+                if (res.status == "SUCCESS") {
+                  this.props.updateBindingData('userList', {
+                    data: {}
+                  });
+                }
+              });
+            }
+          });
+          break;
+        case 'delete':
+          Dialog.confirm({
+            title: '提示',
+            content: `确定删除用户[${record.user_name}]吗`,
+            onOk: () => {
+              this.props.updateBindingData('delUser', {
+                data: { id: record.id }
+              }, (res) => {
+                if (res.status == "SUCCESS") {
+                  this.props.updateBindingData('userList', {
+                    data: {}
+                  });
+                }
+              });
+            }
           });
           break;
       }

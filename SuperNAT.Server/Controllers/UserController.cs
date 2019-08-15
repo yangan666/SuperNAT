@@ -32,6 +32,30 @@ namespace SuperNAT.Server.Controllers
             return new JsonResult(rst);
         }
 
+        [HttpPost]
+        [Route("Delete")]
+        public IActionResult Delete(User model)
+        {
+            using var bll = new UserBll();
+            var rst = bll.Delete(model);
+
+            return new JsonResult(rst);
+        }
+
+
+        [HttpPost]
+        [Route("Disable")]
+        public IActionResult Disable(User model)
+        {
+            using var bll = new UserBll();
+            model.is_disabled = !model.is_disabled;
+            var rst = bll.Update(model);
+            var text = model.is_disabled ? "禁用" : "启用";
+            rst.Message = rst.Result ? $"{text}成功" : $"{text}失败";
+
+            return new JsonResult(rst);
+        }
+
 
         [HttpPost]
         [Route("GetOne")]

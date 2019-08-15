@@ -46,6 +46,24 @@ namespace SuperNAT.Common.Bll
             return rst;
         }
 
+        public ReturnResult<bool> Delete(User model)
+        {
+            var rst = new ReturnResult<bool>();
+
+            try
+            {
+                rst.Result = conn.Delete(model) > 0;
+                rst.Message = "删除成功";
+            }
+            catch (Exception ex)
+            {
+                rst.Message = $"删除失败：{ex.InnerException ?? ex}";
+                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+            }
+
+            return rst;
+        }
+
         public ReturnResult<User> GetOne(User model)
         {
             var rst = new ReturnResult<User>();

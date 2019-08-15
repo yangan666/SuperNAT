@@ -9,7 +9,7 @@ const service = axios.create({
 
 // request interceptor
 service.interceptors.request.use(
-  config => {
+  (config) => {
     // Do something before request is sent]
     config.headers["X-Token"] = getToken(); // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
     return config;
@@ -26,6 +26,7 @@ service.interceptors.response.use(
     const body = response.data;
     const newBody = {
       status: body.Result ? "SUCCESS" : "ERROR",
+      code: body.Status,
       message: body.Message,
       data: {
         dataSource: body.Data
