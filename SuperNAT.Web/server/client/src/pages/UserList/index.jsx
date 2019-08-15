@@ -41,8 +41,8 @@ import { Dialog, Input, Message, Button } from '@alifd/next';
       dataSource: {}
     }
   },
-  diable: {
-    url: '/Api/User/Diable',
+  disable: {
+    url: '/Api/User/Disable',
     method: 'POST',
     data: {},
     defaultBindingData: {
@@ -101,7 +101,7 @@ export default class UserList extends Component {
             title: '提示',
             content: `确定${record.is_disabled ? '启用' : '禁用'}用户[${record.user_name}]吗`,
             onOk: () => {
-              this.props.updateBindingData('diable', {
+              this.props.updateBindingData('disable', {
                 data: record
               }, (res) => {
                 if (res.status == "SUCCESS") {

@@ -10,7 +10,7 @@ export default function UsersTable({ data, operate }) {
           编辑
         </a>
         <a className={styles.button} onClick={() => { operate('disable', record) }}>
-          禁用
+          {record.is_disabled ? "启用" : "禁用"}
         </a>
         <a className={styles.button} onClick={() => { operate('delete', record) }}>
           删除
