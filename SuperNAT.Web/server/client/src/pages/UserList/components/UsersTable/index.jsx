@@ -1,6 +1,7 @@
 import React from 'react';
-import { Input, Table, Dialog } from '@alifd/next';
+import { Input, Table } from '@alifd/next';
 import styles from './index.module.scss';
+import IceLabel from '@icedesign/label';
 
 export default function UsersTable({ data, operate }) {
   const renderOper = (value, index, record) => {
@@ -18,20 +19,25 @@ export default function UsersTable({ data, operate }) {
       </div>
     );
   };
+  const renderStatus = (value, index, record) => {
+    return (
+      <IceLabel status={record.is_disabled ? 'danger' : 'success'}>{record.is_disabled_str}</IceLabel>
+    );
+  }
   return (
     <div>
       <div className={styles.searchBar}>
-        <div className={styles.info}>共 {data.length} 条记录</div>
+        <div className={styles.info}>共 {data.dataSource.length} 条记录</div>
         <Input
           style={{ width: '300px' }}
           placeholder="请输入关键字"
         />
       </div>
-      <Table hasBorder={false} dataSource={data}>
-        <Table.Column title="用户名" dataIndex="user_name" />
-        <Table.Column title="微信号" dataIndex="wechat" />
-        <Table.Column title="手机号码" dataIndex="tel" />
-        <Table.Column title="状态" dataIndex="is_disabled_str" />
+      <Table loading={data.__loading} hasBorder={false} dataSource={data.dataSource}>
+        <Table.Column width={180} title="用户名" dataIndex="user_name" />
+        <Table.Column width={180} title="微信号" dataIndex="wechat" />
+        <Table.Column width={200} title="手机号码" dataIndex="tel" />
+        <Table.Column width={150} title="状态" cell={renderStatus} />
         <Table.Column title="操作" cell={renderOper} />
       </Table>
     </div>

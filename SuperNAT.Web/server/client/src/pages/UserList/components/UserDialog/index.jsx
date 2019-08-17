@@ -56,12 +56,6 @@ export default function Card(props) {
                                 <Input name="tel" style={{ width: '400px' }} />
                             </IceFormBinder>
                         </div>
-                        <div className={styles.formItem}>
-                            <div className={styles.formLabel}>禁用</div>
-                            <IceFormBinder>
-                                <Switch name="is_disabled" />
-                            </IceFormBinder>
-                        </div>
                     </div>
                 </IceFormBinderWrapper>
             </Dialog>

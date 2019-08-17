@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import TopBar from '@/components/TopBar';
 import UsersTable from './components/UsersTable';
 import UserDialog from './components/UserDialog';
-import DataBinder from '@icedesign/data-binder';
 import CustomDataBinder from '@/utils/databinder'
-import { Dialog, Input, Message, Button } from '@alifd/next';
+import { Dialog, Button } from '@alifd/next';
 
 @CustomDataBinder({
   userList: {
@@ -63,7 +62,6 @@ export default class UserList extends Component {
   }
   render() {
     const { userList } = this.props.bindingData
-    const tableData = userList.dataSource
     const getFormValue = (value) => {
       //保存
       this.props.updateBindingData('addUser', {
@@ -99,7 +97,7 @@ export default class UserList extends Component {
         case 'disable':
           Dialog.confirm({
             title: '提示',
-            content: `确定${record.is_disabled ? '启用' : '禁用'}用户[${record.user_name}]吗`,
+            content: `确定${record.is_disabled ? '启用' : '禁用'}用户"${record.user_name}"吗`,
             onOk: () => {
               this.props.updateBindingData('disable', {
                 data: record
@@ -116,7 +114,7 @@ export default class UserList extends Component {
         case 'delete':
           Dialog.confirm({
             title: '提示',
-            content: `确定删除用户[${record.user_name}]吗`,
+            content: `确定删除用户"${record.user_name}"吗`,
             onOk: () => {
               this.props.updateBindingData('delUser', {
                 data: { id: record.id }
@@ -138,7 +136,7 @@ export default class UserList extends Component {
           title="用户管理"
           extraAfter={<Button type="primary" onClick={() => { setVisible(true) }}>新建用户</Button>}
         />
-        <UsersTable data={tableData} operate={operate} />
+        <UsersTable data={userList} operate={operate} />
         <UserDialog dialogTitle="新建用户"
           dialogVisible={this.state.dialogVisible}
           getFormValue={getFormValue}
