@@ -1,6 +1,6 @@
 .formContent {
   margin: 0 20px;
-  width: 500px;
+  width: 600px;
 }
 
 .formItem {
@@ -10,13 +10,13 @@
 }
 
 .formLabel {
-  width: 58px;
+  width: 100px;
   margin-right: 15px;
   text-align: right;
 }
 
 .formRequired {
-  width: 58px;
+  width: 100px;
   margin-right: 15px;
   text-align: right;
 }
@@ -28,7 +28,7 @@
 }
 
 .formWidth {
-  width: 250px;
+  width: 350px;
 }
 
 .formError {
@@ -37,4 +37,8 @@
 
 .submitButton {
   margin-left: 85px;
+}
+
+.addonAfterMargin{
+  margin-left: 5px;
 }

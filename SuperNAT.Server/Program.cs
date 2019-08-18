@@ -211,12 +211,14 @@ namespace SuperNAT.Server
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
+                var contentRoot = Directory.GetCurrentDirectory();
+                var webRoot = Path.Combine(contentRoot, "wwwroot");
                 webBuilder.UseStartup<Startup>()
                         .UseKestrel(options =>
                         {
                             options.Limits.MaxConcurrentConnections = 100;
                             options.Limits.MaxConcurrentUpgradedConnections = 100;
-                            options.Limits.MaxRequestBodySize = 10 * 1024;
+                            options.Limits.MaxRequestBodySize = 104857600;//100M
                             options.Limits.MinRequestBodyDataRate =
                                 new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
                             options.Limits.MinResponseDataRate =
@@ -226,7 +228,9 @@ namespace SuperNAT.Server
                             //{
                             //    listenOptions.UseHttps("testCert.pfx", "testPassword");
                             //});
-                        });
+                        })
+                        .UseContentRoot(contentRoot)  // set content root
+                        .UseWebRoot(webRoot);         // set web root
             });
 
         private static void WebServer_NewSessionConnected(WebAppSession session)

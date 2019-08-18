@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import TopBar from '@/components/TopBar';
-import UsersTable from './components/UsersTable';
-import UserDialog from './components/UserDialog';
+import MapTable from './components/MapTable';
+import MapDialog from './components/MapDialog';
 import CustomDataBinder from '@/utils/databinder'
 import { Dialog, Button } from '@alifd/next';
 
 @CustomDataBinder({
-  userList: {
-    url: '/Api/User/GetList',
+  mapList: {
+    url: '/Api/Map/GetList',
     method: 'POST',
     data: {},
     defaultBindingData: {
@@ -15,8 +15,8 @@ import { Dialog, Button } from '@alifd/next';
     },
     showSuccessToast: false
   },
-  userData: {
-    url: '/Api/User/GetOne',
+  mapData: {
+    url: '/Api/Map/GetOne',
     method: 'POST',
     data: {},
     defaultBindingData: {
@@ -24,51 +24,61 @@ import { Dialog, Button } from '@alifd/next';
     },
     showSuccessToast: false
   },
-  addUser: {
-    url: '/Api/User/Add',
+  addMap: {
+    url: '/Api/Map/Add',
     method: 'POST',
     data: {},
     defaultBindingData: {
       dataSource: {}
     }
   },
-  delUser: {
-    url: '/Api/User/Delete',
+  delMap: {
+    url: '/Api/Map/Delete',
     method: 'POST',
     data: {},
     defaultBindingData: {
       dataSource: {}
     }
   },
-  disable: {
-    url: '/Api/User/Disable',
+  protocolOptions: {
+    url: '/Api/Common/GetEnumList?type=ssl_type',
     method: 'POST',
     data: {},
     defaultBindingData: {
-      dataSource: {}
-    }
+      dataSource: []
+    },
+    showSuccessToast: false
   }
 })
-export default class UserList extends Component {
+export default class MapList extends Component {
   constructor(props) {
     super(props);
-    this.state = { dialogVisible: false, user: {} };
+    this.state = { dialogVisible: false, map: {} };
   }
   componentDidMount() {
     // 组件加载时获取数据源，数据获取完成会触发组件 render
-    this.props.updateBindingData('userList', {
+    this.props.updateBindingData('mapList', {
+      data: {}
+    });
+    this.props.updateBindingData('protocolOptions', {
       data: {}
     });
   }
   render() {
-    const { userList } = this.props.bindingData
+    const { mapList, protocolOptions } = this.props.bindingData
+    const protocolList = protocolOptions.dataSource.map(v => {
+      return {
+        value: v.Key,
+        label: v.Value
+      }
+    })
     const getFormValue = (value) => {
       //保存
-      this.props.updateBindingData('addUser', {
+      this.props.updateBindingData('addMap', {
         data: value
       }, (res) => {
         if (res.status == "SUCCESS") {
-          this.props.updateBindingData('userList', {
+          this.props.updateBindingData('mapList', {
             data: {}
           });
         }
@@ -76,11 +86,11 @@ export default class UserList extends Component {
     };
     const setVisible = (value) => {
       if (value) {
-        //新建用户
-        this.props.updateBindingData('userData', {
+        //新建映射
+        this.props.updateBindingData('mapData', {
           data: {}
         }, (res) => {
-          this.setState({ user: res.data.dataSource })
+          this.setState({ map: res.data.dataSource })
         });
       }
       this.setState({ dialogVisible: value })
@@ -88,39 +98,22 @@ export default class UserList extends Component {
     const operate = (type, record) => {
       switch (type) {
         case 'edit':
-          this.props.updateBindingData('userData', {
+          this.props.updateBindingData('mapData', {
             data: { id: record.id }
           }, (res) => {
-            this.setState({ user: res.data.dataSource || {}, dialogVisible: true })
-          });
-          break;
-        case 'disable':
-          Dialog.confirm({
-            title: '提示',
-            content: `确定${record.is_disabled ? '启用' : '禁用'}用户"${record.user_name}"吗`,
-            onOk: () => {
-              this.props.updateBindingData('disable', {
-                data: record
-              }, (res) => {
-                if (res.status == "SUCCESS") {
-                  this.props.updateBindingData('userList', {
-                    data: {}
-                  });
-                }
-              });
-            }
+            this.setState({ map: res.data.dataSource || {}, dialogVisible: true })
           });
           break;
         case 'delete':
           Dialog.confirm({
             title: '提示',
-            content: `确定删除用户"${record.user_name}"吗`,
+            content: `确定删除映射"${record.name}"吗`,
             onOk: () => {
-              this.props.updateBindingData('delUser', {
+              this.props.updateBindingData('delMap', {
                 data: { id: record.id }
               }, (res) => {
                 if (res.status == "SUCCESS") {
-                  this.props.updateBindingData('userList', {
+                  this.props.updateBindingData('mapList', {
                     data: {}
                   });
                 }
@@ -134,14 +127,15 @@ export default class UserList extends Component {
       <div>
         <TopBar
           title="用户管理"
-          extraAfter={<Button type="primary" onClick={() => { setVisible(true) }}>新建用户</Button>}
+          extraAfter={<Button type="primary" onClick={() => { setVisible(true) }}>新建映射</Button>}
         />
-        <UsersTable data={userList} operate={operate} />
-        <UserDialog dialogTitle={this.state.user.id === 0 ? "新建用户" : "编辑用户"}
+        <MapTable data={mapList} operate={operate} />
+        <MapDialog dialogTitle={this.state.map.id === 0 ? "新建映射" : "编辑映射"}
           dialogVisible={this.state.dialogVisible}
           getFormValue={getFormValue}
           setVisible={setVisible}
-          formData={this.state.user} />
+          formData={this.state.map}
+          protocolOptions={protocolList} />
       </div>
     );
   }

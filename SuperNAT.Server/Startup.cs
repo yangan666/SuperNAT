@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Http;
 
 namespace SuperNAT.Server
 {
@@ -56,6 +58,7 @@ namespace SuperNAT.Server
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
                 builder.AllowAnyOrigin();
+                //builder.AllowCredentials();
             });
 
             app.UseMvc(routes =>
@@ -77,6 +80,17 @@ namespace SuperNAT.Server
                     })
             });
             app.UseStaticFiles();
+            //var rootPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot");
+            //if (!Directory.Exists(rootPath))
+            //{
+            //    Directory.CreateDirectory(rootPath);
+            //}
+            //app.UseFileServer(new FileServerOptions()
+            //{
+            //    FileProvider = new PhysicalFileProvider(rootPath),
+            //    RequestPath = new PathString("/wwwroot"),
+            //    EnableDirectoryBrowsing = false
+            //});
         }
 
 

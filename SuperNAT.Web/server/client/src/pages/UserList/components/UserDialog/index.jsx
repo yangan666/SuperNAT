@@ -1,18 +1,14 @@
-import React, { useState, useRef } from 'react';
-import { Dialog, Input, Message, Switch } from '@alifd/next';
-import {
-    FormBinderWrapper as IceFormBinderWrapper,
-    FormBinder as IceFormBinder,
-} from '@icedesign/form-binder';
+import React, { useRef } from 'react';
+import { Dialog, Input } from '@alifd/next';
+import { FormBinderWrapper, FormBinder, FormError } from '@icedesign/form-binder';
 import styles from './index.module.scss';
 
 export default function Card(props) {
     const formEl = useRef(null);
     const { dialogTitle, dialogVisible, getFormValue, setVisible, formData } = props;
-    function handleConfirm() {
+    const handleConfirm = () => {
         formEl.current.validateAll((error, value) => {
             if (error) {
-                Message.error('请输入完整的信息');
                 return;
             }
             setVisible(false);
@@ -30,34 +26,36 @@ export default function Card(props) {
                 onClose={() => setVisible(false)}
                 title={dialogTitle}
             >
-                <IceFormBinderWrapper ref={formEl} value={formData}>
+                <FormBinderWrapper ref={formEl} value={formData}>
                     <div className={styles.formContent}>
                         <div className={styles.formItem}>
-                            <div className={styles.formLabel}>用户名</div>
-                            <IceFormBinder required>
-                                <Input name="user_name" style={{ width: '400px' }} />
-                            </IceFormBinder>
+                            <div className={styles.formRequired}>用户名</div>
+                            <FormBinder name="user_name" required message="请输入正确的用户名">
+                                <Input hasClear placeholder="请输入用户名" className={styles.formWidth} />
+                            </FormBinder>
+                            <FormError className={styles.formError} name="user_name" />
                         </div>
                         <div className={styles.formItem}>
                             <div className={styles.formLabel}>密码</div>
-                            <IceFormBinder>
-                                <Input htmlType="password" name="password" style={{ width: '400px' }} />
-                            </IceFormBinder>
+                            <FormBinder name="password">
+                                <Input hasClear placeholder="请输入密码，不填写默认123456" htmlType="password" className={styles.formWidth} />
+                            </FormBinder>
                         </div>
                         <div className={styles.formItem}>
-                            <div className={styles.formLabel}>微信</div>
-                            <IceFormBinder required>
-                                <Input name="wechat" style={{ width: '400px' }} />
-                            </IceFormBinder>
+                            <div className={styles.formRequired}>手机</div>
+                            <FormBinder name="tel" required message="请输入正确的手机">
+                                <Input hasClear placeholder="请输入手机" className={styles.formWidth} />
+                            </FormBinder>
+                            <FormError className={styles.formError} name="tel" />
                         </div>
                         <div className={styles.formItem}>
-                            <div className={styles.formLabel}>手机</div>
-                            <IceFormBinder required>
-                                <Input name="tel" style={{ width: '400px' }} />
-                            </IceFormBinder>
+                            <div className={styles.formLabel}>微信号</div>
+                            <FormBinder name="wechat">
+                                <Input hasClear placeholder="请输入微信号" className={styles.formWidth} />
+                            </FormBinder>
                         </div>
                     </div>
-                </IceFormBinderWrapper>
+                </FormBinderWrapper>
             </Dialog>
         </div>
     );

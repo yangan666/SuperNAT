@@ -10,22 +10,17 @@ namespace SuperNAT.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class MapController : ControllerBase
     {
         [HttpPost]
         [Route("Add")]
-        public IActionResult Add(User model)
+        public IActionResult Add(Map model)
         {
             var rst = new ReturnResult<bool>();
 
-            using var bll = new UserBll();
+            using var bll = new MapBll();
             if (model.id == 0)
             {
-                model.token = Guid.NewGuid().ToString("N");
-                if (string.IsNullOrEmpty(model.password))
-                {
-                    model.password = "123456";
-                }
                 rst = bll.Add(model);
             }
             else
@@ -38,52 +33,37 @@ namespace SuperNAT.Server.Controllers
 
         [HttpPost]
         [Route("Delete")]
-        public IActionResult Delete(User model)
+        public IActionResult Delete(Map model)
         {
-            using var bll = new UserBll();
+            using var bll = new MapBll();
             var rst = bll.Delete(model);
 
             return new JsonResult(rst);
         }
 
-
-        [HttpPost]
-        [Route("Disable")]
-        public IActionResult Disable(User model)
-        {
-            using var bll = new UserBll();
-            model.is_disabled = !model.is_disabled;
-            var rst = bll.Update(model);
-            var text = model.is_disabled ? "禁用" : "启用";
-            rst.Message = rst.Result ? $"{text}成功" : $"{text}失败";
-
-            return new JsonResult(rst);
-        }
-
-
         [HttpPost]
         [Route("GetOne")]
-        public IActionResult GetOne(User model)
+        public IActionResult GetOne(Map model)
         {
             if (model.id == 0)
             {
-                var defalut = new ReturnResult<User>()
+                var defalut = new ReturnResult<Map>()
                 {
                     Result = true,
-                    Data = new User()
+                    Data = new Map()
                 };
                 return new JsonResult(defalut);
             }
-            using var bll = new UserBll();
+            using var bll = new MapBll();
             var rst = bll.GetOne(model);
             return new JsonResult(rst);
         }
 
         [HttpPost]
         [Route("GetList")]
-        public IActionResult GetList(User model)
+        public IActionResult GetList(Map model)
         {
-            using var bll = new UserBll();
+            using var bll = new MapBll();
             var rst = bll.GetList(model);
             return new JsonResult(rst);
         }

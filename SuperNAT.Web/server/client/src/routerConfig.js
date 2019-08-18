@@ -3,7 +3,6 @@ import BasicLayout from '@/layouts/BasicLayout';
 
 import UserLogin from '@/pages/UserLogin';
 import UserRegister from '@/pages/UserRegister';
-import Projects from '@/pages/Projects';
 import Entities from '@/pages/Entities';
 import Repository from '@/pages/Repository';
 import Generalization from '@/pages/Generalization';
@@ -13,6 +12,7 @@ import Setting from '@/pages/Setting';
 import NotFound from '@/pages/NotFound';
 
 import UserList from '@/pages/UserList';
+import PortMap from '@/pages/PortMap';
 
 const routerConfig = [
   {
@@ -47,6 +47,10 @@ const routerConfig = [
       {
         path: '/userlist',
         component: UserList,
+      },
+      {
+        path: '/portmap',
+        component: PortMap,
       },
       {
         path: '/entities',

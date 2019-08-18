@@ -31,6 +31,11 @@ const asideMenuConfig = [
     path: '/userlist',
     icon: 'home2',
   },
+  {
+    name: '端口映射',
+    path: '/portmap',
+    icon: 'home2',
+  }
 ];
 
 export { headerMenuConfig, asideMenuConfig };

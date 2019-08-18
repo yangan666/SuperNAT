@@ -4,7 +4,8 @@ import { getToken } from "@/utils/auth";
 // create an axios instance
 const service = axios.create({
   baseURL: "http://localhost:8088", // api的base_url
-  timeout: -1 // request timeout
+  timeout: -1, // request timeout
+  // withCredentials: true // 允许携带cookie
 });
 
 // request interceptor
