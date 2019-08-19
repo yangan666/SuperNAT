@@ -208,7 +208,7 @@ namespace SuperNAT.Client
                         HandleLog.WriteLine($"映射不存在，外网访问地址：{packJson.Host}");
                         return;
                     }
-                    var res = HttpHelper.Request(packJson.Method, natAddress + packJson.Route, data, headers: headers, contentType: contentType);
+                    var res = HttpHelper.Request(packJson.Method, $"http://{natAddress}{packJson.Route}", data, headers: headers, contentType: contentType);
                     if (res == null)
                     {
                         HandleLog.WriteLine("服务器返回NULL");
