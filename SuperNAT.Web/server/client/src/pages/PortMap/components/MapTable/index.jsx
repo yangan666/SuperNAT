@@ -25,12 +25,12 @@ export default function UsersTable({ data, operate }) {
         />
       </div>
       <Table loading={data.__loading} hasBorder={false} dataSource={data.dataSource}>
+        <Table.Column width={150} title="所属用户" dataIndex="user_name" />
         <Table.Column width={200} title="应用名称" dataIndex="name" />
         <Table.Column width={200} title="内网地址" dataIndex="local" />
         <Table.Column width={200} title="外网地址" dataIndex="remote" />
         <Table.Column width={150} title="协议类型" dataIndex="protocol" />
         <Table.Column width={350} title="证书文件" dataIndex="certfile" />
-        <Table.Column width={150} title="所属用户" dataIndex="user_id" />
         <Table.Column title="操作" cell={renderOper} />
       </Table>
     </div>

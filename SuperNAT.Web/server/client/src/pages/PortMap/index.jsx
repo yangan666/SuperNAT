@@ -48,7 +48,16 @@ import { Dialog, Button } from '@alifd/next';
       dataSource: []
     },
     showSuccessToast: false
-  }
+  },
+  userOptions: {
+    url: '/Api/User/GetList',
+    method: 'POST',
+    data: {},
+    defaultBindingData: {
+      dataSource: []
+    },
+    showSuccessToast: false
+  },
 })
 export default class MapList extends Component {
   constructor(props) {
@@ -63,13 +72,22 @@ export default class MapList extends Component {
     this.props.updateBindingData('protocolOptions', {
       data: {}
     });
+    this.props.updateBindingData('userOptions', {
+      data: {}
+    });
   }
   render() {
-    const { mapList, protocolOptions } = this.props.bindingData
+    const { mapList, protocolOptions, userOptions } = this.props.bindingData
     const protocolList = protocolOptions.dataSource.map(v => {
       return {
         value: v.Key,
         label: v.Value
+      }
+    })
+    const userList = userOptions.dataSource.map(v => {
+      return {
+        value: v.id,
+        label: v.user_name
       }
     })
     const getFormValue = (value) => {
@@ -135,7 +153,8 @@ export default class MapList extends Component {
           getFormValue={getFormValue}
           setVisible={setVisible}
           formData={this.state.map}
-          protocolOptions={protocolList} />
+          protocolList={protocolList}
+          userList={userList} />
       </div>
     );
   }

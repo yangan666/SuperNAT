@@ -21,7 +21,7 @@ export default function Card(props) {
             <Dialog
                 visible={dialogVisible}
                 onOk={handleConfirm}
-                closeable="esc,mask,close"
+                closeable="esc,close"
                 onCancel={() => setVisible(false)}
                 onClose={() => setVisible(false)}
                 title={dialogTitle}

@@ -1,4 +1,5 @@
 ﻿using SuperNAT.Common;
+using SuperNAT.Common.Models;
 using SuperSocket.ClientEngine;
 using SuperSocket.ProtoBase;
 using System;
@@ -19,15 +20,13 @@ namespace SuperNAT.Client
     {
         public static EasyClient<NatPackageInfo> NatClient { get; set; }
         public static EasyClient<NatPackageInfo> HttpClient { get; set; }
-        public static string NatAddress { get; set; }
-        public static string ProxyHost { get; set; } = AppConfig.GetSetting("ProxyHost");
-        public static string RemoteHost { get; set; } = AppConfig.GetSetting("RemoteHost");
         public static int RemoteWebPort { get; set; } = 10005;
         public static int RemoteNatPort { get; set; } = 10006;
-        public static string Token { get; set; } = "3d951d8b2275425887e1e9d1e53c5fa5";
-        public static string RegPack { get; set; } = $"{Token} {RemoteHost}:{RemoteWebPort}";
-        public static byte[] RegPack2Bytes => Encoding.UTF8.GetBytes(RegPack);
-        public static int LocalPort { get; set; }
+        public static string Token { get; set; } = AppConfig.GetSetting("Token");
+        public static string ServerUrl { get; set; } = AppConfig.GetSetting("ServerUrl");
+        public static string ServerPort { get; set; } = AppConfig.GetSetting("ServerPort");
+        public static byte[] RegPack => Encoding.UTF8.GetBytes(Token);
+        public static List<Map> MapList { get; set; }
         static void Main(string[] args)
         {
             try
@@ -37,26 +36,21 @@ namespace SuperNAT.Client
                     Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
                     Log4netUtil.Info(log);
                 };
-                mark:
-                Console.Write("请输入本地映射端口：");
-                var port = Console.ReadLine();
-                var tryParse = int.TryParse(port, out int readPort);
-                if (!tryParse)
+                MapList = GetMapList(Token)?.Data;
+                if (MapList?.Any() ?? false)
                 {
-                    Console.WriteLine("请输入正确的端口！");
-                    Console.WriteLine("按任意键继续...");
-                    Console.ReadKey();
-                    goto mark;
+                    ConnectNatServer();
+
+                    Thread reConnectThread = new Thread(ReConnect) { IsBackground = true };
+                    reConnectThread.Start();
+
+                    Thread heartThread = new Thread(SendHeart) { IsBackground = true };
+                    heartThread.Start();
                 }
-                LocalPort = readPort;
-                NatAddress = $"http://{ProxyHost}:{readPort}";
-                ConnectNatServer();
-
-                Thread reConnectThread = new Thread(ReConnect) { IsBackground = true };
-                reConnectThread.Start();
-
-                Thread heartThread = new Thread(SendHeart) { IsBackground = true };
-                heartThread.Start();
+                else
+                {
+                    HandleLog.WriteLine($"端口映射列表为空！");
+                }
             }
             catch (Exception ex)
             {
@@ -66,10 +60,31 @@ namespace SuperNAT.Client
             Console.ReadKey();
         }
 
+        static ReturnResult<List<Map>> GetMapList(string token)
+        {
+            var res = new ReturnResult<List<Map>>();
+
+            try
+            {
+                var response = HttpHelper.HttpRequest("POST", $"http://{ServerUrl}:{ServerPort}/Api/Map/GetMapList?token={token}");
+                if (!string.IsNullOrEmpty(response))
+                {
+                    res = JsonHelper.Instance.Deserialize<ReturnResult<List<Map>>>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                HandleLog.WriteLine($"获取端口映射列表失败：{ex}");
+            }
+
+            return res;
+        }
+
         static void ConnectNatServer()
         {
             try
             {
+                HandleLog.WriteLine($"正在连接服务器...");
                 NatClient?.Close();
                 NatClient = null;
                 NatClient = new EasyClient<NatPackageInfo>
@@ -88,8 +103,8 @@ namespace SuperNAT.Client
                 NatClient.Error += OnClientError;
                 NatClient.Closed += OnClientClosed;
                 //解析主机名
-                IPHostEntry ipInfo = Dns.GetHostEntry(RemoteHost);
-                var serverIp = ipInfo.AddressList.Any() ? ipInfo.AddressList[0].ToString() : throw new Exception($"域名【{RemoteHost}】无法解析");
+                IPHostEntry ipInfo = Dns.GetHostEntry(ServerUrl);
+                var serverIp = ipInfo.AddressList.Any() ? ipInfo.AddressList[0].ToString() : throw new Exception($"域名【{ServerUrl}】无法解析");
                 //连接NAT转发服务
                 var res = NatClient.ConnectAsync(new IPEndPoint(IPAddress.Parse(serverIp), RemoteNatPort)).Result;
                 if (!res)
@@ -124,16 +139,16 @@ namespace SuperNAT.Client
         {
             while (true)
             {
+                Thread.Sleep(30000);
                 if (NatClient.IsConnected)
                 {
                     //发送心跳包
                     var packBytes = new List<byte>() { 0x1, 0x2 };
-                    var lenBytes = BitConverter.GetBytes(RegPack2Bytes.Length).Reverse();
+                    var lenBytes = BitConverter.GetBytes(RegPack.Length).Reverse();
                     packBytes.AddRange(lenBytes);
-                    packBytes.AddRange(RegPack2Bytes);
+                    packBytes.AddRange(RegPack);
                     NatClient.Send(packBytes.ToArray());
                 }
-                Thread.Sleep(30000);
             }
         }
 
@@ -142,11 +157,14 @@ namespace SuperNAT.Client
             //HandleLog.WriteLine($"【{NatClient.LocalEndPoint}】已连接到服务器【{NatClient.Socket.RemoteEndPoint}】");
             //发送注册包
             var packBytes = new List<byte>() { 0x1, 0x1 };
-            var lenBytes = BitConverter.GetBytes(RegPack2Bytes.Length).Reverse();
+            var lenBytes = BitConverter.GetBytes(RegPack.Length).Reverse();
             packBytes.AddRange(lenBytes);
-            packBytes.AddRange(RegPack2Bytes);
+            packBytes.AddRange(RegPack);
             NatClient.Send(packBytes.ToArray());
-            HandleLog.WriteLine($"映射成功：{NatAddress} --> {RemoteHost}:{RemoteWebPort}");
+            foreach (var item in MapList)
+            {
+                HandleLog.WriteLine($"映射成功：{item.local} --> {item.remote}");
+            }
         }
 
         static void OnPackageReceived(object sender, PackageEventArgs<NatPackageInfo> e)
@@ -184,7 +202,13 @@ namespace SuperNAT.Client
                             contentType = contentType.Substring(0, index);
                         }
                     }
-                    var res = HttpHelper.Request(packJson.Method, NatAddress + packJson.Route, data, headers: headers, contentType: contentType);
+                    var natAddress = MapList.Find(c => c.remote == packJson.Host)?.local;
+                    if (string.IsNullOrEmpty(natAddress))
+                    {
+                        HandleLog.WriteLine($"映射不存在，外网访问地址：{packJson.Host}");
+                        return;
+                    }
+                    var res = HttpHelper.Request(packJson.Method, natAddress + packJson.Route, data, headers: headers, contentType: contentType);
                     if (res == null)
                     {
                         HandleLog.WriteLine("服务器返回NULL");
@@ -197,7 +221,7 @@ namespace SuperNAT.Client
                             var result = DataHelper.StreamToBytes(stream);
                             var rawResult = Encoding.UTF8.GetString(result);
                             StringBuilder resp = new StringBuilder();
-                            resp.Append($"{NatAddress.Split(':')[0].ToUpper()}/{res.Version} {(int)res.StatusCode} {res.StatusCode.ToString()}\r\n");
+                            resp.Append($"{natAddress.Split(':')[0].ToUpper()}/{res.Version} {(int)res.StatusCode} {res.StatusCode.ToString()}\r\n");
                             foreach (var item in res.Headers)
                             {
                                 if (item.Key != "Transfer-Encoding")
@@ -250,15 +274,11 @@ namespace SuperNAT.Client
         static void OnClientClosed(object sender, EventArgs e)
         {
             HandleLog.WriteLine($"连接{NatClient.LocalEndPoint}已关闭");
-            Thread.Sleep(1000);
-            ConnectNatServer();
         }
 
         static void OnClientError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
             HandleLog.WriteLine($"连接错误：{e.Exception}");
-            Thread.Sleep(1000);
-            ConnectNatServer();
         }
     }
 }

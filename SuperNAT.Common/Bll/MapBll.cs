@@ -89,7 +89,36 @@ namespace SuperNAT.Common.Bll
 
             try
             {
-                rst.Data = conn.GetList<Map>("", model).ToList();
+                rst.Data = conn.Query<Map>(@"SELECT
+	                                            t1.*, t2.user_name
+                                            FROM
+	                                            map t1
+                                            LEFT JOIN `user` t2 ON t1.user_id = t2.id").ToList();
+                rst.Result = true;
+                rst.Message = "获取成功";
+            }
+            catch (Exception ex)
+            {
+                rst.Message = $"获取失败：{ex.InnerException ?? ex}";
+                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+            }
+
+            return rst;
+        }
+
+        public ReturnResult<List<Map>> GetMapList(string token)
+        {
+            var rst = new ReturnResult<List<Map>>();
+
+            try
+            {
+                rst.Data = conn.Query<Map>(@"SELECT
+	                                            t1.*, t2.user_name
+                                            FROM
+	                                            map t1
+                                            INNER JOIN `user` t2 ON t1.user_id = t2.id
+                                            WHERE
+	                                            t2.token = @token", new { token }).ToList();
                 rst.Result = true;
                 rst.Message = "获取成功";
             }

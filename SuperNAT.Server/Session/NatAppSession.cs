@@ -1,4 +1,5 @@
 ﻿using CSuperSocket.SocketBase;
+using SuperNAT.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,7 @@ namespace SuperNAT.Server
 {
     public class NatAppSession : AppSession<NatAppSession, MyRequestInfo>
     {
-        public string Token { get; set; }
-        public string Host { get; set; }
-        public string UserId { get; set; } = Guid.NewGuid().ToString();
+        public User User { get; set; }
+        public List<Map> MapList { get; set; }
     }
 }

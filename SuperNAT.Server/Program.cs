@@ -14,6 +14,8 @@ using CSuperSocket.ProtoBase;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using SuperNAT.Common.Bll;
+using SuperNAT.Common.Models;
 
 namespace SuperNAT.Server
 {
@@ -124,39 +126,34 @@ namespace SuperNAT.Server
                                 case 0x1:
                                     {
                                         //注册包
-                                        var host = requestInfo.BodyRaw.Split(' ');
-                                        session.Token = host[0];
-                                        if (session.Token != Token)
+                                        var token = requestInfo.BodyRaw;
+                                        using var bll = new UserBll();
+                                        var user = bll.GetOne(token).Data;
+                                        if (user == null)
                                         {
                                             HandleLog.WriteLine($"Token非法，关闭连接【{session.RemoteEndPoint}】");
                                             session.Close(CSuperSocket.SocketBase.CloseReason.ServerClosing);
                                             return;
                                         }
-                                        var client = NATServer.GetSessions(c => c.Host == host[1]).ToList();
+                                        var client = NATServer.GetSessions(c => c.User?.token == token).ToList();
                                         if (client != null)
                                         {
                                             client.ForEach(c =>
                                             {
                                                 c?.Close();
-                                                HandleLog.WriteLine($"【{session.Host}】连接重复，强制关闭{c.RemoteEndPoint}");
+                                                HandleLog.WriteLine($"【{session.User.token}】连接重复，强制关闭{c.RemoteEndPoint}");
                                             });
                                         }
-                                        session.Host = host[1];
-                                        HandleLog.WriteLine($"注册的Host为：{session.Host}");
+                                        session.User = user;
+
+                                        using var mapBll = new MapBll();
+                                        session.MapList = mapBll.GetMapList(token).Data ?? new List<Map>();
                                     }
                                     break;
                                 case 0x2:
                                     {
                                         //心跳包
-                                        var host = requestInfo.BodyRaw.Split(' ');
-                                        session.Token = host[0];
-                                        if (session.Token != Token)
-                                        {
-                                            HandleLog.WriteLine($"Token非法，关闭连接【{session.RemoteEndPoint}】");
-                                            session.Close(CSuperSocket.SocketBase.CloseReason.ServerClosing);
-                                            return;
-                                        }
-                                        HandleLog.WriteLine($"收到{session.RemoteEndPoint}的心跳包");
+                                        HandleLog.WriteLine($"收到连接：{session.RemoteEndPoint}，用户：{session.User?.user_name}的心跳包");
                                     }
                                     break;
                                 case 0x3:
@@ -223,7 +220,7 @@ namespace SuperNAT.Server
                                 new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
                             options.Limits.MinResponseDataRate =
                                 new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
-                            options.Listen(IPAddress.Loopback, 8088);
+                            options.Listen(IPAddress.Any, 8088);
                             //options.Listen(IPAddress.Loopback, 5001, listenOptions =>
                             //{
                             //    listenOptions.UseHttps("testCert.pfx", "testPassword");
@@ -319,7 +316,7 @@ namespace SuperNAT.Server
                     }
                     //转发请求
                     var host = headers["Host"];
-                    var natSession = NATServer.GetSessions(c => c.Host == host).FirstOrDefault();
+                    var natSession = NATServer.GetSessions(c => c.MapList.Any(m => m.remote == host)).FirstOrDefault();
                     if (natSession == null)
                     {
                         session?.Close();

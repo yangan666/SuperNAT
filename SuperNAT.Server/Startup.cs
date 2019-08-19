@@ -67,6 +67,10 @@ namespace SuperNAT.Server
                     name: "default",
                     template: "{controller=Show}/{action=Index}/{id?}");
             });
+            DefaultFilesOptions defaultFilesOptions = new DefaultFilesOptions();
+            defaultFilesOptions.DefaultFileNames.Clear();
+            defaultFilesOptions.DefaultFileNames.Add("index.html");
+            app.UseDefaultFiles(defaultFilesOptions);
             app.UseStaticFiles(new StaticFileOptions
             {
                 //FileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory()),
@@ -80,17 +84,6 @@ namespace SuperNAT.Server
                     })
             });
             app.UseStaticFiles();
-            //var rootPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot");
-            //if (!Directory.Exists(rootPath))
-            //{
-            //    Directory.CreateDirectory(rootPath);
-            //}
-            //app.UseFileServer(new FileServerOptions()
-            //{
-            //    FileProvider = new PhysicalFileProvider(rootPath),
-            //    RequestPath = new PathString("/wwwroot"),
-            //    EnableDirectoryBrowsing = false
-            //});
         }
 
 

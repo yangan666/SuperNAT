@@ -67,5 +67,14 @@ namespace SuperNAT.Server.Controllers
             var rst = bll.GetList(model);
             return new JsonResult(rst);
         }
+
+        [HttpPost]
+        [Route("GetMapList")]
+        public IActionResult GetMapList(string token)
+        {
+            using var bll = new MapBll();
+            var rst = bll.GetMapList(token);
+            return new JsonResult(rst);
+        }
     }
 }

@@ -92,6 +92,77 @@ namespace SuperNAT.Common
             }
         }
 
+        public static string HttpRequest(string method, string url, string postData = null, Dictionary<string, string> headers = null, string contentType = null, int timeout = 60, Encoding encoding = null)
+        {
+            string result = string.Empty;
+            HttpResponseMessage response = null;
+            HttpClient client = null;
+            try
+            {
+                if (url.StartsWith("https"))
+                {
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+                }
+                //反向代理手动设置cookies
+                client = new HttpClient(new HttpClientHandler() { UseCookies = false });
+
+                if (headers != null)
+                {
+                    if (DefaultRequestHeadersKeys == null)
+                    {
+                        DefaultRequestHeadersKeys = client.DefaultRequestHeaders.GetType().GetProperties().Select(s => s.Name).ToList();
+                    }
+                    foreach (KeyValuePair<string, string> header in headers)
+                    {
+                        client.DefaultRequestHeaders.Add(header.Key, header.Value);
+                    }
+                }
+                if (timeout > 0)
+                {
+                    client.Timeout = new TimeSpan(0, 0, timeout);
+                }
+                using (HttpContent content = new StringContent(postData ?? "", encoding ?? Encoding.UTF8))
+                {
+                    if (!string.IsNullOrEmpty(contentType))
+                    {
+                        content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
+                    }
+                    //先不释放
+                    switch (method.ToUpper())
+                    {
+                        case "POST":
+                            response = client.PostAsync(url, content).Result;
+                            break;
+                        case "GET":
+                            response = client.GetAsync(url).Result;
+                            break;
+                        case "PUT":
+                            response = client.PutAsync(url, content).Result;
+                            break;
+                        case "DELETE":
+                            response = client.DeleteAsync(url).Result;
+                            break;
+                    }
+                }
+                using (response)
+                {
+                    result = response.Content.ReadAsStringAsync().Result;
+                    Log4netUtil.Info($"请求地址：{url}{Environment.NewLine}请求参数：{postData}{Environment.NewLine}返回结果：{result}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log4netUtil.Error("Api接口出错了", ex.InnerException ?? ex);
+                Console.WriteLine($"Api接口出错了：{ex.InnerException ?? ex}");
+            }
+            finally
+            {
+                client.Dispose();
+            }
+
+            return result;
+        }
+
         public static bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             //绕过验证

@@ -15,10 +15,12 @@ namespace SuperNAT.Common.Models
         public string name { get; set; } = "";
         public string local { get; set; } = "";
         public string remote { get; set; } = "";
-        public string protocol { get; set; } = "";
+        public string protocol { get; set; } = "http";
         public string certfile { get; set; } = "";
         public string certpwd { get; set; } = "";
         public int? ssl_type { get; set; }
-        public int user_id { get; set; }
+        public int? user_id { get; set; }
+        [Editable(false)]
+        public string user_name { get; set; }
     }
 }
