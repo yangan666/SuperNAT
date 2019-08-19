@@ -91,11 +91,18 @@ namespace SuperNAT.Client
                 IPHostEntry ipInfo = Dns.GetHostEntry(RemoteHost);
                 var serverIp = ipInfo.AddressList.Any() ? ipInfo.AddressList[0].ToString() : throw new Exception($"域名【{RemoteHost}】无法解析");
                 //连接NAT转发服务
-                NatClient.ConnectAsync(new IPEndPoint(IPAddress.Parse(serverIp), RemoteNatPort));
+                var res = NatClient.ConnectAsync(new IPEndPoint(IPAddress.Parse(serverIp), RemoteNatPort)).Result;
+                if (!res)
+                {
+                    Thread.Sleep(1000);
+                    ConnectNatServer();
+                }
             }
             catch (Exception ex)
             {
                 HandleLog.WriteLine($"连接服务器失败：{ex}");
+                Thread.Sleep(1000);
+                ConnectNatServer();
             }
         }
 
@@ -242,12 +249,16 @@ namespace SuperNAT.Client
 
         static void OnClientClosed(object sender, EventArgs e)
         {
-            HandleLog.WriteLine($"连接【{NatClient.LocalEndPoint}】已关闭");
+            HandleLog.WriteLine($"连接{NatClient.LocalEndPoint}已关闭");
+            Thread.Sleep(1000);
+            ConnectNatServer();
         }
 
         static void OnClientError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
             HandleLog.WriteLine($"连接错误：{e.Exception}");
+            Thread.Sleep(1000);
+            ConnectNatServer();
         }
     }
 }
