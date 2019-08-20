@@ -19,7 +19,10 @@ namespace SuperNAT.Common.Models
         public string certfile { get; set; } = "";
         public string certpwd { get; set; } = "";
         public int? ssl_type { get; set; }
-        public int? user_id { get; set; }
+        public int? app_id { get; set; }
+        public bool is_disabled { get; set; }
+        [Editable(false)]
+        public string app_name { get; set; }
         [Editable(false)]
         public string user_name { get; set; }
     }

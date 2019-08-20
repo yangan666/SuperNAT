@@ -1,4 +1,4 @@
-import React, { useRef, Component } from 'react';
+import React, { Component } from 'react';
 import { Dialog, Input, Select, Upload, Button } from '@alifd/next';
 import { FormBinderWrapper, FormBinder, FormError } from '@icedesign/form-binder';
 import styles from './index.module.scss';

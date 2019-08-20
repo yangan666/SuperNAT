@@ -8,10 +8,10 @@ namespace SuperNAT.Common
 {
     public class HandleLog
     {
-        public static Action<string> WriteLog { get; set; }
-        public static void WriteLine(string log)
+        public static Action<string, bool> WriteLog { get; set; }
+        public static void WriteLine(string log, bool isPrint = true)
         {
-            WriteLog?.Invoke(log);
+            WriteLog?.Invoke(log, isPrint);
         }
     }
 }
