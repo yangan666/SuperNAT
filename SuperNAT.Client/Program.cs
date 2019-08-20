@@ -202,13 +202,13 @@ namespace SuperNAT.Client
                             contentType = contentType.Substring(0, index);
                         }
                     }
-                    var natAddress = MapList.Find(c => c.remote == packJson.Host)?.local;
-                    if (string.IsNullOrEmpty(natAddress))
+                    var map = MapList.Find(c => c.remote == packJson.Host);
+                    if (map == null)
                     {
                         HandleLog.WriteLine($"映射不存在，外网访问地址：{packJson.Host}");
                         return;
                     }
-                    var res = HttpHelper.Request(packJson.Method, $"http://{natAddress}{packJson.Route}", data, headers: headers, contentType: contentType);
+                    var res = HttpHelper.Request(packJson.Method, $"{map.protocol}://{map.local}{packJson.Route}", data, headers: headers, contentType: contentType);
                     if (res == null)
                     {
                         HandleLog.WriteLine("服务器返回NULL");
@@ -221,7 +221,7 @@ namespace SuperNAT.Client
                             var result = DataHelper.StreamToBytes(stream);
                             var rawResult = Encoding.UTF8.GetString(result);
                             StringBuilder resp = new StringBuilder();
-                            resp.Append($"{natAddress.Split(':')[0].ToUpper()}/{res.Version} {(int)res.StatusCode} {res.StatusCode.ToString()}\r\n");
+                            resp.Append($"{map.protocol.ToUpper()}/{res.Version} {(int)res.StatusCode} {res.StatusCode.ToString()}\r\n");
                             foreach (var item in res.Headers)
                             {
                                 if (item.Key != "Transfer-Encoding")
@@ -251,7 +251,7 @@ namespace SuperNAT.Client
                                 Host = packJson.Host,
                                 UserId = packJson.UserId,
                                 Content = body,
-                                ResponseInfo = $"{packJson.Method} {packJson.Route} {(int)res.StatusCode} {res.StatusCode.ToString()}"
+                                ResponseInfo = $"{map.name} {packJson.Method} {packJson.Route} {(int)res.StatusCode} {res.StatusCode.ToString()}"
                             };
                             var json = JsonHelper.Instance.Serialize(pack);
                             var jsonBytes = Encoding.UTF8.GetBytes(json);

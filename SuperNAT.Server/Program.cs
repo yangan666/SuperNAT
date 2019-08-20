@@ -136,13 +136,14 @@ namespace SuperNAT.Server
                                             return;
                                         }
                                         var client = NATServer.GetSessions(c => c.User?.token == token).ToList();
-                                        if (client != null)
+                                        if (client?.Count > 0)
                                         {
                                             client.ForEach(c =>
                                             {
                                                 c?.Close();
                                                 HandleLog.WriteLine($"【{session.User.token}】连接重复，强制关闭{c.RemoteEndPoint}");
                                             });
+                                            return;
                                         }
                                         session.User = user;
 
@@ -178,8 +179,8 @@ namespace SuperNAT.Server
                                         var response = DataHelper.Decompress(packJson.Content);
                                         var rawResponse = Encoding.UTF8.GetString(response);
                                         var res = webSession.TrySend(response, 0, response.Length);
-                                        HandleLog.WriteLine($"发送结果：{res} {packJson.ResponseInfo} {(DateTime.Now - webSession.RequestTime).Value.TotalSeconds}s");
-                                        webSession?.Close();
+                                        HandleLog.WriteLine($"{packJson.ResponseInfo} {(DateTime.Now - webSession.RequestTime).Value.TotalSeconds}s");
+                                        //webSession?.Close();
                                     }
                                     break;
                             }
@@ -316,7 +317,7 @@ namespace SuperNAT.Server
                     }
                     //转发请求
                     var host = headers["Host"];
-                    var natSession = NATServer.GetSessions(c => c.MapList.Any(m => m.remote == host)).FirstOrDefault();
+                    var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.remote == host) ?? false).FirstOrDefault();
                     if (natSession == null)
                     {
                         session?.Close();
