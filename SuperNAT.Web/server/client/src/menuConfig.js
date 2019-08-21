@@ -32,7 +32,7 @@ const asideMenuConfig = [
     icon: 'home2',
   },
   {
-    name: '端口映射',
+    name: '内网穿透',
     path: '/portmap',
     icon: 'home2',
   }

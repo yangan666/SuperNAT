@@ -69,3 +69,4 @@ namespace SuperNAT.Server.Controllers
             return new JsonResult(rst);
         }
     }
+}

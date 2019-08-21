@@ -19,6 +19,7 @@ export default function UsersTable({ data, operate }) {
       </div>
     );
   };
+  const tableData = data.dataSource || []
   const renderStatus = (value, index, record) => {
     return (
       <IceLabel status={record.is_disabled ? 'danger' : 'success'}>{record.is_disabled_str}</IceLabel>
@@ -27,13 +28,13 @@ export default function UsersTable({ data, operate }) {
   return (
     <div>
       <div className={styles.searchBar}>
-        <div className={styles.info}>共 {data.dataSource.length} 条记录</div>
+        <div className={styles.info}>共 {tableData.length} 条记录</div>
         <Input
           style={{ width: '300px' }}
           placeholder="请输入关键字"
         />
       </div>
-      <Table loading={data.__loading} hasBorder={false} dataSource={data.dataSource}>
+      <Table loading={data.__loading} hasBorder={false} dataSource={tableData}>
         <Table.Column width={180} title="用户名" dataIndex="user_name" />
         <Table.Column width={180} title="微信号" dataIndex="wechat" />
         <Table.Column width={200} title="手机号码" dataIndex="tel" />

@@ -2,7 +2,7 @@ import React from 'react';
 import { Input, Table } from '@alifd/next';
 import styles from './index.module.scss';
 
-export default function UsersTable({ data, operate }) {
+export default function MapTable({ data, operate }) {
   const renderOper = (value, index, record) => {
     return (
       <div className={styles.oper}>
@@ -15,16 +15,17 @@ export default function UsersTable({ data, operate }) {
       </div>
     );
   };
+  const tableData = data.dataSource || []
   return (
     <div>
       <div className={styles.searchBar}>
-        <div className={styles.info}>共 {data.dataSource.length} 条记录</div>
+        <div className={styles.info}>共 {tableData.length} 条记录</div>
         <Input
           style={{ width: '300px' }}
           placeholder="请输入关键字"
         />
       </div>
-      <Table loading={data.__loading} hasBorder={false} dataSource={data.dataSource}>
+      <Table loading={data.__loading} hasBorder={false} dataSource={tableData}>
         <Table.Column width={150} title="所属用户" dataIndex="user_name" />
         <Table.Column width={200} title="应用名称" dataIndex="name" />
         <Table.Column width={200} title="内网地址" dataIndex="local" />
