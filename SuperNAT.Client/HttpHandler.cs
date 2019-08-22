@@ -248,7 +248,7 @@ namespace SuperNAT.Client
             NatClient.Send(packBytes.ToArray());
             foreach (var item in MapList)
             {
-                HandleLog.WriteLine($"映射成功：{item.local} --> {item.remote}");
+                HandleLog.WriteLine($"{item.name}映射成功：{item.local} --> {item.remote}");
             }
         }
 
