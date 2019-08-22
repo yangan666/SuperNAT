@@ -4,6 +4,11 @@ import styles from './index.module.scss';
 import IceLabel from '@icedesign/label';
 
 export default function UsersTable({ data, operate }) {
+  const renderStatus = (value, index, record) => {
+    return (
+      <IceLabel status={record.is_disabled ? 'danger' : 'success'}>{record.is_disabled_str}</IceLabel>
+    );
+  }
   const renderOper = (value, index, record) => {
     return (
       <div className={styles.oper}>
@@ -20,11 +25,6 @@ export default function UsersTable({ data, operate }) {
     );
   };
   const tableData = data.dataSource || []
-  const renderStatus = (value, index, record) => {
-    return (
-      <IceLabel status={record.is_disabled ? 'danger' : 'success'}>{record.is_disabled_str}</IceLabel>
-    );
-  }
   return (
     <div>
       <div className={styles.searchBar}>

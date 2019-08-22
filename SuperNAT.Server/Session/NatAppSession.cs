@@ -10,7 +10,7 @@ namespace SuperNAT.Server
 {
     public class NatAppSession : AppSession<NatAppSession, MyRequestInfo>
     {
-        public User User { get; set; }
+        public Client Client { get; set; }
         public List<Map> MapList { get; set; }
     }
 }

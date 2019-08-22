@@ -32,6 +32,11 @@ const asideMenuConfig = [
     icon: 'home2',
   },
   {
+    name: '主机管理',
+    path: '/clientlist',
+    icon: 'home2',
+  },
+  {
     name: '内网穿透',
     path: '/portmap',
     icon: 'home2',

@@ -10,7 +10,7 @@ namespace SuperNAT.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
         [HttpPost]
         [Route("Add")]
@@ -21,7 +21,6 @@ namespace SuperNAT.Server.Controllers
             using var bll = new UserBll();
             if (model.id == 0)
             {
-                model.token = Guid.NewGuid().ToString("N");
                 if (string.IsNullOrEmpty(model.password))
                 {
                     model.password = "123456";
@@ -33,7 +32,7 @@ namespace SuperNAT.Server.Controllers
                 rst = bll.Update(model);
             }
 
-            return new JsonResult(rst);
+            return Json(rst);
         }
 
         [HttpPost]
@@ -43,7 +42,7 @@ namespace SuperNAT.Server.Controllers
             using var bll = new UserBll();
             var rst = bll.Delete(model);
 
-            return new JsonResult(rst);
+            return Json(rst);
         }
 
         [HttpPost]
@@ -56,7 +55,7 @@ namespace SuperNAT.Server.Controllers
             var text = model.is_disabled ? "禁用" : "启用";
             rst.Message = rst.Result ? $"{text}成功" : $"{text}失败";
 
-            return new JsonResult(rst);
+            return Json(rst);
         }
 
         [HttpPost]
@@ -70,11 +69,11 @@ namespace SuperNAT.Server.Controllers
                     Result = true,
                     Data = new User()
                 };
-                return new JsonResult(defalut);
+                return Json(defalut);
             }
             using var bll = new UserBll();
             var rst = bll.GetOne(model);
-            return new JsonResult(rst);
+            return Json(rst);
         }
 
         [HttpPost]
@@ -83,7 +82,7 @@ namespace SuperNAT.Server.Controllers
         {
             using var bll = new UserBll();
             var rst = bll.GetList(model);
-            return new JsonResult(rst);
+            return Json(rst);
         }
     }
 }

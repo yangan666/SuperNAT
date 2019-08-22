@@ -70,7 +70,15 @@ namespace SuperNAT.Common.Bll
 
             try
             {
-                rst.Data = conn.Get<Map>(model.id);
+                rst.Data = conn.QueryFirstOrDefault<Map>(@"SELECT
+	                                                            t1.*, t2.`name` client_name,
+                                                                t2.user_id,
+	                                                            t3.user_name
+                                                            FROM
+	                                                            `map` t1
+                                                            INNER JOIN client t2 ON t1.client_id = t2.id
+                                                            INNER JOIN `user` t3 ON t2.user_id = t3.id
+                                                            WHERE t1.id=@id", new { model.id });
                 rst.Result = true;
                 rst.Message = "获取成功";
             }
@@ -90,10 +98,13 @@ namespace SuperNAT.Common.Bll
             try
             {
                 rst.Data = conn.Query<Map>(@"SELECT
-	                                            t1.*, t2.user_name
+	                                            t1.*, t2.`name` client_name,
+                                                t2.user_id,
+	                                            t3.user_name
                                             FROM
-	                                            map t1
-                                            LEFT JOIN `user` t2 ON t1.user_id = t2.id").ToList();
+	                                            `map` t1
+                                            INNER JOIN client t2 ON t1.client_id = t2.id
+                                            INNER JOIN `user` t3 ON t2.user_id = t3.id").ToList();
                 rst.Result = true;
                 rst.Message = "获取成功";
             }
@@ -106,19 +117,21 @@ namespace SuperNAT.Common.Bll
             return rst;
         }
 
-        public ReturnResult<List<Map>> GetMapList(string token)
+        public ReturnResult<List<Map>> GetMapList(string secret)
         {
             var rst = new ReturnResult<List<Map>>();
 
             try
             {
                 rst.Data = conn.Query<Map>(@"SELECT
-	                                            t1.*, t2.user_name
+	                                            t1.*, t2.`name` client_name,
+	                                            t3.user_name
                                             FROM
-	                                            map t1
-                                            INNER JOIN `user` t2 ON t1.user_id = t2.id
+	                                            `map` t1
+                                            INNER JOIN client t2 ON t1.client_id = t2.id
+                                            INNER JOIN `user` t3 ON t2.user_id = t3.id
                                             WHERE
-	                                            t2.token = @token", new { token }).ToList();
+	                                            t2.secret = @secret", new { secret }).ToList();
                 rst.Result = true;
                 rst.Message = "获取成功";
             }

@@ -13,7 +13,7 @@ namespace SuperNAT.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CommonController : ControllerBase
+    public class CommonController : BaseController
     {
         private IWebHostEnvironment hostingEnvironment;
         public CommonController(IWebHostEnvironment env)
@@ -34,7 +34,7 @@ namespace SuperNAT.Server.Controllers
                 Message = "获取成功"
             };
 
-            return new JsonResult(rst);
+            return Json(rst);
         }
 
 
@@ -73,7 +73,7 @@ namespace SuperNAT.Server.Controllers
                 rst.Message = ex.Message;
             }
 
-            return new JsonResult(rst);
+            return Json(rst);
         }
     }
 }

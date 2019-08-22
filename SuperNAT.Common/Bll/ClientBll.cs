@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace SuperNAT.Common.Bll
 {
-    public class AppBll : BaseBll
+    public class ClientBll : BaseBll
     {
-        public ReturnResult<bool> Add(App model)
+        public ReturnResult<bool> Add(Client model)
         {
             var rst = new ReturnResult<bool>();
 
@@ -28,7 +29,7 @@ namespace SuperNAT.Common.Bll
             return rst;
         }
 
-        public ReturnResult<bool> Update(App model)
+        public ReturnResult<bool> Update(Client model)
         {
             var rst = new ReturnResult<bool>();
 
@@ -46,7 +47,7 @@ namespace SuperNAT.Common.Bll
             return rst;
         }
 
-        public ReturnResult<bool> Delete(App model)
+        public ReturnResult<bool> Delete(Client model)
         {
             var rst = new ReturnResult<bool>();
 
@@ -64,13 +65,13 @@ namespace SuperNAT.Common.Bll
             return rst;
         }
 
-        public ReturnResult<App> GetOne(App model)
+        public ReturnResult<Client> GetOne(Client model)
         {
-            var rst = new ReturnResult<App>();
+            var rst = new ReturnResult<Client>();
 
             try
             {
-                rst.Data = conn.Get<App>(model.id);
+                rst.Data = conn.Get<Client>(model.id);
                 rst.Result = true;
                 rst.Message = "获取成功";
             }
@@ -83,13 +84,36 @@ namespace SuperNAT.Common.Bll
             return rst;
         }
 
-        public ReturnResult<List<App>> GetList(App model)
+        public ReturnResult<Client> GetOne(string secret)
         {
-            var rst = new ReturnResult<List<App>>();
+            var rst = new ReturnResult<Client>();
 
             try
             {
-                rst.Data = conn.GetList<App>("", model).ToList();
+                rst.Data = conn.QueryFirstOrDefault<Client>("select * from client where secret=@secret", new { secret });
+                rst.Result = true;
+                rst.Message = "获取成功";
+            }
+            catch (Exception ex)
+            {
+                rst.Message = $"获取失败：{ex.InnerException ?? ex}";
+                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+            }
+
+            return rst;
+        }
+
+        public ReturnResult<List<Client>> GetList(Client model)
+        {
+            var rst = new ReturnResult<List<Client>>();
+
+            try
+            {
+                rst.Data = conn.Query<Client>(@"SELECT
+	                                                t1.*, t2.user_name
+                                                FROM
+	                                                client t1
+                                                LEFT JOIN `user` t2 ON t1.user_id = t2.id", model).ToList();
                 rst.Result = true;
                 rst.Message = "获取成功";
             }

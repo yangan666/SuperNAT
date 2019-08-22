@@ -10,18 +10,20 @@ namespace SuperNAT.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AppController
+    public class ClientController : BaseController
     {
         [HttpPost]
         [Route("Add")]
-        public IActionResult Add(App model)
+        public IActionResult Add(Client model)
         {
             var rst = new ReturnResult<bool>();
 
-            using var bll = new AppBll();
+            using var bll = new ClientBll();
             if (model.id == 0)
             {
                 model.secret = Guid.NewGuid().ToString("N");
+                model.is_online = false;
+                model.create_time = DateTime.Now;
                 rst = bll.Add(model);
             }
             else
@@ -29,44 +31,44 @@ namespace SuperNAT.Server.Controllers
                 rst = bll.Update(model);
             }
 
-            return new JsonResult(rst);
+            return Json(rst);
         }
 
         [HttpPost]
         [Route("Delete")]
-        public IActionResult Delete(App model)
+        public IActionResult Delete(Client model)
         {
-            using var bll = new AppBll();
+            using var bll = new ClientBll();
             var rst = bll.Delete(model);
 
-            return new JsonResult(rst);
+            return Json(rst);
         }
 
         [HttpPost]
         [Route("GetOne")]
-        public IActionResult GetOne(App model)
+        public IActionResult GetOne(Client model)
         {
             if (model.id == 0)
             {
-                var defalut = new ReturnResult<App>()
+                var defalut = new ReturnResult<Client>()
                 {
                     Result = true,
-                    Data = new App()
+                    Data = new Client()
                 };
-                return new JsonResult(defalut);
+                return Json(defalut);
             }
-            using var bll = new AppBll();
+            using var bll = new ClientBll();
             var rst = bll.GetOne(model);
-            return new JsonResult(rst);
+            return Json(rst);
         }
 
         [HttpPost]
         [Route("GetList")]
-        public IActionResult GetList(App model)
+        public IActionResult GetList(Client model)
         {
-            using var bll = new AppBll();
+            using var bll = new ClientBll();
             var rst = bll.GetList(model);
-            return new JsonResult(rst);
+            return Json(rst);
         }
     }
 }

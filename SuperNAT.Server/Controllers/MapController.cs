@@ -10,7 +10,7 @@ namespace SuperNAT.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MapController : ControllerBase
+    public class MapController : BaseController
     {
         [HttpPost]
         [Route("Add")]
@@ -28,7 +28,7 @@ namespace SuperNAT.Server.Controllers
                 rst = bll.Update(model);
             }
 
-            return new JsonResult(rst);
+            return Json(rst);
         }
 
         [HttpPost]
@@ -38,7 +38,7 @@ namespace SuperNAT.Server.Controllers
             using var bll = new MapBll();
             var rst = bll.Delete(model);
 
-            return new JsonResult(rst);
+            return Json(rst);
         }
 
         [HttpPost]
@@ -52,11 +52,11 @@ namespace SuperNAT.Server.Controllers
                     Result = true,
                     Data = new Map()
                 };
-                return new JsonResult(defalut);
+                return Json(defalut);
             }
             using var bll = new MapBll();
             var rst = bll.GetOne(model);
-            return new JsonResult(rst);
+            return Json(rst);
         }
 
         [HttpPost]
@@ -65,16 +65,16 @@ namespace SuperNAT.Server.Controllers
         {
             using var bll = new MapBll();
             var rst = bll.GetList(model);
-            return new JsonResult(rst);
+            return Json(rst);
         }
 
         [HttpPost]
         [Route("GetMapList")]
-        public IActionResult GetMapList(string token)
+        public IActionResult GetMapList(string secret)
         {
             using var bll = new MapBll();
-            var rst = bll.GetMapList(token);
-            return new JsonResult(rst);
+            var rst = bll.GetMapList(secret);
+            return Json(rst);
         }
     }
 }

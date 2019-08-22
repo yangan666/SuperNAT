@@ -23,7 +23,7 @@ namespace SuperNAT.Server
     {
         public static string CertFile = "iot3rd.p12";
         public static string CertPassword = "IoM@1234";
-        static HttpAppServer WebServer { get; set; }
+        static List<HttpAppServer> WebServerList { get; set; } = new List<HttpAppServer>();
         static NatAppServer NATServer { get; set; }
 
         public static void Start()
@@ -47,7 +47,7 @@ namespace SuperNAT.Server
                 Port = 10006,
                 TextEncoding = "ASCII",
                 MaxRequestLength = 102400,
-                MaxConnectionNumber = 10000,
+                MaxConnectionNumber = 1000,
                 ReceiveBufferSize = 102400,
                 SendBufferSize = 102400,
                 LogBasicSessionActivity = true,
@@ -95,29 +95,29 @@ namespace SuperNAT.Server
                     case 0x1:
                         {
                             //注册包
-                            var token = requestInfo.BodyRaw;
-                            using var bll = new UserBll();
-                            var user = bll.GetOne(token).Data;
-                            if (user == null)
+                            var secret = requestInfo.BodyRaw;
+                            using var bll = new ClientBll();
+                            var client = bll.GetOne(secret).Data;
+                            if (client == null)
                             {
                                 HandleLog.WriteLine($"Token非法，关闭连接【{session.RemoteEndPoint}】");
                                 session.Close(CSuperSocket.SocketBase.CloseReason.ServerClosing);
                                 return;
                             }
-                            var client = NATServer.GetSessions(c => c.User?.token == token).ToList();
-                            if (client?.Count > 0)
+                            var sessionList = NATServer.GetSessions(c => c.Client?.secret == secret).ToList();
+                            if (sessionList?.Count > 0)
                             {
-                                client.ForEach(c =>
+                                sessionList.ForEach(c =>
                                 {
                                     c?.Close();
-                                    HandleLog.WriteLine($"【{session.User.token}】连接重复，强制关闭{c.RemoteEndPoint}");
+                                    HandleLog.WriteLine($"【{session.Client.secret}】连接重复，强制关闭{c.RemoteEndPoint}");
                                 });
                                 return;
                             }
-                            session.User = user;
+                            session.Client = client;
 
                             using var mapBll = new MapBll();
-                            session.MapList = mapBll.GetMapList(token).Data ?? new List<Map>();
+                            session.MapList = mapBll.GetMapList(secret).Data ?? new List<Map>();
                         }
                         break;
                     case 0x2:
@@ -132,7 +132,7 @@ namespace SuperNAT.Server
                             var packJson = JsonHelper.Instance.Deserialize<PackJson>(requestInfo.BodyRaw);
                             int count = 0;
                             mark:
-                            var webSession = WebServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
+                            var webSession = WebServerList.SelectMany(s => s.GetAllSessions()).Where(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
                             if (webSession == null)
                             {
                                 count++;
@@ -169,46 +169,50 @@ namespace SuperNAT.Server
         #region 网页Web服务
         private static void StartWebServer()
         {
-            WebServer = new HttpAppServer();
-            bool setup = WebServer.Setup(new RootConfig()
+            for (var i = 10000; i <= 10005; i++)
             {
-                DisablePerformanceDataCollector = true
-            }, new ServerConfig()
-            {
-                Ip = "Any",
-                Port = 10005,
-                TextEncoding = "ASCII",
-                MaxRequestLength = 102400,
-                MaxConnectionNumber = 10000,
-                ReceiveBufferSize = 102400,
-                SendBufferSize = 102400,
-                LogBasicSessionActivity = true,
-                LogAllSocketException = true,
-                SyncSend = false,
-                //Security = "tls12",
-                //Certificate = new CertificateConfig()
-                //{
-                //    FilePath = CertFile,
-                //    Password = CertPassword,
-                //    ClientCertificateRequired = false
-                //},
-                DisableSessionSnapshot = true,
-                SessionSnapshotInterval = 1
-            });
-            if (setup)
-            {
-                var start = WebServer.Start();
-                if (start)
+                var webServer = new HttpAppServer();
+                bool setup = webServer.Setup(new RootConfig()
                 {
-                    WebServer.NewSessionConnected += WebServer_NewSessionConnected;
-                    WebServer.NewRequestReceived += WebServer_NewRequestReceived;
-                    WebServer.SessionClosed += WebServer_SessionClosed;
-                    HandleLog.WriteLine($"Web服务启动成功，监听端口：{WebServer.Config.Port}");
+                    DisablePerformanceDataCollector = true
+                }, new ServerConfig()
+                {
+                    Ip = "Any",
+                    Port = i,
+                    TextEncoding = "ASCII",
+                    MaxRequestLength = 102400,
+                    MaxConnectionNumber = 100,
+                    ReceiveBufferSize = 102400,
+                    SendBufferSize = 102400,
+                    LogBasicSessionActivity = true,
+                    LogAllSocketException = true,
+                    SyncSend = false,
+                    //Security = "tls12",
+                    //Certificate = new CertificateConfig()
+                    //{
+                    //    FilePath = CertFile,
+                    //    Password = CertPassword,
+                    //    ClientCertificateRequired = false
+                    //},
+                    DisableSessionSnapshot = true,
+                    SessionSnapshotInterval = 1
+                });
+                if (setup)
+                {
+                    var start = webServer.Start();
+                    if (start)
+                    {
+                        webServer.NewSessionConnected += WebServer_NewSessionConnected;
+                        webServer.NewRequestReceived += WebServer_NewRequestReceived;
+                        webServer.SessionClosed += WebServer_SessionClosed;
+                        HandleLog.WriteLine($"Web服务启动成功，监听端口：{webServer.Config.Port}");
+                        WebServerList.Add(webServer);
+                    }
                 }
-            }
-            else
-            {
-                HandleLog.WriteLine($"Web服务启动失败，端口：{WebServer.Config.Port}");
+                else
+                {
+                    HandleLog.WriteLine($"Web服务启动失败，端口：{webServer.Config.Port}");
+                }
             }
         }
 

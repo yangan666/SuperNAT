@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import TopBar from '@/components/TopBar';
-import MapTable from './components/MapTable';
-import MapDialog from './components/MapDialog';
+import ClientTable from './components/ClientTable';
+import ClientDialog from './components/ClientDialog';
 import CustomDataBinder from '@/utils/databinder'
 import { Dialog, Button } from '@alifd/next';
 
 @CustomDataBinder({
-  mapList: {
-    url: '/Api/Map/GetList',
+  clientList: {
+    url: '/Api/Client/GetList',
     method: 'POST',
     data: {},
     defaultBindingData: {
@@ -15,8 +15,8 @@ import { Dialog, Button } from '@alifd/next';
     },
     showSuccessToast: false
   },
-  mapData: {
-    url: '/Api/Map/GetOne',
+  clientData: {
+    url: '/Api/Client/GetOne',
     method: 'POST',
     data: {},
     defaultBindingData: {
@@ -24,30 +24,21 @@ import { Dialog, Button } from '@alifd/next';
     },
     showSuccessToast: false
   },
-  addMap: {
-    url: '/Api/Map/Add',
+  addClient: {
+    url: '/Api/Client/Add',
     method: 'POST',
     data: {},
     defaultBindingData: {
       dataSource: {}
     }
   },
-  delMap: {
-    url: '/Api/Map/Delete',
+  delClient: {
+    url: '/Api/Client/Delete',
     method: 'POST',
     data: {},
     defaultBindingData: {
       dataSource: {}
     }
-  },
-  protocolOptions: {
-    url: '/Api/Common/GetEnumList?type=ssl_type',
-    method: 'POST',
-    data: {},
-    defaultBindingData: {
-      dataSource: []
-    },
-    showSuccessToast: false
   },
   userOptions: {
     url: '/Api/User/GetList',
@@ -58,44 +49,23 @@ import { Dialog, Button } from '@alifd/next';
     },
     showSuccessToast: false
   },
-  clientList: {
-    url: '/Api/Client/GetList',
-    method: 'POST',
-    data: {},
-    defaultBindingData: {
-      dataSource: []
-    },
-    showSuccessToast: false
-  },
 })
-export default class MapList extends Component {
+export default class ClientList extends Component {
   constructor(props) {
     super(props);
-    this.state = { dialogVisible: false, map: {} };
+    this.state = { dialogVisible: false, client: {} };
   }
   componentDidMount() {
     // 组件加载时获取数据源，数据获取完成会触发组件 render
-    this.props.updateBindingData('mapList', {
-      data: {}
-    });
-    this.props.updateBindingData('protocolOptions', {
+    this.props.updateBindingData('clientList', {
       data: {}
     });
     this.props.updateBindingData('userOptions', {
       data: {}
     });
-    this.props.updateBindingData('clientList', {
-      data: {}
-    });
   }
   render() {
-    const { mapList, protocolOptions, userOptions, clientList } = this.props.bindingData
-    const protocolList = protocolOptions.dataSource.map(v => {
-      return {
-        value: v.Key,
-        label: v.Value
-      }
-    })
+    const { clientList,  userOptions } = this.props.bindingData
     const userList = userOptions.dataSource.map(v => {
       return {
         value: v.id,
@@ -104,11 +74,11 @@ export default class MapList extends Component {
     })
     const getFormValue = (value) => {
       //保存
-      this.props.updateBindingData('addMap', {
+      this.props.updateBindingData('addClient', {
         data: value
       }, (res) => {
         if (res.status == "SUCCESS") {
-          this.props.updateBindingData('mapList', {
+          this.props.updateBindingData('clientList', {
             data: {}
           });
         }
@@ -117,10 +87,10 @@ export default class MapList extends Component {
     const setVisible = (value) => {
       if (value) {
         //新建映射
-        this.props.updateBindingData('mapData', {
+        this.props.updateBindingData('clientData', {
           data: {}
         }, (res) => {
-          this.setState({ map: res.data.dataSource })
+          this.setState({ client: res.data.dataSource })
         });
       }
       this.setState({ dialogVisible: value })
@@ -128,22 +98,22 @@ export default class MapList extends Component {
     const operate = (type, record) => {
       switch (type) {
         case 'edit':
-          this.props.updateBindingData('mapData', {
+          this.props.updateBindingData('clientData', {
             data: { id: record.id }
           }, (res) => {
-            this.setState({ map: res.data.dataSource || {}, dialogVisible: true })
+            this.setState({ client: res.data.dataSource || {}, dialogVisible: true })
           });
           break;
         case 'delete':
           Dialog.confirm({
             title: '提示',
-            content: `确定删除映射"${record.name}"吗`,
+            content: `确定删除主机"${record.name}"吗`,
             onOk: () => {
-              this.props.updateBindingData('delMap', {
+              this.props.updateBindingData('delClient', {
                 data: { id: record.id }
               }, (res) => {
                 if (res.status == "SUCCESS") {
-                  this.props.updateBindingData('mapList', {
+                  this.props.updateBindingData('clientList', {
                     data: {}
                   });
                 }
@@ -157,17 +127,15 @@ export default class MapList extends Component {
       <div>
         <TopBar
           title="用户管理"
-          extraAfter={<Button type="primary" onClick={() => { setVisible(true) }}>新建映射</Button>}
+          extraAfter={<Button type="primary" onClick={() => { setVisible(true) }}>新建主机</Button>}
         />
-        <MapTable data={mapList} operate={operate} />
-        <MapDialog dialogTitle={this.state.map.id === 0 ? "新建映射" : "编辑映射"}
+        <ClientTable data={clientList} operate={operate} />
+        <ClientDialog dialogTitle={this.state.client.id === 0 ? "新建主机" : "编辑主机"}
           dialogVisible={this.state.dialogVisible}
           getFormValue={getFormValue}
           setVisible={setVisible}
-          formData={this.state.map}
-          protocolList={protocolList}
-          userList={userList}
-          clientList={clientList.dataSource || []} />
+          formData={this.state.client}
+          userList={userList} />
       </div>
     );
   }

@@ -3,7 +3,7 @@ import { getToken } from "@/utils/auth";
 
 // create an axios instance
 const service = axios.create({
-  baseURL: "http://localhost:8088", // api的base_url  http://www.supernat.cn:8088
+  baseURL: "", // api的base_url  http://www.supernat.cn:8088  http://localhost:8088
   timeout: -1, // request timeout
   // withCredentials: true // 允许携带cookie
 });

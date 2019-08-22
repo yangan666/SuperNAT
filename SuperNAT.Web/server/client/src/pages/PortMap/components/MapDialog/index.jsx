@@ -6,11 +6,24 @@ import styles from './index.module.scss';
 export default class MapDialog extends Component {
     constructor(props) {
         super(props);
-        this.state = { formData: {} };
+        this.state = { formData: {}, clientList: [], clientOptions: [] };
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.formData !== this.state.formData) {
             this.setState({ formData: nextProps.formData })
+            var newList = this.state.clientList.filter(c => c.user_id === nextProps.formData.user_id) || []
+            const newOptions = newList.map(v => {
+                return {
+                    value: v.id,
+                    label: v.name
+                }
+            })
+            console.log('newOptions', newOptions)
+            this.setState({ clientOptions: newOptions })
+        }
+        console.log('nextProps.clientList', nextProps.clientList)
+        if (nextProps.clientList !== this.state.clientList) {
+            this.setState({ clientList: nextProps.clientList })
         }
     }
     render() {
@@ -31,7 +44,28 @@ export default class MapDialog extends Component {
                 formData: data
             })
         }
-
+        const selectUserChange = (value, actionType, item) => {
+            console.log('selectUserChange', value, actionType, item)
+            if (!value && typeof value === undefined) {
+                this.setState({ clientOptions: [] })
+            } else {
+                var newList = this.state.clientList.filter(c => c.user_id === value) || []
+                const newOptions = newList.map(v => {
+                    return {
+                        value: v.id,
+                        label: v.name
+                    }
+                })
+                console.log('newOptions', newOptions)
+                this.setState({ clientOptions: newOptions })
+            }
+            if (this.state.clientOptions.length === 0) {
+                let data = Object.assign({}, this.state.formData, { client_id: '' })
+                this.setState({
+                    formData: data
+                })
+            }
+        }
         return (
             <div>
                 <Dialog
@@ -52,10 +86,24 @@ export default class MapDialog extends Component {
                                         dataSource={userList}
                                         placeholder="请选择所属用户"
                                         autoWidth={false}
+                                        onChange={selectUserChange}
                                         className={styles.formWidth}
                                     />
                                 </FormBinder>
                                 <FormError className={styles.formError} name="user_id" />
+                            </div>
+                            <div className={styles.formItem}>
+                                <div className={styles.formRequired}>选择主机</div>
+                                <FormBinder name="client_id" required message="请选择正确的主机">
+                                    <Select
+                                        hasClear
+                                        dataSource={this.state.clientOptions}
+                                        placeholder="请选择主机"
+                                        autoWidth={false}
+                                        className={styles.formWidth}
+                                    />
+                                </FormBinder>
+                                <FormError className={styles.formError} name="client_id" />
                             </div>
                             <div className={styles.formItem}>
                                 <div className={styles.formRequired}>应用名称</div>

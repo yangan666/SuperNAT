@@ -12,6 +12,7 @@ import Setting from '@/pages/Setting';
 import NotFound from '@/pages/NotFound';
 
 import UserList from '@/pages/UserList';
+import ClientList from '@/pages/ClientList';
 import PortMap from '@/pages/PortMap';
 
 const routerConfig = [
@@ -47,6 +48,10 @@ const routerConfig = [
       {
         path: '/userlist',
         component: UserList,
+      },
+      {
+        path: '/clientlist',
+        component: ClientList,
       },
       {
         path: '/portmap',

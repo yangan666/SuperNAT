@@ -1,8 +1,14 @@
 import React from 'react';
 import { Input, Table } from '@alifd/next';
+import IceLabel from '@icedesign/label';
 import styles from './index.module.scss';
 
-export default function MapTable({ data, operate }) {
+export default function ClientTable({ data, operate }) {
+  const renderStatus = (value, index, record) => {
+    return (
+      <IceLabel status={record.is_online ? 'success' : 'danger'}>{record.is_online_str}</IceLabel>
+    );
+  }
   const renderOper = (value, index, record) => {
     return (
       <div className={styles.oper}>
@@ -27,12 +33,13 @@ export default function MapTable({ data, operate }) {
       </div>
       <Table loading={data.__loading} hasBorder={false} dataSource={tableData}>
         <Table.Column width={150} title="所属用户" dataIndex="user_name" />
-        <Table.Column width={150} title="主机名称" dataIndex="client_name" />
-        <Table.Column width={200} title="应用名称" dataIndex="name" />
-        <Table.Column width={200} title="内网地址" dataIndex="local" />
-        <Table.Column width={200} title="外网地址" dataIndex="remote" />
-        <Table.Column width={150} title="协议类型" dataIndex="protocol" />
-        <Table.Column width={350} title="证书文件" dataIndex="certfile" />
+        <Table.Column width={150} title="主机名称" dataIndex="name" />
+        <Table.Column width={280} title="主机密钥" dataIndex="secret" />
+        <Table.Column width={150} title="二级域名" dataIndex="subdomain" />
+        <Table.Column width={180} title="最后活动时间" dataIndex="last_heart_time" />
+        <Table.Column width={180} title="创建时间" dataIndex="create_time" />
+        <Table.Column width={300} title="描述" dataIndex="remark" />
+        <Table.Column width={100} title="状态" cell={renderStatus} />
         <Table.Column title="操作" cell={renderOper} />
       </Table>
     </div>

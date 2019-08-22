@@ -15,10 +15,10 @@ namespace SuperNAT.Client
     {
         public static EasyClient<NatPackageInfo> NatClient { get; set; }
         public static int RemoteNatPort { get; set; } = 10006;
-        public static string Token { get; set; } = AppConfig.GetSetting("Token");
+        public static string Secret { get; set; } = AppConfig.GetSetting("Secret");
         public static string ServerUrl { get; set; } = AppConfig.GetSetting("ServerUrl");
         public static string ServerPort { get; set; } = AppConfig.GetSetting("ServerPort");
-        public static byte[] RegPack => Encoding.UTF8.GetBytes(Token);
+        public static byte[] RegPack => Encoding.UTF8.GetBytes(Secret);
         public static List<Map> MapList { get; set; }
 
 
@@ -34,7 +34,7 @@ namespace SuperNAT.Client
                     }
                     Log4netUtil.Info(log);
                 };
-                MapList = GetMapList(Token)?.Data;
+                MapList = GetMapList(Secret)?.Data;
                 if (MapList?.Any() ?? false)
                 {
                     ConnectNatServer();
@@ -145,13 +145,13 @@ namespace SuperNAT.Client
             });
         }
 
-        static ReturnResult<List<Map>> GetMapList(string token)
+        static ReturnResult<List<Map>> GetMapList(string secret)
         {
             var res = new ReturnResult<List<Map>>();
 
             try
             {
-                var response = HttpHelper.HttpRequest("POST", $"http://{ServerUrl}:{ServerPort}/Api/Map/GetMapList?token={token}");
+                var response = HttpHelper.HttpRequest("POST", $"http://{ServerUrl}:{ServerPort}/Api/Map/GetMapList?secret={secret}");
                 if (!string.IsNullOrEmpty(response))
                 {
                     res = JsonHelper.Instance.Deserialize<ReturnResult<List<Map>>>(response);
