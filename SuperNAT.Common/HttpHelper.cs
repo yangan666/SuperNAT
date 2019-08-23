@@ -15,7 +15,7 @@ namespace SuperNAT.Common
         public static List<string> DefaultRequestHeadersKeys { get; set; }
         public static HttpResponseMessage Request(string method, string url, string postData = null, Dictionary<string, string> headers = null, string contentType = null, int timeout = 60, Encoding encoding = null)
         {
-            HttpResponseMessage result = null;
+            HttpResponseMessage result = new HttpResponseMessage();
             HttpClient client = null;
             try
             {
@@ -74,22 +74,26 @@ namespace SuperNAT.Common
                         case "DELETE":
                             result = client.DeleteAsync(url).Result;
                             break;
+                        case "OPTIONS":
+                            result.StatusCode = HttpStatusCode.NoContent;
+                            result.Content = new StringContent("");
+                            break;
                     }
                 }
 
                 Log4netUtil.Info($"请求地址：{url}{Environment.NewLine}请求参数：{postData}{Environment.NewLine}返回结果：{result.ToString()}");
-                return result;
             }
             catch (Exception ex)
             {
                 Log4netUtil.Error("Api接口出错了", ex.InnerException ?? ex);
                 Console.WriteLine($"Api接口出错了：{ex.InnerException ?? ex}");
-                return null;
             }
             finally
             {
                 client.Dispose();
             }
+
+            return result;
         }
 
         public static string HttpRequest(string method, string url, string postData = null, Dictionary<string, string> headers = null, string contentType = null, int timeout = 60, Encoding encoding = null)

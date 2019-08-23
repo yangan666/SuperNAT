@@ -109,6 +109,16 @@ namespace SuperNAT.Client
                         {
                             resp.Append($"{item.Key}: {string.Join(";", item.Value)}\r\n");
                         }
+                        if (packJson.Method.ToUpper() == "OPTIONS")
+                        {
+                            resp.Append("Access-Control-Allow-Credentials: true\r\n");
+                            if (packJson.Headers.ContainsKey("Access-Control-Request-Headers"))
+                            {
+                                resp.Append($"Access-Control-Allow-Headers: {packJson.Headers["Access-Control-Request-Headers"]}\r\n");
+                            }
+                            resp.Append("Access-Control-Allow-Methods: *\r\n");
+                            resp.Append($"Access-Control-Allow-Origin: {packJson.Headers["Origin"]}\r\n");
+                        }
                         if (!res.Content.Headers.Contains("Content-Length"))
                         {
                             resp.Append($"Content-Length: {result.Length}\r\n");
