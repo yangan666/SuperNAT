@@ -11,7 +11,7 @@ namespace SuperNAT.Common.Models
     public class User
     {
         [Key]
-        public int id { get; set; }
+        public string id { get; set; }
         public string user_name { get; set; } = "";
         public string password { get; set; } = "";
         public string wechat { get; set; } = "";

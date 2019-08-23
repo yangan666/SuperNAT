@@ -1,5 +1,4 @@
-﻿using CSuperSocket.SocketBase.Config;
-using Dynamic.Core.Log;
+﻿using Dynamic.Core.Log;
 using Dynamic.Core.Service;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -13,8 +12,9 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using SuperNAT.Server.Models;
 
 namespace SuperNAT.Server
 {
@@ -28,6 +28,22 @@ namespace SuperNAT.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var jwtSetting = new JwtSetting();
+            Configuration.Bind("JwtSetting", jwtSetting);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = jwtSetting.Issuer,
+                    ValidAudience = jwtSetting.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.SecurityKey)),
+                    // 默认允许 300s  的时间偏移量，设置为0
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
             services.AddMvc(option =>
             {
                 option.EnableEndpointRouting = false;

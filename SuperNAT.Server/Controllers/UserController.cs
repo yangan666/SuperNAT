@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using SuperNAT.Common.Bll;
@@ -13,13 +14,23 @@ namespace SuperNAT.Server.Controllers
     public class UserController : BaseController
     {
         [HttpPost]
+        [Route("Login")]
+        [AllowAnonymous]
+        public IActionResult Login(User model)
+        {
+            using var bll = new UserBll();
+            var rst = bll.GetOne(model);
+            return Json(rst);
+        }
+
+        [HttpPost]
         [Route("Add")]
         public IActionResult Add(User model)
         {
             var rst = new ReturnResult<bool>();
 
             using var bll = new UserBll();
-            if (model.id == 0)
+            if (string.IsNullOrEmpty(model.id))
             {
                 if (string.IsNullOrEmpty(model.password))
                 {
@@ -62,7 +73,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetOne")]
         public IActionResult GetOne(User model)
         {
-            if (model.id == 0)
+            if (string.IsNullOrEmpty(model.id))
             {
                 var defalut = new ReturnResult<User>()
                 {

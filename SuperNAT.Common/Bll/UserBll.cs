@@ -16,6 +16,7 @@ namespace SuperNAT.Common.Bll
 
             try
             {
+                model.password = EncryptHelper.MD5Encrypt(model.password);
                 rst.Result = conn.Insert(model) > 0;
                 rst.Message = "添加成功";
             }
@@ -34,6 +35,10 @@ namespace SuperNAT.Common.Bll
 
             try
             {
+                if (!string.IsNullOrEmpty(model.password))
+                {
+                    model.password = EncryptHelper.MD5Encrypt(model.password);
+                }
                 rst.Result = conn.Update(model) > 0;
                 rst.Message = "更新成功";
             }
@@ -64,6 +69,25 @@ namespace SuperNAT.Common.Bll
             return rst;
         }
 
+        public ReturnResult<User> Login(User model)
+        {
+            var rst = new ReturnResult<User>();
+
+            try
+            {
+                rst.Data = conn.QueryFirstOrDefault<User>("select * from user where user_name=@user_name and password=@password", model);
+                rst.Result = true;
+                rst.Message = "获取成功";
+            }
+            catch (Exception ex)
+            {
+                rst.Message = $"获取失败：{ex.InnerException ?? ex}";
+                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+            }
+
+            return rst;
+        }
+
         public ReturnResult<User> GetOne(User model)
         {
             var rst = new ReturnResult<User>();
@@ -71,6 +95,10 @@ namespace SuperNAT.Common.Bll
             try
             {
                 rst.Data = conn.Get<User>(model.id);
+                if (rst.Data != null)
+                {
+                    rst.Data.password = "";
+                }
                 rst.Result = true;
                 rst.Message = "获取成功";
             }
