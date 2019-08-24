@@ -29,7 +29,7 @@ const CustomDataBinder = options => {
         responseHandler(body, response);
       },
       success: (body, defaultCallback, originResponse) => {
-        const { config } = originResponse;
+        console.log("success config", config);
         if (body.status !== "SUCCESS") {
           // 后端返回的状态码错误
           if (config.showErrorToast) {
@@ -43,9 +43,23 @@ const CustomDataBinder = options => {
       },
       error: (originResponse, defaultCallback, err) => {
         // 网络异常：404，302 等
-        const { config } = originResponse;
+        console.log("originResponse", originResponse);
         if (config.showErrorToast) {
-          Message.error(err.message);
+          if (originResponse.status === 401) {
+            var data = originResponse.data;
+            Message.error(data.Message);
+            if (data.Status === 10000) {
+              //未授权
+            } else if (data.Status === 10001) {
+              //签名不正确
+            } else if (data.Status === 10002) {
+              //会话超时
+            } else if (data.Status === 10003) {
+              //授权验证失败
+            }
+          } else {
+            Message.error(err.message);
+          }
         }
       }
     };

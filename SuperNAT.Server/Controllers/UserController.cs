@@ -4,8 +4,11 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SuperNAT.Common;
 using SuperNAT.Common.Bll;
 using SuperNAT.Common.Models;
+using SuperNAT.Server.Models;
 
 namespace SuperNAT.Server.Controllers
 {
@@ -13,13 +16,23 @@ namespace SuperNAT.Server.Controllers
     [ApiController]
     public class UserController : BaseController
     {
+        private readonly JwtSetting _jwtSetting;
+        public UserController(IOptions<JwtSetting> option)
+        {
+            _jwtSetting = option.Value;
+        }
+
         [HttpPost]
         [Route("Login")]
-        [AllowAnonymous]
         public IActionResult Login(User model)
         {
             using var bll = new UserBll();
-            var rst = bll.GetOne(model);
+            var rst = bll.Login(model);
+            if (rst.Result)
+            {
+                //构造jwt token
+                rst.Data.token = JwtHandler.GetToken(_jwtSetting, rst.Data);
+            }
             return Json(rst);
         }
 
@@ -30,8 +43,10 @@ namespace SuperNAT.Server.Controllers
             var rst = new ReturnResult<bool>();
 
             using var bll = new UserBll();
-            if (string.IsNullOrEmpty(model.id))
+            if (model.id == 0)
             {
+                model.user_id = EncryptHelper.CreateGuid();
+                model.password = EncryptHelper.MD5Encrypt(model.password);
                 if (string.IsNullOrEmpty(model.password))
                 {
                     model.password = "123456";
@@ -40,6 +55,10 @@ namespace SuperNAT.Server.Controllers
             }
             else
             {
+                if (!string.IsNullOrEmpty(model.password))
+                {
+                    model.password = EncryptHelper.MD5Encrypt(model.password);
+                }
                 rst = bll.Update(model);
             }
 
@@ -73,7 +92,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetOne")]
         public IActionResult GetOne(User model)
         {
-            if (string.IsNullOrEmpty(model.id))
+            if (model.id == 0)
             {
                 var defalut = new ReturnResult<User>()
                 {

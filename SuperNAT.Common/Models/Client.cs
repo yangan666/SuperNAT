@@ -6,7 +6,7 @@ using System.Text;
 namespace SuperNAT.Common.Models
 {
     [Table("client")]
-    public class Client
+    public class Client : IModel
     {
         [Key]
         public int id { get; set; }
@@ -17,7 +17,7 @@ namespace SuperNAT.Common.Models
         public DateTime? last_heart_time { get; set; }
         public string machine_id { get; set; }
         public string remark { get; set; }
-        public int? user_id { get; set; }
+        public string user_id { get; set; }
         public DateTime create_time { get; set; }
         [Editable(false)]
         public string user_name { get; set; }

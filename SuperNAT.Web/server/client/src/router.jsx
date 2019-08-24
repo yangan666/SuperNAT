@@ -34,7 +34,7 @@ const router = () => {
             <Route
               key={id}
               {...others}
-              component={(props) => {
+              render={(props) => {
                 return (
                   children ? (
                     <RouteComponent key={id} {...props}>
@@ -51,15 +51,15 @@ const router = () => {
                       </Switch>
                     </RouteComponent>
                   ) : (
-                    <>
-                      {
-                        RouteItem({
-                          key: id,
-                          ...props,
-                        })
-                      }
-                    </>
-                  )
+                      <>
+                        {
+                          RouteItem({
+                            key: id,
+                            ...props,
+                          })
+                        }
+                      </>
+                    )
                 );
               }}
             />

@@ -15,6 +15,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using SuperNAT.Server.Models;
+using SuperNAT.Server.Auth;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SuperNAT.Server
 {
@@ -28,8 +30,12 @@ namespace SuperNAT.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var jwtSetting = new JwtSetting();
-            Configuration.Bind("JwtSetting", jwtSetting);
+            services.AddHttpContextAccessor();
+            services.AddScoped<IIdentityService, IdentityService>();
+
+            var jwtSettingConfiguration = Configuration.GetSection("JwtSetting");
+            var jwtSetting = jwtSettingConfiguration.Get<JwtSetting>();
+            services.Configure<JwtSetting>(jwtSettingConfiguration);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -38,9 +44,7 @@ namespace SuperNAT.Server
                 {
                     ValidIssuer = jwtSetting.Issuer,
                     ValidAudience = jwtSetting.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.SecurityKey)),
-                    // 默认允许 300s  的时间偏移量，设置为0
-                    ClockSkew = TimeSpan.Zero
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.SecurityKey))
                 };
             });
 
@@ -49,6 +53,8 @@ namespace SuperNAT.Server
                 option.EnableEndpointRouting = false;
             })
             .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -57,17 +63,15 @@ namespace SuperNAT.Server
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseHsts();
-            }
+            //else
+            //{
+            //    app.UseHsts();
+            //}
 
             //app.UseRouting(routes =>
             //{
             //    routes.MapControllers();
             //});
-
-            app.UseAuthorization();
 
             app.UseCors(builder =>
             {
@@ -77,12 +81,17 @@ namespace SuperNAT.Server
                 //builder.AllowCredentials();
             });
 
+            app.UseAuthorization();
+            app.UseMiddleware<AuthMiddleware>();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Show}/{action=Index}/{id?}");
             });
+            app.UseMvc();
+
             DefaultFilesOptions defaultFilesOptions = new DefaultFilesOptions();
             defaultFilesOptions.DefaultFileNames.Clear();
             defaultFilesOptions.DefaultFileNames.Add("index.html");

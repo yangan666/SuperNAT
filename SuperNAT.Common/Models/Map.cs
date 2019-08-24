@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SuperNAT.Common.Models
 {
     [Table("map")]
-    public class Map
+    public class Map : IModel
     {
         [Key]
         public int id { get; set; }
@@ -24,7 +24,7 @@ namespace SuperNAT.Common.Models
         [Editable(false)]
         public string client_name { get; set; }
         [Editable(false)]
-        public int? user_id { get; set; }
+        public string user_id { get; set; }
         [Editable(false)]
         public string user_name { get; set; }
     }

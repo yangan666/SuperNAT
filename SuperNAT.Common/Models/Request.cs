@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 namespace SuperNAT.Common.Models
 {
     [Table("request")]
-    public class Request
+    public class Request : IModel
     {
         [Key]
-        public string id { get; set; }
+        public int id { get; set; }
         public string request_url { get; set; }
         public string client_ip { get; set; }
         public string user_id { get; set; }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SuperNAT.Server.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class BaseController : ControllerBase
     {
         protected JsonResult Json(object content)

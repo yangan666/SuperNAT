@@ -18,10 +18,8 @@ export default class MapDialog extends Component {
                     label: v.name
                 }
             })
-            console.log('newOptions', newOptions)
             this.setState({ clientOptions: newOptions })
         }
-        console.log('nextProps.clientList', nextProps.clientList)
         if (nextProps.clientList !== this.state.clientList) {
             this.setState({ clientList: nextProps.clientList })
         }
@@ -45,7 +43,6 @@ export default class MapDialog extends Component {
             })
         }
         const selectUserChange = (value, actionType, item) => {
-            console.log('selectUserChange', value, actionType, item)
             if (!value && typeof value === undefined) {
                 this.setState({ clientOptions: [] })
             } else {
@@ -56,7 +53,6 @@ export default class MapDialog extends Component {
                         label: v.name
                     }
                 })
-                console.log('newOptions', newOptions)
                 this.setState({ clientOptions: newOptions })
             }
             if (this.state.clientOptions.length === 0) {
