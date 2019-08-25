@@ -58,7 +58,7 @@ class UserLogin extends Component {
             //记录到cookies
             setJwtToken(data.token);
             setUserId(data.user_id);
-            //跳转到登录
+            //跳转到主页
             this.props.history.push('/');
           }
         });
@@ -79,7 +79,6 @@ class UserLogin extends Component {
               <IceFormBinder name="user_name" required message="必填">
                 <Input
                   size="large"
-                  maxLength={20}
                   placeholder="用户名"
                   className={styles.inputCol}
                 />

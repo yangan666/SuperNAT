@@ -6,6 +6,7 @@ import IceImg from '@icedesign/img';
 import { headerMenuConfig } from '@/menuConfig';
 import Logo from '../Logo';
 import styles from './index.module.scss';
+import { removeToken } from "@/utils/auth";
 
 const { SubNav, Item } = Nav;
 
@@ -145,7 +146,9 @@ const Header = withRouter((props) => {
                 </Link>
               </li>
               <li className={styles.userProfileMenuItem}>
-                <Link to="/user/login">
+                <Link onClick={() => {
+                  removeToken()
+                }} to="/user/login">
                   <FoundationSymbol type="compass" size="small" />
                   退出
                 </Link>

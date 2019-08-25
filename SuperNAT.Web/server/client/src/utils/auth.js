@@ -4,7 +4,7 @@ const token = 'token'
 const user_id = 'user_id'
 
 export function getJwtToken() {
-  return Cookies.get(token)
+  return Cookies.get(token) || ''
 }
 
 export function setJwtToken(data) {
@@ -12,7 +12,7 @@ export function setJwtToken(data) {
 }
 
 export function getUserId() {
-  return Cookies.get(user_id)
+  return Cookies.get(user_id) || ''
 }
 
 export function setUserId(data) {

@@ -16,7 +16,23 @@ namespace SuperNAT.Common.Bll
 
             try
             {
-                rst.Data = conn.QueryFirstOrDefault<User>("select * from user where user_name=@user_name", model);// and password=@password
+                model.password = EncryptHelper.MD5Encrypt(model.password);
+                var sql = new StringBuilder("select * from user where password=@password ");
+                if (!string.IsNullOrEmpty(model.user_id))
+                {
+                    sql.Append("and user_id=@user_id");
+                }
+                else if (!string.IsNullOrEmpty(model.user_name))
+                {
+                    sql.Append("and user_name=@user_name");
+                }
+                else
+                {
+                    rst.Status = 10005;
+                    rst.Message = "信息已失效请刷新界面重新登录！";
+                    return rst;
+                }
+                rst.Data = conn.QueryFirstOrDefault<User>(sql.ToString(), model);
                 if (rst.Data != null)
                 {
                     rst.Result = true;
