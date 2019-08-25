@@ -53,7 +53,8 @@ namespace SuperNAT.Common.Bll
                                             FROM
 	                                            `map` t1
                                             INNER JOIN client t2 ON t1.client_id = t2.id
-                                            INNER JOIN `user` t3 ON t2.user_id = t3.user_id", model).ToList();
+                                            INNER JOIN `user` t3 ON t2.user_id = t3.user_id
+                                            ORDER BY t2.user_id,t1.client_id,t1.remote", model).ToList();
                 if (rst.Data != null)
                 {
                     rst.Result = true;
@@ -77,13 +78,14 @@ namespace SuperNAT.Common.Bll
             {
                 rst.Data = conn.Query<Map>(@"SELECT
 	                                            t1.*, t2.`name` client_name,
+                                                t2.user_id,
 	                                            t3.user_name
                                             FROM
 	                                            `map` t1
                                             INNER JOIN client t2 ON t1.client_id = t2.id
                                             INNER JOIN `user` t3 ON t2.user_id = t3.user_id
-                                            WHERE
-	                                            t2.secret = @secret", new { secret }).ToList();
+                                            WHERE t2.secret = @secret
+                                            ORDER BY t2.user_id,t1.client_id,t1.remote", new { secret }).ToList();
                 if (rst.Data != null)
                 {
                     rst.Result = true;

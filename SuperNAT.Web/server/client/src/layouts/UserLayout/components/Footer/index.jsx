@@ -15,7 +15,7 @@ export default () => {
           条款
         </a>
       </div> */}
-      <div className={styles.copyright}>杨岸工作室 © {new Date().getFullYear()} 版权所有</div>
+      <div className={styles.copyright}>SuperNAT © {new Date().getFullYear()} 版权所有</div>
     </div>
   );
 };

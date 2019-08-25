@@ -9,6 +9,7 @@ using SuperNAT.Server.Models;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace SuperNAT.Server.Auth
 {
@@ -16,6 +17,7 @@ namespace SuperNAT.Server.Auth
     {
         private readonly RequestDelegate _next;
         private readonly JwtSetting _jwtSetting;
+        private readonly List<string> _allowAnonymousPathList = new List<string>() { "/Api/User/Login", "/Api/Map/GetMapList" };
 
         public AuthMiddleware(RequestDelegate next, IOptions<JwtSetting> option)
         {
@@ -29,7 +31,12 @@ namespace SuperNAT.Server.Auth
 
             try
             {
-                if (httpContext.Request.Path == "/Api/User/Login")
+                if (!httpContext.Request.Path.ToString().StartsWith("/Api"))
+                {
+                    await _next.Invoke(httpContext);
+                    return;
+                }
+                if (_allowAnonymousPathList.Contains(httpContext.Request.Path))
                 {
                     await _next.Invoke(httpContext);
                     return;

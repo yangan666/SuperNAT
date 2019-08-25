@@ -131,7 +131,9 @@ export default class MapList extends Component {
           this.props.updateBindingData('mapData', {
             data: { id: record.id }
           }, (res) => {
-            this.setState({ map: res.data.dataSource || {}, dialogVisible: true })
+            if (res.status == "SUCCESS") {
+              this.setState({ map: res.data.dataSource || {}, dialogVisible: true })
+            }
           });
           break;
         case 'delete':

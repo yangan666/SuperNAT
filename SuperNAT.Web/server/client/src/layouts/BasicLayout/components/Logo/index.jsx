@@ -5,7 +5,7 @@ import styles from './index.module.scss';
 export default function Logo() {
   return (
     <Link to="/" className={styles.logoStyle}>
-      SuperNat管理后台
+      SuperNAT内网穿透
     </Link>
   );
 }

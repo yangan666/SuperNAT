@@ -91,7 +91,9 @@ export default class UserList extends Component {
           this.props.updateBindingData('userData', {
             data: { id: record.id }
           }, (res) => {
-            this.setState({ user: res.data.dataSource || {}, dialogVisible: true })
+            if (res.status == "SUCCESS") {
+              this.setState({ user: res.data.dataSource || {}, dialogVisible: true })
+            }
           });
           break;
         case 'disable':
