@@ -149,7 +149,7 @@ namespace SuperNAT.Server
                             var response = DataHelper.Decompress(packJson.Content);
                             var rawResponse = Encoding.UTF8.GetString(response);
                             var res = webSession.TrySend(response, 0, response.Length);
-                            HandleLog.WriteLine($"{packJson.ResponseInfo} {(DateTime.Now - webSession.RequestTime).Value.TotalSeconds}s");
+                            HandleLog.WriteLine($"{packJson.ResponseInfo} {Math.Ceiling((DateTime.Now - webSession.RequestTime).Value.TotalMilliseconds)}ms");
                             //webSession?.Close();
                         }
                         break;
