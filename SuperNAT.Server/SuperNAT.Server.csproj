@@ -32,6 +32,9 @@
     <None Update="iot3rd.p12">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

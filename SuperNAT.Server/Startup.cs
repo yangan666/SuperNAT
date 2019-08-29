@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc;
 using log4net.Repository;
 using log4net;
 using log4net.Config;
+using SuperNAT.Common;
 
 namespace SuperNAT.Server
 {
@@ -30,9 +31,6 @@ namespace SuperNAT.Server
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Repository = LogManager.CreateRepository("NETCoreRepository");
-            XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
-            Log4netUtil.LogRepository = Repository;//类库中定义的静态变量
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -126,6 +124,18 @@ namespace SuperNAT.Server
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json", false);
             var configuration = builder.Build();
+
+            Repository = LogManager.CreateRepository("NETCoreRepository");
+            XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
+            Log4netUtil.LogRepository = Repository;//类库中定义的静态变量
+            HandleLog.WriteLog += (log, isPrint) =>
+            {
+                if (isPrint)
+                {
+                    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
+                }
+                Log4netUtil.Info(log);
+            };
 
             var appSettingSetion = configuration.GetSection("AppSettingConfig");
             var appSettingConfig = appSettingSetion.Get<AppSettingConfig>();

@@ -209,10 +209,14 @@ namespace SuperNAT.Server
                         HandleLog.WriteLine($"Web服务启动成功，监听端口：{webServer.Config.Port}");
                         WebServerList.Add(webServer);
                     }
+                    else
+                    {
+                        HandleLog.WriteLine($"Web服务启动失败，端口：{webServer.Config.Port}");
+                    }
                 }
                 else
                 {
-                    HandleLog.WriteLine($"Web服务启动失败，端口：{webServer.Config.Port}");
+                    HandleLog.WriteLine($"Web服务初始化失败，端口：{webServer.Config.Port}");
                 }
             }
         }

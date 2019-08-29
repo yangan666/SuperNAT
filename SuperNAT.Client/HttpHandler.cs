@@ -1,8 +1,12 @@
-﻿using SuperNAT.Common;
+﻿using log4net;
+using log4net.Config;
+using log4net.Repository;
+using SuperNAT.Common;
 using SuperNAT.Common.Models;
 using SuperSocket.ClientEngine;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -20,12 +24,16 @@ namespace SuperNAT.Client
         public static string ServerPort { get; set; } = AppConfig.GetSetting("ServerPort");
         public static byte[] RegPack => Encoding.UTF8.GetBytes(Secret);
         public static List<Map> MapList { get; set; }
+        public static ILoggerRepository Repository { get; set; }
 
 
         public static void Start()
         {
             try
             {
+                Repository = LogManager.CreateRepository("NETCoreRepository");
+                XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
+                Log4netUtil.LogRepository = Repository;//类库中定义的静态变量
                 HandleLog.WriteLog += (log, isPrint) =>
                 {
                     if (isPrint)

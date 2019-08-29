@@ -37,7 +37,8 @@ public class Log4netUtil
         }
         catch (Exception ex)
         {
-            throw ex;
+            Console.WriteLine($"初始化日志失败：{ex}");
+            return null;
         }
         return log;
     }
@@ -88,7 +89,7 @@ public class Log4netUtil
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
-            if (log.IsErrorEnabled)
+            if (log?.IsErrorEnabled ?? false)
             {
                 log.Error(pMessage + Environment.NewLine);
             }
@@ -101,7 +102,7 @@ public class Log4netUtil
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
-            if (log.IsErrorEnabled)
+            if (log?.IsErrorEnabled ?? false)
             {
                 log.Error((ex.InnerException == null ? ex.Message : ex.InnerException.Message) + Environment.NewLine);
             }
@@ -120,7 +121,7 @@ public class Log4netUtil
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
-            if (log.IsErrorEnabled)
+            if (log?.IsErrorEnabled ?? false)
             {
                 log.Error(pMessage + "," + ec.ToString() + Environment.NewLine);
             }
@@ -137,7 +138,7 @@ public class Log4netUtil
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
-            if (log.IsWarnEnabled)
+            if (log?.IsWarnEnabled ?? false)
             {
                 log.Warn(pMessage);
             }
@@ -155,7 +156,7 @@ public class Log4netUtil
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
-            if (log.IsWarnEnabled)
+            if (log?.IsWarnEnabled ?? false)
             {
                 log.Warn(pMessage + "," + ec.ToString());
             }
@@ -175,7 +176,7 @@ public class Log4netUtil
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
-            if (log.IsInfoEnabled)
+            if (log?.IsInfoEnabled ?? false)
             {
                 log.Info(pMessage);
             }
@@ -194,7 +195,7 @@ public class Log4netUtil
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
-            if (log.IsInfoEnabled)
+            if (log?.IsInfoEnabled ?? false)
             {
                 log.Info(pMessage + "," + ec.ToString() + Environment.NewLine);
             }
@@ -213,7 +214,7 @@ public class Log4netUtil
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
-            if (log.IsInfoEnabled)
+            if (log?.IsDebugEnabled ?? false)
             {
                 log.Info("错误信息:" + message + ",接口:" + apiMethod + "调用方法:" + callMethod + ",参数：" + string.Concat(param));
             }
@@ -231,7 +232,7 @@ public class Log4netUtil
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
-            if (log.IsDebugEnabled)
+            if (log?.IsDebugEnabled ?? false)
             {
                 log.Debug(pMessage);
 
@@ -252,7 +253,7 @@ public class Log4netUtil
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
-            if (log.IsDebugEnabled)
+            if (log?.IsDebugEnabled ?? false)
             {
                 log.Debug(pMessage + "," + ec.ToString());
 
@@ -291,5 +292,4 @@ public class Log4netUtil
         str += mb.Name + "\n";
         return str;
     }
-
 }
