@@ -125,6 +125,13 @@ namespace SuperNAT.Server
                             //心跳包
                             var secret = requestInfo.BodyRaw;
                             HandleLog.WriteLine($"收到连接{session.RemoteEndPoint}的心跳包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
+                            Task.Run(() =>
+                            {
+                                //更新在线状态
+                                using var bll = new ClientBll();
+                                var updateRst = bll.UpdateOnlineStatus(new Client() { secret = session.Client.secret, is_online = true, last_heart_time = DateTime.Now });
+                                HandleLog.WriteLine($"更新主机【{session.Client.name}】在线状态结果：{updateRst.Message}", false);
+                            });
                         }
                         break;
                     case 0x3:
@@ -164,6 +171,13 @@ namespace SuperNAT.Server
         private static void NATServer_SessionClosed(NatAppSession session, CSuperSocket.SocketBase.CloseReason value)
         {
             HandleLog.WriteLine($"内网客户端【{session.RemoteEndPoint}】已下线");
+            Task.Run(() =>
+            {
+                //更新在线状态
+                using var bll = new ClientBll();
+                var updateRst = bll.UpdateOnlineStatus(new Client() { secret = session.Client.secret, is_online = false });
+                HandleLog.WriteLine($"更新主机【{session.Client.name}】离线状态结果：{updateRst.Message}");
+            });
         }
         #endregion
 

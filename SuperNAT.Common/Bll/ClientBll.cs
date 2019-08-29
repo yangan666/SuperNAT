@@ -58,5 +58,26 @@ namespace SuperNAT.Common.Bll
 
             return rst;
         }
+
+        public ReturnResult<bool> UpdateOnlineStatus(Client model)
+        {
+            var rst = new ReturnResult<bool>() { Message = "更新失败" };
+
+            try
+            {
+                if (conn.Execute($"update client set is_online=@is_online{(model.is_online ? ",last_heart_time=@last_heart_time" : "")} where secret=@secret", model) > 0)
+                {
+                    rst.Result = true;
+                    rst.Message = "更新成功";
+                }
+            }
+            catch (Exception ex)
+            {
+                rst.Message = $"更新失败：{ex.InnerException ?? ex}";
+                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+            }
+
+            return rst;
+        }
     }
 }
