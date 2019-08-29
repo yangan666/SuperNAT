@@ -1,10 +1,15 @@
-﻿using log4net;
-using System;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
+using log4net;
+using log4net.Repository;
 
-public static class Log4netUtil
+public class Log4netUtil
 {
+    public static ILoggerRepository LogRepository { get; set; }
+    private static ILog log { get; set; }
     //"true":打开调试日志;"false":关闭调试日志
     private static bool isDebugger()
     {
@@ -23,12 +28,12 @@ public static class Log4netUtil
 
     private static ILog GetLog()
     {
-        ILog log = null;
         try
         {
-            //System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
-            //是利用反射获取当前类的type,记录在日志中，便于定位日志发生的所在
-            log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            if (log == null)
+            {
+                log = LogManager.GetLogger(LogRepository.Name, "NETCorelog4net");
+            }
         }
         catch (Exception ex)
         {
@@ -79,12 +84,26 @@ public static class Log4netUtil
     /// <param name="pMessage">message.</param>
     public static void Error(string pMessage)
     {
+
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
             if (log.IsErrorEnabled)
             {
-                log.Error(pMessage);
+                log.Error(pMessage + Environment.NewLine);
+            }
+        }
+    }
+
+    public static void Error(Exception ex)
+    {
+
+        if (isDebugger())
+        {
+            ILog log = Log4netUtil.GetLog();
+            if (log.IsErrorEnabled)
+            {
+                log.Error((ex.InnerException == null ? ex.Message : ex.InnerException.Message) + Environment.NewLine);
             }
         }
     }
@@ -97,12 +116,13 @@ public static class Log4netUtil
     /// <param name="Exception">ec.</param>
     public static void Error(string pMessage, Exception ec)
     {
+
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
             if (log.IsErrorEnabled)
             {
-                log.Error(pMessage + "," + ec.ToString());
+                log.Error(pMessage + "," + ec.ToString() + Environment.NewLine);
             }
         }
     }
@@ -142,6 +162,8 @@ public static class Log4netUtil
         }
     }
 
+
+
     /// <summary>
     /// Information log
     /// </summary>
@@ -149,6 +171,7 @@ public static class Log4netUtil
     /// <param name="pMessage">message.</param>
     public static void Info(string pMessage)
     {
+
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
@@ -167,12 +190,13 @@ public static class Log4netUtil
     /// <param name="Exception">ec.</param>
     public static void Info(string pMessage, Exception ec)
     {
+
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
             if (log.IsInfoEnabled)
             {
-                log.Info(pMessage + "," + ec.ToString());
+                log.Info(pMessage + "," + ec.ToString() + Environment.NewLine);
             }
         }
     }
@@ -203,12 +227,14 @@ public static class Log4netUtil
     /// <param name="pMessage">message.</param>
     public static void Debug(string pMessage)
     {
+
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
             if (log.IsDebugEnabled)
             {
                 log.Debug(pMessage);
+
             }
         }
     }
@@ -219,14 +245,17 @@ public static class Log4netUtil
     /// <param name="pMethod">method.</param>
     /// <param name="pMessage">message.</param>
     /// <param name="Exception">ec.</param>
+    /// 
     public static void Debug(string pMessage, Exception ec)
     {
+
         if (isDebugger())
         {
             ILog log = Log4netUtil.GetLog();
             if (log.IsDebugEnabled)
             {
                 log.Debug(pMessage + "," + ec.ToString());
+
             }
         }
     }
@@ -235,13 +264,13 @@ public static class Log4netUtil
     {
         string str = "";
 
-        //取得当前方法命名空间
+        //取得当前方法命名空间    
         str += "命名空间名:" + System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Namespace + "\n";
 
-        //取得当前方法类全名 包括命名空间
+        //取得当前方法类全名 包括命名空间    
         str += "类名:" + System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName + "\n";
 
-        //取得当前方法名
+        //取得当前方法名    
         str += "方法名:" + System.Reflection.MethodBase.GetCurrentMethod().Name + "\n"; str += "\n";
 
         //父方法
@@ -249,17 +278,18 @@ public static class Log4netUtil
         System.Diagnostics.StackTrace ss = new System.Diagnostics.StackTrace(true);
         System.Reflection.MethodBase mb = ss.GetFrame(1).GetMethod();
 
-        //取得父方法命名空间
+        //取得父方法命名空间    
         str += mb.DeclaringType.Namespace + "\n";
 
-        //取得父方法类名
+        //取得父方法类名    
         str += mb.DeclaringType.Name + "\n";
 
-        //取得父方法类全名
+        //取得父方法类全名    
         str += mb.DeclaringType.FullName + "\n";
 
-        //取得父方法名
+        //取得父方法名    
         str += mb.Name + "\n";
         return str;
     }
+
 }

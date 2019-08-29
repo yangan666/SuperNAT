@@ -123,7 +123,8 @@ namespace SuperNAT.Server
                     case 0x2:
                         {
                             //心跳包
-                            HandleLog.WriteLine($"收到连接{session.RemoteEndPoint}的心跳包", false);
+                            var secret = requestInfo.BodyRaw;
+                            HandleLog.WriteLine($"收到连接{session.RemoteEndPoint}的心跳包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
                         }
                         break;
                     case 0x3:

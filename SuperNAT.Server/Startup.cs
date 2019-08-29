@@ -17,15 +17,22 @@ using Microsoft.IdentityModel.Tokens;
 using SuperNAT.Server.Models;
 using SuperNAT.Server.Auth;
 using Microsoft.AspNetCore.Mvc;
+using log4net.Repository;
+using log4net;
+using log4net.Config;
 
 namespace SuperNAT.Server
 {
     public class Startup
     {
+        public static ILoggerRepository Repository { get; set; }
         public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Repository = LogManager.CreateRepository("NETCoreRepository");
+            XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
+            Log4netUtil.LogRepository = Repository;//类库中定义的静态变量
         }
 
         public void ConfigureServices(IServiceCollection services)
