@@ -10,6 +10,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using SuperNAT.Common.Bll;
 
 namespace SuperNAT.Server.Auth
 {
@@ -61,9 +62,9 @@ namespace SuperNAT.Server.Auth
                 {
                     //授权不存在
                     rst.Status = 10000;
-                    throw new Exception("未授权");
+                    throw new Exception("未登录");
                 }
-                result = JwtHandler.Validate(_jwtSetting, authStr.ToString().Substring("Bearer ".Length).Trim(), out int code, out string error);
+                result = JwtHandler.Validate(_jwtSetting, authStr.ToString().Substring("Bearer ".Length).Trim(), out int code, out string error, out Dictionary<string, object> payLoad);
                 if (!result)
                 {
                     rst.Status = code;
@@ -79,13 +80,22 @@ namespace SuperNAT.Server.Auth
                 //}
                 #endregion
 
-                //验证通过
-                await _next.Invoke(httpContext);
+                //前端F5刷新 重新获取用户信息
+                if (httpContext.Request.Path.ToString() == "/Api/User/GetUserInfo")
+                {
+                    using var bll = new UserBll();
+                    var user = bll.GetUserInfo(payLoad["user_id"].ToString());
+                    await httpContext.Response.WriteAsync(JsonHelper.Instance.Serialize(user));
+                }
+                else
+                {
+                    //验证通过
+                    await _next.Invoke(httpContext);
+                }
             }
             catch (Exception ex)
             {
                 rst.Message = ex.Message;
-                httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 await httpContext.Response.WriteAsync(JsonHelper.Instance.Serialize(rst));
             }
         }

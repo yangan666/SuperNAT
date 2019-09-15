@@ -37,6 +37,14 @@ namespace SuperNAT.Server.Controllers
         }
 
         [HttpPost]
+        [Route("GetUserInfo")]
+        public IActionResult GetUserInfo()
+        {
+            //AuthMiddleware处理了
+            return Json(new ReturnResult<User>());
+        }
+
+        [HttpPost]
         [Route("Add")]
         public IActionResult Add(User model)
         {
@@ -59,7 +67,7 @@ namespace SuperNAT.Server.Controllers
                 {
                     model.password = EncryptHelper.MD5Encrypt(model.password);
                 }
-                rst = bll.Update(model);
+                rst = bll.UpdateUser(model);
             }
 
             return Json(rst);
@@ -81,7 +89,7 @@ namespace SuperNAT.Server.Controllers
         {
             using var bll = new UserBll();
             model.is_disabled = !model.is_disabled;
-            var rst = bll.Update(model);
+            var rst = bll.DisableUser(model);
             var text = model.is_disabled ? "禁用" : "启用";
             rst.Message = rst.Result ? $"{text}成功" : $"{text}失败";
 
@@ -103,6 +111,11 @@ namespace SuperNAT.Server.Controllers
             }
             using var bll = new UserBll();
             var rst = bll.GetOne(model);
+            if (rst.Result)
+            {
+                //密码不传前端
+                rst.Data.password = "";
+            }
             return Json(rst);
         }
 

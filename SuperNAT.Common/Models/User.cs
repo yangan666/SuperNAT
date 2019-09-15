@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SuperNAT.Common.Models
 {
     [Table("user")]
-    public class User : IModel
+    public class User : BaseModel, IModel
     {
         [Key]
         public int id { get; set; }

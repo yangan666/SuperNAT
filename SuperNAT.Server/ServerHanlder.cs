@@ -258,7 +258,6 @@ namespace SuperNAT.Server
                     int contentLength = 0, contentLen = 0, headerIndex = 0;
                     string method = string.Empty;
                     string route = string.Empty;
-                    var sss = Encoding.UTF8.GetString(session.RequestByteList.ToArray());
                     headerIndex = DataHelper.BytesIndexOf(session.RequestByteList.ToArray(), Encoding.UTF8.GetBytes("\r\n\r\n"));
                     if (headerIndex <= 0)
                     {
@@ -303,15 +302,6 @@ namespace SuperNAT.Server
                     {
                         return;
                     }
-                    else if (contentLen == contentLength)
-                    {
-                        //HandleLog.WriteLine($"长度是对的，header给的长度为：{contentLength}，接收长度为：{contentLen}");
-                    }
-                    else
-                    {
-                        //HandleLog.WriteLine($"长度超出了，header给的长度为：{contentLength}，接收长度为：{contentLen}");
-                    }
-
                     //没有Host直接返回
                     if (!headers.ContainsKey("Host"))
                     {
@@ -349,7 +339,7 @@ namespace SuperNAT.Server
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.WriteLine($"处理发生异常：{ex}");
+                    HandleLog.WriteLine($"【{session.RemoteEndPoint}】请求参数：{Encoding.UTF8.GetString(session.RequestByteList.ToArray())}，处理发生异常：{ex}");
                 }
             });
         }

@@ -47,13 +47,13 @@ namespace SuperNAT.Server
         /// 例如：payLoad["aud"]?.ToString() == "roberAuddience";
         /// 例如：验证是否过期 等
         /// <returns></returns>
-        public static bool Validate(JwtSetting jwtSetting, string encodeJwt, out int code, out string error)
+        public static bool Validate(JwtSetting jwtSetting, string encodeJwt, out int code, out string error, out Dictionary<string, object> payLoad)
         {
             try
             {
                 var jwtArr = encodeJwt.Split('.');
                 var header = JsonConvert.DeserializeObject<Dictionary<string, object>>(Base64UrlEncoder.Decode(jwtArr[0]));
-                var payLoad = JsonConvert.DeserializeObject<Dictionary<string, object>>(Base64UrlEncoder.Decode(jwtArr[1]));
+                payLoad = JsonConvert.DeserializeObject<Dictionary<string, object>>(Base64UrlEncoder.Decode(jwtArr[1]));
                 var hs256 = new HMACSHA256(Encoding.ASCII.GetBytes(jwtSetting.SecurityKey));
 
                 //首先验证签名是否正确（必须的）
@@ -82,6 +82,7 @@ namespace SuperNAT.Server
                 Log4netUtil.Error($"授权验证失败：{ex}");
                 code = 10003;
                 error = "授权验证失败";
+                payLoad = null;
                 return false;
             }
         }
