@@ -1,0 +1,16 @@
+.v-snack--top {
+  top: 5px !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.v-btn {
+  margin: 6px 0px !important;
+  min-width: 0px !important;
+}
+
+.v-btn--small {
+  padding: 0 3px !important;
+}
