@@ -2,10 +2,12 @@ import Vue from "vue"
 import App from "./App.vue"
 import Vuetify from "vuetify"
 import VuetifyDialog from "vuetify-dialog"
+import VeeValidate from "vee-validate"
 import "./theme/default.styl"
 import "vuetify-dialog/dist/vuetify-dialog.css"
 import router from "./router/"
 import store from "./store"
+import LoginForm from "./LoginForm.vue"
 import "./registerServiceWorker"
 import "roboto-fontface/css/roboto/roboto-fontface.css"
 import "font-awesome/css/font-awesome.css"
@@ -25,6 +27,7 @@ Vue.use(Vuetify, {
   },
   customProperties: true
 })
+
 Vue.use(VuetifyDialog, {
   confirm: {
     actions: {
@@ -42,6 +45,8 @@ Vue.use(VuetifyDialog, {
   prompt: {}
 })
 
+Vue.use(VeeValidate)
+
 Vue.config.productionTip = false
 window.show = false
 let vm = new Vue({
@@ -51,7 +56,6 @@ let vm = new Vue({
   render: h => h(App)
 }).$mount("#app")
 
-import LoginForm from "./LoginForm.vue"
 window.showLogin = () => {
   vm.$dialog.show(LoginForm, { persistent: true }, {})
   show = true

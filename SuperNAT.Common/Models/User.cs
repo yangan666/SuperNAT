@@ -17,7 +17,7 @@ namespace SuperNAT.Common.Models
         public string password { get; set; } = "";
         public string wechat { get; set; } = "";
         public string tel { get; set; } = "";
-        public bool is_disabled { get; set; } = true;
+        public bool is_disabled { get; set; } = false;
         public bool is_admin { get; set; } = false;
         [Editable(false)]
         public string is_disabled_str => is_disabled ? "禁用" : "正常";

@@ -36,6 +36,11 @@
                         <v-flex>
                           <v-text-field clearable
                                         v-model="formItem.user_name"
+                                        v-validate="'required|max:15'"
+                                        :counter="15"
+                                        :error-messages="errors.collect('user_name')"
+                                        data-vv-name="user_name"
+                                        required
                                         label="用户名"></v-text-field>
                         </v-flex>
                         <v-flex>
@@ -84,7 +89,11 @@
                   <td class="text-xs-left">{{ props.item.user_name }}</td>
                   <td class="text-xs-left">{{ props.item.wechat }}</td>
                   <td class="text-xs-left">{{ props.item.tel }}</td>
-                  <td class="text-xs-left">{{ props.item.is_disabled_str }}</td>
+                  <td class="text-xs-left">
+                    <v-btn flat
+                           small
+                           :color="props.item.is_disabled ? 'error': 'success'">{{ props.item.is_disabled_str }}</v-btn>
+                  </td>
                   <td class="text-xs-left">
                     <v-btn flat
                            small
@@ -122,6 +131,9 @@
 <script>
 import request from "@/util/request"
 export default {
+  $_veeValidate: {
+    validator: 'new'
+  },
   data () {
     return {
       search: "",
@@ -172,6 +184,18 @@ export default {
           }
         ],
         items: []
+      },
+      dictionary: {
+        custom: {
+          user_name: {
+            required: () => '用户名不能为空',
+            max: '用户名长度不能超过15位'
+            // custom messages
+          },
+          select: {
+            required: 'Select field is required'
+          }
+        }
       }
     }
   },
@@ -181,6 +205,7 @@ export default {
     }
   },
   mounted () {
+    this.$validator.localize('zh', this.dictionary)
     this.getList()
   },
   methods: {
@@ -203,7 +228,22 @@ export default {
             color: 'primary',
             text: '确定',
             handle: () => {
-
+              request({
+                url: '/Api/User/Disable',
+                method: 'post',
+                data: item
+              }).then(({ data }) => {
+                if (data.Result) {
+                  this.getList()
+                  this.$dialog.message.success(data.Message, {
+                    position: 'top'
+                  })
+                } else {
+                  this.$dialog.message.error(data.Message, {
+                    position: 'top'
+                  })
+                }
+              })
             }
           },
           false: '取消'
@@ -212,7 +252,36 @@ export default {
     },
     //禁用/启用
     del (item) {
-
+      this.$dialog.error({
+        text: `确定删除用户"${item.user_name}"吗`,
+        title: '警告',
+        persistent: true,
+        actions: {
+          true: {
+            color: 'primary',
+            text: '确定',
+            handle: () => {
+              request({
+                url: '/Api/User/Delete',
+                method: 'post',
+                data: item
+              }).then(({ data }) => {
+                if (data.Result) {
+                  this.getList()
+                  this.$dialog.message.success(data.Message, {
+                    position: 'top'
+                  })
+                } else {
+                  this.$dialog.message.error(data.Message, {
+                    position: 'top'
+                  })
+                }
+              })
+            }
+          },
+          false: '取消'
+        }
+      })
     },
     //关闭窗口
     close () {
@@ -223,6 +292,10 @@ export default {
     },
     //保存
     save () {
+      var valid = this.$validator.validateAll()
+      if (!valid) {
+        return
+      }
       request({
         url: '/Api/User/Add',
         method: 'post',
@@ -278,7 +351,9 @@ export default {
           this.table.pageCount = data.PageInfo.PageCount
           this.table.totalCount = data.PageInfo.TotalCount
         } else {
-
+          this.$dialog.message.error(data.Message, {
+            position: 'top'
+          })
         }
       })
     }

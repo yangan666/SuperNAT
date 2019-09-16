@@ -14,3 +14,7 @@
 .v-btn--small {
   padding: 0 3px !important;
 }
+
+.container {
+  padding: 18px !important;
+}
