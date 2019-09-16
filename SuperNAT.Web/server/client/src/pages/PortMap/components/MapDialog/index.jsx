@@ -14,7 +14,7 @@ export default class MapDialog extends Component {
             var newList = this.state.clientList.filter(c => c.user_id === nextProps.formData.user_id) || []
             const newOptions = newList.map(v => {
                 return {
-                    value: v.id,
+                    value: v.user_id,
                     label: v.name
                 }
             })
@@ -55,12 +55,12 @@ export default class MapDialog extends Component {
                 })
                 this.setState({ clientOptions: newOptions })
             }
-            if (this.state.clientOptions.length === 0) {
-                let data = Object.assign({}, this.state.formData, { client_id: '' })
-                this.setState({
-                    formData: data
-                })
-            }
+            // if (this.state.clientOptions.length === 0) {
+            //     let data = Object.assign({}, this.state.formData, { client_id: '' })
+            //     this.setState({
+            //         formData: data
+            //     })
+            // }
         }
         return (
             <div>

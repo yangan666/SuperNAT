@@ -98,7 +98,7 @@ export default class MapList extends Component {
     })
     const userList = userOptions.dataSource.map(v => {
       return {
-        value: v.id,
+        value: v.user_id,
         label: v.user_name
       }
     })

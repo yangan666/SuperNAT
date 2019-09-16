@@ -68,7 +68,7 @@ export default class ClientList extends Component {
     const { clientList,  userOptions } = this.props.bindingData
     const userList = userOptions.dataSource.map(v => {
       return {
-        value: v.id,
+        value: v.user_id,
         label: v.user_name
       }
     })
