@@ -66,8 +66,8 @@ export default {
   data: () => ({
     loading: false,
     model: {
-      user_name: "yangan",
-      password: "123"
+      user_name: "",
+      password: ""
     }
   }),
   methods: {
