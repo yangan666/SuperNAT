@@ -6,7 +6,7 @@ using System.Text;
 namespace SuperNAT.Common.Models
 {
     [Table("client")]
-    public class Client : IModel
+    public class Client : BaseModel, IModel
     {
         [Key]
         public int id { get; set; }

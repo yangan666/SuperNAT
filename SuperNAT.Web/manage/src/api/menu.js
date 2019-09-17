@@ -1,5 +1,5 @@
 const Menu = [
-  { header: "控制面板" },
+  { header: "系统管理" },
   {
     title: "请求统计",
     icon: "dashboard",
@@ -11,6 +11,11 @@ const Menu = [
     name: "User"
   },
   { header: "内网穿透" },
+  {
+    title: "主机管理",
+    icon: "dashboard",
+    name: "Client"
+  },
   {
     title: "端口映射",
     icon: "dashboard",

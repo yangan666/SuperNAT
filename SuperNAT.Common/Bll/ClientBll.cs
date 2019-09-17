@@ -39,11 +39,37 @@ namespace SuperNAT.Common.Bll
 
             try
             {
-                rst.Data = conn.Query<Client>(@"SELECT
+                if (model.page_index > 0)
+                {
+                    var where = new StringBuilder();
+                    if (!string.IsNullOrWhiteSpace(model.name))
+                    {
+                        model.name = $"%{model.name}%";
+                        where.Append("where t1.name like @name ");
+                        where.Append("or t1.remark like @name ");
+                        where.Append("or t2.user_name like @name ");
+                    }
+                    var query = conn.Query<Client>(@"SELECT
+	                                                t1.*, t2.user_name
+                                                FROM
+	                                                client t1
+                                                LEFT JOIN `user` t2 ON t1.user_id = t2.user_id " + where.ToString(), model);
+                    rst.Data = query.Skip(model.page_size * (model.page_index - 1)).Take(model.page_size).ToList();
+                    rst.PageInfo = new PageInfo()
+                    {
+                        PageIndex = model.page_index,
+                        PageSize = model.page_size,
+                        TotalCount = query.Count()
+                    };
+                }
+                else
+                {
+                    rst.Data = conn.Query<Client>(@"SELECT
 	                                                t1.*, t2.user_name
                                                 FROM
 	                                                client t1
                                                 LEFT JOIN `user` t2 ON t1.user_id = t2.user_id", model).ToList();
+                }
                 if (rst.Data != null)
                 {
                     rst.Result = true;

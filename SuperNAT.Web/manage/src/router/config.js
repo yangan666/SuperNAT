@@ -53,10 +53,16 @@ export const protectedRoute = [
         component: () => import(/* webpackChunkName: "table" */ "@/views/user/UserList.vue")
       },
       {
+        path: "/client",
+        name: "Client",
+        meta: { title: "主机管理", group: "apps", icon: "dashboard" },
+        component: () => import(/* webpackChunkName: "table" */ "@/views/client/ClientList.vue")
+      },
+      {
         path: "/map",
         name: "Map",
         meta: { title: "端口映射", group: "apps", icon: "dashboard" },
-        component: () => import(/* webpackChunkName: "table" */ "@/views/list/Table.vue")
+        component: () => import(/* webpackChunkName: "table" */ "@/views/map/MapList.vue")
       },
       {
         path: "/403",

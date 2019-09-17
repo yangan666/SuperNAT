@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 namespace SuperNAT.Common.Models
 {
     [Table("map")]
-    public class Map : IModel
+    public class Map : BaseModel, IModel
     {
         [Key]
         public int id { get; set; }
         public string name { get; set; } = "";
-        public string local { get; set; } = "";
-        public string remote { get; set; } = "";
+        public string local { get; set; } = "localhost:80";
+        public string remote { get; set; } = "xxx.supernat.cn:10000";
         public string protocol { get; set; } = "http";
         public string certfile { get; set; } = "";
         public string certpwd { get; set; } = "";
