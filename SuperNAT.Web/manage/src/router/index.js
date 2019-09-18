@@ -1,8 +1,13 @@
 import Vue from "vue"
 import store from "../store"
 import Router from "vue-router"
-import { publicRoute, protectedRoute } from "./config"
-import { getJwtToken } from "@/util/auth"
+import {
+  publicRoute,
+  protectedRoute
+} from "./config"
+import {
+  getJwtToken
+} from "@/util/auth"
 import NProgress from "nprogress"
 import "nprogress/nprogress.css"
 import request from "@/util/request"
@@ -29,12 +34,17 @@ router.beforeEach((to, from, next) => {
         request({
           url: "/Api/User/GetUserInfo",
           method: "post"
-        }).then(({ data }) => {
+        }).then(({
+          data
+        }) => {
           if (data.Result) {
             data.Data.token = token
             store.dispatch("setUser", data.Data)
+            next()
+          } else {
+            //跳转到登录
+            next("/auth/login")
           }
-          next()
         })
       } else {
         next()

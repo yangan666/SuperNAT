@@ -359,6 +359,7 @@ export default {
           if (!this.dialog) {
             this.dialog = true
           }
+          this.selectUserChange(data.Data.user_id)
           this.formItem = data.Data
           this.formTitle = id == 0 ? '新建主机' : '编辑主机'
         } else {
