@@ -133,6 +133,11 @@
                   <td class="text-xs-left">
                     <v-btn flat
                            small
+                           :color="props.item.is_online ? 'success': 'error'">{{ props.item.is_online_str }}</v-btn>
+                  </td>
+                  <td class="text-xs-left">
+                    <v-btn flat
+                           small
                            href
                            color="primary"
                            @click="edit(props.item)">编辑</v-btn>
@@ -217,13 +222,19 @@ export default {
           {
             text: "协议类型",
             align: 'left',
-            width: 180,
+            width: 100,
             sortable: false
           },
           {
             text: "证书文件",
             align: 'left',
             width: 250,
+            sortable: false
+          },
+          {
+            text: "主机状态",
+            align: 'left',
+            width: 100,
             sortable: false
           },
           {

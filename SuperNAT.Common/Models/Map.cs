@@ -24,6 +24,10 @@ namespace SuperNAT.Common.Models
         [Editable(false)]
         public string client_name { get; set; }
         [Editable(false)]
+        public bool is_online { get; set; }
+        [Editable(false)]
+        public string is_online_str => is_online ? "在线" : "离线";
+        [Editable(false)]
         public string user_id { get; set; }
         [Editable(false)]
         public string user_name { get; set; }
