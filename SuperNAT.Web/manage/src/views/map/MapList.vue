@@ -25,7 +25,7 @@
                          dark
                          class="mb-2"
                          v-on="on"
-                         @click="add">新建主机</v-btn>
+                         @click="add">新建映射</v-btn>
                 </template>
                 <v-card>
                   <v-card-title>
@@ -361,7 +361,7 @@ export default {
           }
           this.selectUserChange(data.Data.user_id)
           this.formItem = data.Data
-          this.formTitle = id == 0 ? '新建主机' : '编辑主机'
+          this.formTitle = id == 0 ? '新建映射' : '编辑映射'
         } else {
           this.$dialog.message.error(data.Message, {
             position: 'top'
