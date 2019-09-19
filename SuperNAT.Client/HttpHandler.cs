@@ -38,7 +38,7 @@ namespace SuperNAT.Client
                 {
                     if (isPrint)
                     {
-                        Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
+                        Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {log}");
                     }
                     Log4netUtil.Info(log);
                 };
