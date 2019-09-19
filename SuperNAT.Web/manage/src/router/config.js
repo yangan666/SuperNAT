@@ -1,7 +1,7 @@
 import { AuthLayout, DefaultLayout, ChatLayout } from "@/components/layouts"
 
 export const publicRoute = [
-  { path: "*", component: () => import(/* webpackChunkName: "errors-404" */ "@/views/error/NotFound.vue") },
+  { path: "*", component: () => import("@/views/error/NotFound.vue") },
   {
     path: "/auth",
     component: AuthLayout,
@@ -13,7 +13,7 @@ export const publicRoute = [
         path: "login",
         name: "login",
         meta: { title: "Login" },
-        component: () => import(/* webpackChunkName: "login" */ "@/views/auth/Login.vue")
+        component: () => import("@/views/auth/Login.vue")
       }
     ]
   },
@@ -22,14 +22,14 @@ export const publicRoute = [
     path: "/404",
     name: "404",
     meta: { title: "Not Found" },
-    component: () => import(/* webpackChunkName: "errors-404" */ "@/views/error/NotFound.vue")
+    component: () => import("@/views/error/NotFound.vue")
   },
 
   {
     path: "/500",
     name: "500",
     meta: { title: "Server Error" },
-    component: () => import(/* webpackChunkName: "errors-500" */ "@/views/error/Error.vue")
+    component: () => import("@/views/error/Error.vue")
   }
 ]
 
@@ -37,38 +37,48 @@ export const protectedRoute = [
   {
     path: "/",
     component: DefaultLayout,
-    meta: { title: "主页", group: "apps", icon: "" },
+    meta: { title: "首页", icon: "dashboard" },
     redirect: "/dashboard",
     children: [
       {
         path: "/dashboard",
         name: "Dashboard",
+        hidden: true,
         meta: { title: "请求统计", group: "apps", icon: "dashboard" },
         component: () => import(/* webpackChunkName: "dashboard" */ "@/views/Dashboard.vue")
-      },
+      }
+    ]
+  },
+  {
+    path: "/sys",
+    component: DefaultLayout,
+    meta: { title: "系统管理", icon: "dashboard" },
+    redirect: "/sys/user",
+    children: [
       {
-        path: "/user",
+        path: "/sys/user",
         name: "User",
-        meta: { title: "用户管理" },
-        component: () => import(/* webpackChunkName: "table" */ "@/views/user/UserList.vue")
+        meta: { title: "用户管理", icon: "dashboard" },
+        component: () => import("@/views/user/UserList.vue")
       },
       {
         path: "/client",
         name: "Client",
-        meta: { title: "主机管理", group: "apps", icon: "dashboard" },
-        component: () => import(/* webpackChunkName: "table" */ "@/views/client/ClientList.vue")
+        meta: { title: "主机管理", icon: "dashboard" },
+        component: () => import("@/views/client/ClientList.vue")
       },
       {
         path: "/map",
         name: "Map",
-        meta: { title: "端口映射", group: "apps", icon: "dashboard" },
-        component: () => import(/* webpackChunkName: "table" */ "@/views/map/MapList.vue")
+        meta: { title: "端口映射", icon: "dashboard" },
+        component: () => import("@/views/map/MapList.vue")
       },
       {
         path: "/403",
         name: "Forbidden",
-        meta: { title: "Access Denied", hiddenInMenu: true },
-        component: () => import(/* webpackChunkName: "error-403" */ "@/views/error/Deny.vue")
+        hidden: true,
+        meta: { title: "Access Denied" },
+        component: () => import("@/views/error/Deny.vue")
       }
     ]
   }
