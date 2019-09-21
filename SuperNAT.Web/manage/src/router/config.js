@@ -43,9 +43,8 @@ export const protectedRoute = [
       {
         path: "/dashboard",
         name: "Dashboard",
-        hidden: true,
         meta: { title: "请求统计", group: "apps", icon: "dashboard" },
-        component: () => import(/* webpackChunkName: "dashboard" */ "@/views/Dashboard.vue")
+        component: () => import("@/views/Dashboard.vue")
       }
     ]
   },

@@ -8,7 +8,7 @@
                dark>
       <img :src="computeLogo"
            height="36"
-           alt="Vue Material Admin Template" />
+           alt="SuperNAT" />
       <v-toolbar-title class="ml-0 pl-3">
         <span class="hidden-sm-and-down">SuperNAT</span>
       </v-toolbar-title>
@@ -17,45 +17,61 @@
                            :settings="scrollSettings">
       <v-list expand
               dense>
-        <template v-for="(route, index) in routes">
-          <template v-if="showChildren(route.children)">
-            <v-list-group v-if="!(route.hidden || false)"
-                          value="true"
-                          :prepend-icon="route.meta && route.meta.icon"
-                          :key="index"
-                          no-action>
-              <v-list-tile slot="activator"
-                           ripple>
+        <template v-for="route in routes">
+          <!-- 有子级菜单 -->
+          <template v-if="route.children">
+            <!-- 子级菜单大于1个 -->
+            <template v-if="route.children.length > 1">
+              <v-list-group :prepend-icon="route.meta && route.meta.icon"
+                            :key="route.name"
+                            no-action>
+                <v-list-tile slot="activator"
+                             ripple>
+                  <v-list-tile-content>
+                    <v-list-tile-title>{{ route.meta.title }}</v-list-tile-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+                <template v-for="cRoute in route.children">
+                  <v-list-tile ripple
+                               v-if="!(cRoute.hidden || false)"
+                               :to="{ name: cRoute.name }"
+                               :key="cRoute.name">
+                    <v-list-tile-content>
+                      <v-list-tile-title>{{ cRoute.meta.title }}</v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </template>
+              </v-list-group>
+            </template>
+            <!-- 子级菜单等于1个，直接把子级菜单当作一级菜单 -->
+            <template v-else>
+              <v-list-tile ripple
+                           :to="{ name: route.children[0].name }"
+                           :key="route.children[0].name"
+                           rel="noopener">
+                <v-list-tile-action>
+                  <v-icon>{{ route.children[0].meta && route.children[0].meta.icon }}</v-icon>
+                </v-list-tile-action>
                 <v-list-tile-content>
+                  <!-- 用顶级的标题 -->
                   <v-list-tile-title>{{ route.meta.title }}</v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
-              <v-list-tile ripple
-                           v-for="(cRoute, idx) in route.children"
-                           :to="{ path: cRoute.path }"
-                           :key="idx">
-                <!-- <v-list-tile-action>
-                  <v-icon>{{ cRoute.meta && cRoute.meta.icon }}</v-icon>
-                </v-list-tile-action> -->
-                <v-list-tile-content v-if="!(cRoute.hidden || false)">
-                  <v-list-tile-title>{{ cRoute.meta.title }}</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list-group>
+            </template>
           </template>
-          <template v-else>
-            <v-list-tile v-if="!(route.hidden || false)"
-                         ripple
-                         :to="{ path: route.path }"
-                         :key="index">
-              <v-list-tile-action>
-                <v-icon>{{ route.meta && route.meta.icon }}</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>{{ route.meta.title }}</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </template>
+          <!-- 顶级菜单 -->
+          <v-list-tile v-else
+                       ripple
+                       :to="{ name: route.name }"
+                       :key="route.name"
+                       rel="noopener">
+            <v-list-tile-action>
+              <v-icon>{{ route.meta && route.meta.icon }}</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>{{ route.meta.title }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
         </template>
       </v-list>
     </vue-perfect-scrollbar>
@@ -66,7 +82,6 @@ import {
   protectedRoute
 } from "@/router/config"
 import VuePerfectScrollbar from "vue-perfect-scrollbar"
-console.log(protectedRoute)
 export default {
   name: "AppDrawer",
   components: {
@@ -99,25 +114,14 @@ export default {
     computeLogo () {
       return "/static/m.png"
     },
-
     sideToolbarColor () {
       return this.$vuetify.options.extra.sideNav
     }
   },
   created () { },
-
   methods: {
     showChildren (children) {
       return children.some(c => !c.hidden)
-    },
-    genChildTarget (item, subItem) {
-      if (subItem.href) return
-      if (subItem.component) {
-        return {
-          name: subItem.component
-        }
-      }
-      return { name: `${item.group}/${subItem.name}` }
     }
   }
 }
