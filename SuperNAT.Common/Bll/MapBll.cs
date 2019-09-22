@@ -46,49 +46,39 @@ namespace SuperNAT.Common.Bll
 
             try
             {
+                var sql = new StringBuilder(@"SELECT
+	                                                t1.*, t2.`name` client_name,
+                                                    t2.user_id,
+                                                    t2.is_online,
+	                                                t3.user_name
+                                                FROM
+	                                                `map` t1
+                                                INNER JOIN client t2 ON t1.client_id = t2.id
+                                                INNER JOIN `user` t3 ON t2.user_id = t3.user_id ");
                 if (model.page_index > 0)
                 {
-                    var where = new StringBuilder();
                     if (!string.IsNullOrWhiteSpace(model.name))
                     {
                         model.name = $"%{model.name}%";
-                        where.Append("where t1.name like @name ");
-                        where.Append("or t1.local like @name ");
-                        where.Append("or t1.remote like @name ");
-                        where.Append("or t2.name like @name ");
-                        where.Append("or t3.user_name like @name ");
+                        sql.Append("where t1.name like @name ");
+                        sql.Append("or t1.local like @name ");
+                        sql.Append("or t1.remote like @name ");
+                        sql.Append("or t2.name like @name ");
+                        sql.Append("or t3.user_name like @name ");
                     }
-                    var query = conn.Query<Map>(@"SELECT
-	                                            t1.*, t2.`name` client_name,
-                                                t2.user_id,
-                                                t2.is_online,
-	                                            t3.user_name
-                                            FROM
-	                                            `map` t1
-                                            INNER JOIN client t2 ON t1.client_id = t2.id
-                                            INNER JOIN `user` t3 ON t2.user_id = t3.user_id "
-                                            + where.ToString() 
-                                            + @"ORDER BY t2.user_id, t1.client_id, t1.remote ", model);
-                    rst.Data = query.Skip(model.page_size * (model.page_index - 1)).Take(model.page_size).ToList();
+                    sql.Append("order by t2.user_id,t1.client_id,t1.remote asc");
+                    rst.Data = conn.GetListPaged<Map>(model.page_index, model.page_size, sql.ToString(), out int totalCount, model).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,
                         PageSize = model.page_size,
-                        TotalCount = query.Count()
+                        TotalCount = totalCount
                     };
                 }
                 else
                 {
-                    rst.Data = conn.Query<Map>(@"SELECT
-	                                            t1.*, t2.`name` client_name,
-                                                t2.user_id,
-                                                t2.is_online,
-	                                            t3.user_name
-                                            FROM
-	                                            `map` t1
-                                            INNER JOIN client t2 ON t1.client_id = t2.id
-                                            INNER JOIN `user` t3 ON t2.user_id = t3.user_id
-                                            ORDER BY t2.user_id,t1.client_id,t1.remote", model).ToList();
+                    sql.Append("order by t2.user_id,t1.client_id,t1.remote asc");
+                    rst.Data = conn.Query<Map>(sql.ToString()).ToList();
                 }
                 if (rst.Data != null)
                 {

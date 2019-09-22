@@ -39,36 +39,35 @@ namespace SuperNAT.Common.Bll
 
             try
             {
-                if (model.page_index > 0)
-                {
-                    var where = new StringBuilder();
-                    if (!string.IsNullOrWhiteSpace(model.name))
-                    {
-                        model.name = $"%{model.name}%";
-                        where.Append("where t1.name like @name ");
-                        where.Append("or t1.remark like @name ");
-                        where.Append("or t2.user_name like @name ");
-                    }
-                    var query = conn.Query<Client>(@"SELECT
+                var sql = new StringBuilder(@"SELECT
 	                                                t1.*, t2.user_name
                                                 FROM
 	                                                client t1
-                                                LEFT JOIN `user` t2 ON t1.user_id = t2.user_id " + where.ToString(), model);
-                    rst.Data = query.Skip(model.page_size * (model.page_index - 1)).Take(model.page_size).ToList();
+                                                LEFT JOIN `user` t2 ON t1.user_id = t2.user_id ");
+                if (model.page_index > 0)
+                {
+                    if (!string.IsNullOrWhiteSpace(model.name))
+                    {
+                        model.name = $"%{model.name}%";
+                        sql.Append("where t1.name like @name ");
+                        sql.Append("or t1.remark like @name ");
+                        sql.Append("or t2.user_name like @name ");
+                    }
+                    sql.Append("order by t1.id ");
+                    rst.Data = conn.GetListPaged<Client>(model.page_index, model.page_size, sql.ToString(), out int totalCount, model).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,
                         PageSize = model.page_size,
-                        TotalCount = query.Count()
+                        TotalCount = totalCount
                     };
+                    rst.Result = true;
+                    rst.Message = "获取成功";
                 }
                 else
                 {
-                    rst.Data = conn.Query<Client>(@"SELECT
-	                                                t1.*, t2.user_name
-                                                FROM
-	                                                client t1
-                                                LEFT JOIN `user` t2 ON t1.user_id = t2.user_id", model).ToList();
+                    sql.Append("order by t1.id ");
+                    rst.Data = conn.Query<Client>(sql.ToString()).ToList();
                 }
                 if (rst.Data != null)
                 {

@@ -17,6 +17,7 @@
                       name="login"
                       :label="$t('login.account')"
                       type="text"
+                      @keyup.enter.native="login"
                       v-model="model.user_name"
                       v-validate="'required'"
                       :error-messages="errors.collect('user_name')"
