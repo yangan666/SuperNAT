@@ -6,6 +6,7 @@
                 wrap>
         <v-flex lg12>
           <v-card>
+            <!-- 菜单栏 -->
             <v-toolbar card
                        color="white">
               <v-text-field flat
@@ -17,6 +18,7 @@
                             v-model="search"
                             hide-details
                             class="hidden-sm-and-down"></v-text-field>
+              <!-- 弹框 -->
               <v-dialog v-model="dialog"
                         persistent
                         max-width="500px">
@@ -34,9 +36,11 @@
 
                   <v-card-text>
                     <v-container grid-list-md>
+                      <!-- 动态form表单 -->
                       <form>
-                        <template v-for="(item,index) in columns">
-                          <v-flex v-if="item.form"
+                        <template v-for="(item,index) in forms">
+                          <!-- 输入框 -->
+                          <v-flex v-if="item.type == 'input'"
                                   :key="index">
                             <v-text-field clearable
                                           v-model="formItem[item.value]"
@@ -46,6 +50,34 @@
                                           :data-vv-name="item.value"
                                           :required="item.required"
                                           :label="item.text"></v-text-field>
+                          </v-flex>
+                          <!-- 密码框 -->
+                          <v-flex v-else-if="item.type == 'password'"
+                                  :key="index">
+                            <v-text-field clearable
+                                          type='password'
+                                          v-model="formItem[item.value]"
+                                          v-validate="item.validate"
+                                          :counter="item.counter"
+                                          :error-messages="errors.collect(item.value)"
+                                          :data-vv-name="item.value"
+                                          :required="item.required"
+                                          :label="item.text"></v-text-field>
+                          </v-flex>
+                          <!-- 下拉框 -->
+                          <v-flex v-else-if="item.type == 'select'"
+                                  :key="index">
+                            <v-select clearable
+                                      v-model="formItem[item.value]"
+                                      v-validate="item.validate"
+                                      :error-messages="errors.collect(item.value)"
+                                      :data-vv-name="item.value"
+                                      :required="item.required"
+                                      :items="item.items"
+                                      :item-text="item.itemText"
+                                      :item-value="item.itemValue"
+                                      @change="item.change"
+                                      :label="item.text"></v-select>
                           </v-flex>
                         </template>
                       </form>
@@ -65,8 +97,9 @@
               </v-dialog>
             </v-toolbar>
             <v-divider></v-divider>
+            <!-- 表格数据 -->
             <v-card-text class="pa-0">
-              <v-data-table :headers="columns"
+              <v-data-table :headers="headers"
                             :items="table.items"
                             :rows-per-page-items="table.pageSizes"
                             class="elevation-1"
@@ -74,27 +107,33 @@
                             hide-actions>
                 <template slot="items"
                           slot-scope="props">
-                  <template v-for="(item,index) in columns">
-                    <template v-if="item.type != 'action'">
-                      <td :key="index"
-                          class="text-xs-left">{{ props.item[item.value] }}</td>
-                    </template>
-                    <template v-else>
-                      <td :key="index"
-                          class="text-xs-left">
-                        <v-btn v-for="(action,bIndex) in item.actions"
-                               :key="bIndex"
-                               flat
-                               small
-                               href
-                               color="primary"
-                               @click="action.handle(props.item)">{{action.name}}</v-btn>
-                      </td>
-                    </template>
+                  <template v-for="(item,index) in headers">
+                    <td v-if="item.type == 'action'"
+                        :key="index"
+                        class="text-xs-left">
+                      <v-btn v-for="(action,bIndex) in item.actions"
+                             :key="bIndex"
+                             flat
+                             small
+                             href
+                             color="primary"
+                             @click="action.handle(props.item)">{{ action.name(props.item) }}</v-btn>
+                    </td>
+                    <td v-else-if="item.type == 'tag'"
+                        :key="index"
+                        class="text-xs-left">
+                      <v-btn flat
+                             small
+                             :color="item.color(props.item)">{{ props.item[item.value] }}</v-btn>
+                    </td>
+                    <td v-else
+                        :key="index"
+                        class="text-xs-left">{{ props.item[item.value] }}</td>
                   </template>
                 </template>
+                <!-- 分页 -->
                 <template v-slot:footer>
-                  <td :colspan="columns.length">
+                  <td :colspan="headers.length">
                     <div class="text-xs-center pt-2">
                       <v-pagination v-model="table.pageIndex"
                                     :length="table.pageCount"
@@ -146,6 +185,14 @@ export default {
       }
     }
   },
+  computed: {
+    headers () {
+      return this.columns.filter(c => c.table)
+    },
+    forms () {
+      return this.columns.filter(c => c.form)
+    }
+  },
   watch: {
     'table.pageIndex' (newVal, oldVal) {
       this.getList()
@@ -158,13 +205,14 @@ export default {
         dictionary.custom[col.value] = col.requiredInfo
       }
     }
-    this.$validator.localize('zh', dictionary)
+    this.$validator.localize('zh_CN', dictionary)
     this.getList()
   },
   methods: {
     //新增
     add () {
       this.getOne(0)
+      this.curd.affterAdd()
     },
     //修改
     edit (item) {
@@ -173,7 +221,7 @@ export default {
     //删除
     del (item) {
       this.$dialog.error({
-        text: `确定删除${this.basic.title}"${item[this.showValue]}"吗`,
+        text: `确定删除${this.basic.title}"${item[this.basic.showValue]}"吗`,
         title: '警告',
         persistent: true,
         actions: {
@@ -248,6 +296,7 @@ export default {
           if (!this.dialog) {
             this.dialog = true
           }
+          this.curd.affterGetOne(data.Data)
           this.formItem = data.Data
           this.formTitle = id == 0 ? `新建${this.basic.title}` : `编辑${this.basic.title}`
         } else {

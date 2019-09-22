@@ -14,38 +14,76 @@ export default {
   data () {
     return {
       basic: {
-        title: '主机',
-        controller: 'Client',
+        title: '映射',
+        controller: 'Map',
         showValue: 'name'
       },
       curd: {
-        add: {
-          affterAdd: () => { },
-          success: (e) => {
-
-          }
+        affterAdd: () => {
+          this.getUserList()
+          this.getClientList()
+        },
+        affterGetOne: (item) => {
+          this.selectUserChange(item.user_id)
         }
       },
       columns: [
         {
-          text: "名称",
-          value: 'name',
+          type: 'select',
+          text: "所属用户",
+          value: 'user_name',//表格显示的
           align: 'left',
-          width: 150,
+          width: 100,
           sortable: false,
-          table: true,
+          table: true
+        },
+        {
+          type: 'select',
+          text: "所属用户",
+          value: 'user_id',//表单下拉框
           form: true,
+          items: [],
+          itemText: 'user_name',
+          itemValue: 'user_id',
+          change: (id) => {
+            this.selectUserChange(id)
+          },
           required: true,
-          validate: 'required|max:10',
-          counter: 0,
+          validate: 'required',
           requiredInfo: {
-            required: () => '名称不能为空',
-            max: '名称长度不能超过10位'
+            required: () => '请选择所属用户'
           }
         },
         {
-          text: "描述",
-          value: 'remark',
+          type: 'select',
+          text: "主机名称",
+          value: 'client_name',//表格显示的
+          align: 'left',
+          width: 150,
+          sortable: false,
+          table: true
+        },
+        {
+          type: 'select',
+          text: "主机名称",
+          value: 'client_id',//表单下拉框
+          form: true,
+          items: [],
+          itemText: 'name',
+          itemValue: 'id',
+          change: (id) => {
+
+          },
+          required: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '请选择主机'
+          }
+        },
+        {
+          type: 'input',
+          text: '应用名称',
+          value: 'name',
           align: 'left',
           width: 150,
           sortable: false,
@@ -54,74 +92,148 @@ export default {
           required: true,
           validate: 'required',
           requiredInfo: {
-            required: () => '描述不能为空'
+            required: () => '应用名称不能为空'
           }
+        },
+        {
+          type: 'input',
+          text: '内网地址',
+          value: 'local',
+          align: 'left',
+          width: 150,
+          sortable: false,
+          table: true,
+          form: true,
+          required: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '内网地址不能为空'
+          }
+        },
+        {
+          type: 'input',
+          text: '外网地址',
+          value: 'remote',
+          align: 'left',
+          width: 150,
+          sortable: false,
+          table: true,
+          form: true,
+          required: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '外网地址不能为空'
+          }
+        },
+        {
+          type: 'select',
+          text: "协议类型",
+          value: 'protocol',
+          align: 'left',
+          width: 100,
+          sortable: false,
+          table: true,
+          form: true,
+          items: ['http', 'https'],
+          change: (id) => {
+
+          },
+          required: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '请选择协议类型'
+          }
+        },
+        {
+          type: 'input',
+          text: '证书文件',
+          value: 'certfile',
+          align: 'left',
+          width: 250,
+          sortable: false,
+          table: true
+        },
+        {
+          type: 'tag',
+          text: "主机状态",
+          color: (item) => {
+            return item.is_online ? 'error' : 'success'
+          },
+          value: 'is_online_str',
+          align: 'left',
+          width: 100,
+          sortable: false,
+          table: true
         },
         {
           type: 'action',
           text: "操作",
           align: 'left',
-          width: 150,
+          width: 200,
           sortable: false,
           table: true,
           form: false,
           actions: [
             {
-              name: '编辑',
+              name: (item) => {
+                return '编辑'
+              },
               handle: (item) => {
+                this.getUserList()
+                this.getClientList()
                 this.$refs.curd.edit(item)
               }
             },
             {
-              name: '禁用',
-              handle: (item) => {
-                this.disable(item)
-              }
-            },
-            {
-              name: '删除',
+              name: (item) => {
+                return '删除'
+              },
               handle: (item) => {
                 this.$refs.curd.del(item)
               }
             }
           ]
         }
-      ]
+      ],
+      clientList: []
     }
   },
   methods: {
-    //禁用/启用
-    disable (item) {
-      this.$dialog.warning({
-        text: `确定${item.is_disabled ? '启用' : '禁用'}${this.basic.title}"${item[this.basic.showValue]}"吗`,
-        title: '提示',
-        persistent: true,
-        actions: {
-          true: {
-            color: 'primary',
-            text: '确定',
-            handle: () => {
-              request({
-                url: `/Api/${this.basic.controller}/Disable`,
-                method: 'post',
-                data: item
-              }).then(({ data }) => {
-                if (data.Result) {
-                  this.$refs.curd.getList()
-                  this.$dialog.message.success(data.Message, {
-                    position: 'top'
-                  })
-                } else {
-                  this.$dialog.message.error(data.Message, {
-                    position: 'top'
-                  })
-                }
-              })
-            }
-          },
-          false: '取消'
+    //用户列表
+    getUserList () {
+      request({
+        url: '/Api/User/GetList',
+        method: 'post',
+        data: {}
+      }).then(({ data }) => {
+        if (data.Result) {
+          this.columns[1].items = data.Data
         }
       })
+    },
+    //主机列表
+    getClientList () {
+      request({
+        url: '/Api/Client/GetList',
+        method: 'post',
+        data: {}
+      }).then(({ data }) => {
+        if (data.Result) {
+          this.clientList = data.Data
+        }
+      })
+    },
+    //选择所属用户事件
+    selectUserChange (id) {
+      this.$refs.curd.formItem.client_id = null
+      if (id) {
+        //根据用户id过滤主机名称数据源
+        var items = this.clientList.filter(c => c.user_id == id)
+        this.columns[3].items = items
+      } else {
+        //清空主机名称数据源
+        this.columns[3].items = []
+      }
     }
   }
 }

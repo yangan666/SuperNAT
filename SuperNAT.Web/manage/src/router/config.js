@@ -72,12 +72,12 @@ export const protectedRoute = [
         meta: { title: "端口映射", icon: "dashboard" },
         component: () => import("@/views/map/MapList.vue")
       },
-      {
-        path: "/menu",
-        name: "Menu",
-        meta: { title: "菜单管理", icon: "dashboard" },
-        component: () => import("@/views/menu/Menu.vue")
-      },
+      // {
+      //   path: "/menu",
+      //   name: "Menu",
+      //   meta: { title: "菜单管理", icon: "dashboard" },
+      //   component: () => import("@/views/menu/Menu.vue")
+      // },
       {
         path: "/403",
         name: "Forbidden",
