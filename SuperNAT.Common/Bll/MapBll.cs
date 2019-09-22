@@ -57,14 +57,14 @@ namespace SuperNAT.Common.Bll
                                                 INNER JOIN `user` t3 ON t2.user_id = t3.user_id ");
                 if (model.page_index > 0)
                 {
-                    if (!string.IsNullOrWhiteSpace(model.name))
+                    if (!string.IsNullOrWhiteSpace(model.search))
                     {
-                        model.name = $"%{model.name}%";
-                        sql.Append("where t1.name like @name ");
-                        sql.Append("or t1.local like @name ");
-                        sql.Append("or t1.remote like @name ");
-                        sql.Append("or t2.name like @name ");
-                        sql.Append("or t3.user_name like @name ");
+                        model.search = $"%{model.search}%";
+                        sql.Append("where t1.name like @search ");
+                        sql.Append("or t1.local like @search ");
+                        sql.Append("or t1.remote like @search ");
+                        sql.Append("or t2.name like @search ");
+                        sql.Append("or t3.user_name like @search ");
                     }
                     sql.Append("order by t2.user_id,t1.client_id,t1.remote asc");
                     rst.Data = conn.GetListPaged<Map>(model.page_index, model.page_size, sql.ToString(), out int totalCount, model).ToList();

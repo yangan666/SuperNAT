@@ -135,12 +135,12 @@ namespace SuperNAT.Common.Bll
                 if (model.page_index > 0)
                 {
                     var where = new StringBuilder();
-                    if (!string.IsNullOrWhiteSpace(model.user_name))
+                    if (!string.IsNullOrWhiteSpace(model.search))
                     {
-                        model.user_name = $"%{model.user_name}%";
-                        where.Append("where user_name like @user_name ");
-                        where.Append("or wechat like @user_name ");
-                        where.Append("or tel like @user_name ");
+                        model.search = $"%{model.search}%";
+                        where.Append("where user_name like @search ");
+                        where.Append("or wechat like @search ");
+                        where.Append("or tel like @search ");
                     }
                     rst.Data = conn.GetListPaged<User>(model.page_index, model.page_size, where.ToString(), "id asc", model).ToList();
                     rst.PageInfo = new PageInfo()

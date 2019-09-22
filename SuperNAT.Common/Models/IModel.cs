@@ -16,5 +16,7 @@ namespace SuperNAT.Common.Models
         public int page_index { get; set; }
         [Editable(false)]
         public int page_size { get; set; }
+        [Editable(false)]
+        public string search { get; set; }
     }
 }

@@ -312,7 +312,7 @@ export default {
         url: `/Api/${this.basic.controller}/GetList`,
         method: 'post',
         data: {
-          user_name: this.search,
+          search: this.search,
           page_index: this.table.pageIndex,
           page_size: this.table.pageSize
         }

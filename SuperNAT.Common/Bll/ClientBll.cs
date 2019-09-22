@@ -46,12 +46,12 @@ namespace SuperNAT.Common.Bll
                                                 LEFT JOIN `user` t2 ON t1.user_id = t2.user_id ");
                 if (model.page_index > 0)
                 {
-                    if (!string.IsNullOrWhiteSpace(model.name))
+                    if (!string.IsNullOrWhiteSpace(model.search))
                     {
-                        model.name = $"%{model.name}%";
-                        sql.Append("where t1.name like @name ");
-                        sql.Append("or t1.remark like @name ");
-                        sql.Append("or t2.user_name like @name ");
+                        model.search = $"%{model.search}%";
+                        sql.Append("where t1.name like @search ");
+                        sql.Append("or t1.remark like @search ");
+                        sql.Append("or t2.user_name like @search ");
                     }
                     sql.Append("order by t1.id ");
                     rst.Data = conn.GetListPaged<Client>(model.page_index, model.page_size, sql.ToString(), out int totalCount, model).ToList();
