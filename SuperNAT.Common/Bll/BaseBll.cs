@@ -112,13 +112,13 @@ namespace SuperNAT.Common.Bll
             return rst;
         }
 
-        public ReturnResult<List<T>> GetList()
+        public ReturnResult<List<T>> GetList(string where)
         {
             var rst = new ReturnResult<List<T>>() { Message = "暂无记录" };
 
             try
             {
-                rst.Data = conn.GetList<T>().ToList();
+                rst.Data = conn.GetList<T>(where).ToList();
                 if (rst.Data != null)
                 {
                     rst.Result = true;

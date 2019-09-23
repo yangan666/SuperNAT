@@ -13,12 +13,13 @@ namespace SuperNAT.Common.Models
         [Key]
         public int id { get; set; }
         public string user_id { get; set; }
-        public string user_name { get; set; } = "";
-        public string password { get; set; } = "";
-        public string wechat { get; set; } = "";
-        public string tel { get; set; } = "";
+        public string user_name { get; set; }
+        public string password { get; set; }
+        public string wechat { get; set; }
+        public string tel { get; set; }
         public bool is_disabled { get; set; } = false;
         public bool is_admin { get; set; } = false;
+        public string role_id { get; set; }
         [Editable(false)]
         public string is_disabled_str => is_disabled ? "禁用" : "正常";
         [Editable(false)]

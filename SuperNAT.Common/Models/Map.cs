@@ -12,12 +12,12 @@ namespace SuperNAT.Common.Models
     {
         [Key]
         public int id { get; set; }
-        public string name { get; set; } = "";
+        public string name { get; set; }
         public string local { get; set; } = "localhost:80";
         public string remote { get; set; } = "xxx.supernat.cn:10000";
         public string protocol { get; set; } = "http";
-        public string certfile { get; set; } = "";
-        public string certpwd { get; set; } = "";
+        public string certfile { get; set; }
+        public string certpwd { get; set; }
         public int? ssl_type { get; set; }
         public int? client_id { get; set; }
         public bool is_disabled { get; set; }

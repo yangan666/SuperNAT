@@ -14,75 +14,68 @@ export default {
   data () {
     return {
       basic: {
-        title: '映射',
-        controller: 'Map',
+        title: '菜单',
+        controller: 'Menu',
         showValue: 'name'
       },
       curd: {
         affterAdd: () => {
-          this.getUserList()
-          this.getClientList()
+          this.getMenuList()
         },
         affterGetOne: (item) => {
-          this.selectUserChange(item.user_id)
+
         }
       },
       columns: [
         {
           type: 'select',
-          text: "所属用户",
-          value: 'user_name',//表格显示的
+          text: "上级菜单",
+          value: 'pid',//表单下拉框
+          form: true,
+          items: [],
+          itemText: 'title',
+          itemValue: 'menu_id',
+          change: (id) => {
+
+          }
+        },
+        {
+          type: 'input',
+          text: '菜单标题',
+          value: 'title',
+          align: 'left',
+          width: 120,
+          sortable: false,
+          table: true,
+          form: true,
+          required: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '菜单标题不能为空'
+          }
+        },
+        {
+          type: 'select',
+          text: "上级菜单",
+          value: 'p_title',//表格显示的
           align: 'left',
           width: 100,
           sortable: false,
           table: true
         },
         {
-          type: 'select',
-          text: "所属用户",
-          value: 'user_id',//表单下拉框
-          form: true,
-          items: [],
-          itemText: 'user_name',
-          itemValue: 'user_id',
-          change: (id) => {
-            this.selectUserChange(id)
-          },
-          required: true,
-          validate: 'required',
-          requiredInfo: {
-            required: () => '请选择所属用户'
-          }
-        },
-        {
-          type: 'select',
-          text: "主机名称",
-          value: 'client_name',//表格显示的
+          type: 'input',
+          text: '菜单图标',
+          value: 'icon',
           align: 'left',
           width: 150,
           sortable: false,
-          table: true
-        },
-        {
-          type: 'select',
-          text: "主机名称",
-          value: 'client_id',//表单下拉框
-          form: true,
-          items: [],
-          itemText: 'name',
-          itemValue: 'id',
-          change: (id) => {
-
-          },
-          required: true,
-          validate: 'required',
-          requiredInfo: {
-            required: () => '请选择主机'
-          }
+          table: true,
+          form: true
         },
         {
           type: 'input',
-          text: '应用名称',
+          text: '路由名称',
           value: 'name',
           align: 'left',
           width: 150,
@@ -92,13 +85,13 @@ export default {
           required: true,
           validate: 'required',
           requiredInfo: {
-            required: () => '应用名称不能为空'
+            required: () => '路由名称不能为空'
           }
         },
         {
           type: 'input',
-          text: '内网地址',
-          value: 'local',
+          text: '路由地址',
+          value: 'path',
           align: 'left',
           width: 150,
           sortable: false,
@@ -107,13 +100,13 @@ export default {
           required: true,
           validate: 'required',
           requiredInfo: {
-            required: () => '内网地址不能为空'
+            required: () => '路由地址不能为空'
           }
         },
         {
           type: 'input',
-          text: '外网地址',
-          value: 'remote',
+          text: '组件路径',
+          value: 'component',
           align: 'left',
           width: 150,
           sortable: false,
@@ -122,48 +115,49 @@ export default {
           required: true,
           validate: 'required',
           requiredInfo: {
-            required: () => '外网地址不能为空'
+            required: () => '组件路径不能为空'
           }
         },
         {
-          type: 'select',
-          text: "协议类型",
-          value: 'protocol',
-          align: 'left',
-          width: 100,
-          sortable: false,
-          table: true,
+          type: 'switch',
+          text: '是否隐藏',
+          value: 'hidden',
           form: true,
-          items: ['http', 'https'],
-          change: (id) => {
+          required: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '请选择隐藏或显示'
+          }
+        },
+        {
+          type: 'switch',
+          text: '是否隐藏',
+          value: 'hidden_str',
+          table: true,
+          align: 'left',
+          width: 120,
+          sortable: false,
+        },
 
-          },
+        {
+          type: 'switch',
+          text: '总是显示',
+          value: 'away_show',
+          form: true,
           required: true,
           validate: 'required',
           requiredInfo: {
-            required: () => '请选择协议类型'
+            required: () => '请选择总是显示或总是隐藏'
           }
         },
         {
-          type: 'input',
-          text: '证书文件',
-          value: 'certfile',
+          type: 'switch',
+          text: '总是显示',
+          value: 'away_show_str',
+          table: true,
           align: 'left',
-          width: 250,
+          width: 120,
           sortable: false,
-          table: true
-        },
-        {
-          type: 'tag',
-          text: "主机状态",
-          color: (item) => {
-            return item.is_online ? 'error' : 'success'
-          },
-          value: 'is_online_str',
-          align: 'left',
-          width: 100,
-          sortable: false,
-          table: true
         },
         {
           type: 'action',
@@ -179,8 +173,7 @@ export default {
                 return '编辑'
               },
               handle: (item) => {
-                this.getUserList()
-                this.getClientList()
+                this.getMenuList()
                 this.$refs.curd.edit(item)
               }
             },
@@ -199,41 +192,19 @@ export default {
     }
   },
   methods: {
-    //用户列表
-    getUserList () {
+    //菜单列表
+    getMenuList () {
       request({
-        url: '/Api/User/GetList',
+        url: `/Api/${this.basic.controller}/GetParentList`,
         method: 'post',
-        data: {}
+        data: {
+          pid: ''
+        }
       }).then(({ data }) => {
         if (data.Result) {
-          this.columns[1].items = data.Data
+          this.columns[0].items = data.Data
         }
       })
-    },
-    //主机列表
-    getClientList () {
-      request({
-        url: '/Api/Client/GetList',
-        method: 'post',
-        data: {}
-      }).then(({ data }) => {
-        if (data.Result) {
-          this.clientList = data.Data
-        }
-      })
-    },
-    //选择所属用户事件
-    selectUserChange (id) {
-      this.$refs.curd.formItem.client_id = null
-      if (id) {
-        //根据用户id过滤主机名称数据源
-        var items = this.clientList.filter(c => c.user_id == id)
-        this.columns[3].items = items
-      } else {
-        //清空主机名称数据源
-        this.columns[3].items = []
-      }
     }
   }
 }

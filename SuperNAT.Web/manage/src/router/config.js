@@ -17,14 +17,19 @@ export const publicRoute = [
       }
     ]
   },
-
+  {
+    path: "/403",
+    name: "Forbidden",
+    hidden: true,
+    meta: { title: "Access Denied" },
+    component: () => import("@/views/error/Deny.vue")
+  },
   {
     path: "/404",
     name: "404",
     meta: { title: "Not Found" },
     component: () => import("@/views/error/NotFound.vue")
   },
-
   {
     path: "/500",
     name: "500",
@@ -43,23 +48,45 @@ export const protectedRoute = [
       {
         path: "/dashboard",
         name: "Dashboard",
-        meta: { title: "请求统计", group: "apps", icon: "dashboard" },
+        meta: { title: "请求统计", icon: "dashboard" },
         component: () => import("@/views/Dashboard.vue")
       }
     ]
   },
   {
     path: "/sys",
+    name: "System",
     component: DefaultLayout,
     meta: { title: "系统管理", icon: "dashboard" },
     redirect: "/sys/user",
     children: [
       {
-        path: "/sys/user",
+        path: "/menu",
+        name: "Menu",
+        meta: { title: "菜单管理", icon: "dashboard" },
+        component: () => import("@/views/menu/Menu.vue")
+      },
+      {
+        path: "/role",
+        name: "Role",
+        meta: { title: "角色管理", icon: "dashboard" },
+        component: () => import("@/views/role/Role.vue")
+      },
+      {
+        path: "/user",
         name: "User",
         meta: { title: "用户管理", icon: "dashboard" },
         component: () => import("@/views/user/UserList.vue")
-      },
+      }
+    ]
+  },
+  {
+    path: "/nat",
+    name: "Nat",
+    component: DefaultLayout,
+    meta: { title: "内网穿透", icon: "dashboard" },
+    redirect: "/nat/client",
+    children: [
       {
         path: "/client",
         name: "Client",
@@ -71,19 +98,6 @@ export const protectedRoute = [
         name: "Map",
         meta: { title: "端口映射", icon: "dashboard" },
         component: () => import("@/views/map/MapList.vue")
-      },
-      // {
-      //   path: "/menu",
-      //   name: "Menu",
-      //   meta: { title: "菜单管理", icon: "dashboard" },
-      //   component: () => import("@/views/menu/Menu.vue")
-      // },
-      {
-        path: "/403",
-        name: "Forbidden",
-        hidden: true,
-        meta: { title: "Access Denied" },
-        component: () => import("@/views/error/Deny.vue")
       }
     ]
   }
