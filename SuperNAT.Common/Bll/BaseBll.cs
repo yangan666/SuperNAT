@@ -153,9 +153,13 @@ namespace SuperNAT.Common.Bll
 
     public static class MySimpleCRUD
     {
-        public static IEnumerable<T> GetListPaged<T>(this IDbConnection connection, int pageIndex, int pageSize, string sql, out int count, object parameters = default, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        public static IEnumerable<T> GetListPaged<T>(this IDbConnection connection, int pageIndex, int pageSize, string sql, out int count, string orderby = "", object parameters = default, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            var pageSql = $"select sql_calc_found_rows * from ({sql}) t1 limit {(pageIndex - 1) * pageSize},{pageSize};select found_rows()";
+            if (!string.IsNullOrWhiteSpace(orderby))
+            {
+                orderby ="order by " + string.Join(",", orderby.Split(',').Select(s => $" t1.{s.Trim()}"));
+            }
+            var pageSql = $"select sql_calc_found_rows * from ({sql}) t1 {orderby} limit {(pageIndex - 1) * pageSize},{pageSize};select found_rows()";
             var query = connection.QueryMultiple(pageSql, parameters, transaction, commandTimeout, commandType);
             var table = query.Read<T>();
             count = query.ReadFirstOrDefault<int>();

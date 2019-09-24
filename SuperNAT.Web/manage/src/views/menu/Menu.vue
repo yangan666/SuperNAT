@@ -119,6 +119,21 @@ export default {
           }
         },
         {
+          type: 'input',
+          text: '排序',
+          value: 'sort_no',
+          align: 'left',
+          width: 100,
+          sortable: false,
+          table: true,
+          form: true,
+          required: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '排序不能为空'
+          }
+        },
+        {
           type: 'switch',
           text: '是否隐藏',
           value: 'hidden',
@@ -138,7 +153,6 @@ export default {
           width: 120,
           sortable: false,
         },
-
         {
           type: 'switch',
           text: '总是显示',

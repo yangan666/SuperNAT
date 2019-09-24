@@ -25,8 +25,7 @@ namespace SuperNAT.Common.Bll
                         sql.Append("where name like @search ");
                         sql.Append("or remark like @search ");
                     }
-                    sql.Append("order by id ");
-                    rst.Data = conn.GetListPaged<Role>(model.page_index, model.page_size, sql.ToString(), out int totalCount, model).ToList();
+                    rst.Data = conn.GetListPaged<Role>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,

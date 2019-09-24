@@ -13,6 +13,7 @@ namespace SuperNAT.Common.Models
         public string component { get; set; }
         public string title { get; set; }
         public string icon { get; set; }
+        public int sort_no { get; set; }
         public bool hidden { get; set; }
         public bool away_show { get; set; }
         public string menu_id { get; set; }

@@ -75,7 +75,16 @@ namespace SuperNAT.Server.Controllers
         public IActionResult GetParentList()
         {
             using var bll = new MenuBll();
-            var rst = bll.GetList("where pid is null or pid = ''");
+            var rst = bll.GetList("where pid is null or pid = '' order by sort_no");
+            return Json(rst);
+        }
+
+        [HttpPost]
+        [Route("GetAll")]
+        public IActionResult GetAll()
+        {
+            using var bll = new MenuBll();
+            var rst = bll.GetList("order by sort_no");
             return Json(rst);
         }
     }

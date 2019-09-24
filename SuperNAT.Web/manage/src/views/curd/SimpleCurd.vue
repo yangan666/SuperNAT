@@ -116,6 +116,7 @@
                             :rows-per-page-items="table.pageSizes"
                             class="elevation-1"
                             item-key="name"
+                            disable-initial-sort
                             hide-actions>
                 <template slot="items"
                           slot-scope="props">

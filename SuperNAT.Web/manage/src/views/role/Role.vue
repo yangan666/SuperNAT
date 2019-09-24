@@ -50,7 +50,19 @@
                                         label="描述"></v-text-field>
                         </v-flex>
                         <v-flex>
-
+                          <v-treeview v-model="tree"
+                                      :items="roleList"
+                                      activatable
+                                      active-class="grey lighten-4 indigo--text"
+                                      selected-color="indigo"
+                                      open-on-click
+                                      selectable
+                                      multiple-active
+                                      expand-icon="mdi-chevron-down"
+                                      on-icon="mdi-bookmark"
+                                      off-icon="mdi-bookmark-outline"
+                                      indeterminate-icon="mdi-bookmark-minus">
+                          </v-treeview>
                         </v-flex>
                       </form>
                     </v-container>
@@ -122,6 +134,8 @@ export default {
       dialog: false,
       formTitle: '',
       formItem: {},
+      roleList: [],
+      tree: [],
       table: {
         pageIndex: 1,
         pageSize: 10,
@@ -172,10 +186,12 @@ export default {
     //新增
     add () {
       this.getOne(0)
+      this.getAll()
     },
     //修改
     edit (item) {
       this.getOne(item.id)
+      this.getAll()
     },
     //删除
     del (item) {
@@ -279,6 +295,54 @@ export default {
           this.table.items = data.Data
           this.table.pageCount = data.PageInfo.PageCount
           this.table.totalCount = data.PageInfo.TotalCount
+        } else {
+          this.$dialog.message.error(data.Message, {
+            position: 'top'
+          })
+        }
+      })
+    },
+    //获取列表
+    getAll () {
+      request({
+        url: '/Api/Menu/GetAll',
+        method: 'post',
+        data: {}
+      }).then(({ data }) => {
+        if (data.Result) {
+          var menuArr = data.Data
+          var parents = menuArr.filter(c => !c.pid)
+          var nodes = [{
+            id: '0',
+            name: '全部',
+            children: parents.map(v => {
+              return {
+                id: v.menu_id,
+                name: v.title
+              }
+            })
+          }]
+          var toDo = []
+          for (var j of nodes[0].children) {
+            toDo.push(j)
+          }
+          while (toDo.length) {
+            // 循环一级菜单
+            var node = toDo.shift()
+            // 取得子菜单丢进toDo一直循环
+            var childArr = menuArr.filter(c => c.pid === node.id)
+            if (childArr.length > 0) {
+              var childs = childArr.map(v => {
+                return {
+                  id: v.menu_id,
+                  name: v.title
+                }
+              })
+              node.children = childs
+              toDo = toDo.concat(childs)
+            }
+          }
+          this.roleList = nodes
         } else {
           this.$dialog.message.error(data.Message, {
             position: 'top'

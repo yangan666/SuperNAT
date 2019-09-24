@@ -66,8 +66,7 @@ namespace SuperNAT.Common.Bll
                         sql.Append("or t2.name like @search ");
                         sql.Append("or t3.user_name like @search ");
                     }
-                    sql.Append("order by t2.user_id,t1.client_id,t1.remote asc");
-                    rst.Data = conn.GetListPaged<Map>(model.page_index, model.page_size, sql.ToString(), out int totalCount, model).ToList();
+                    rst.Data = conn.GetListPaged<Map>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "user_id, client_id, remote asc", model).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,
