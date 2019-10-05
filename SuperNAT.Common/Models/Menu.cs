@@ -15,13 +15,13 @@ namespace SuperNAT.Common.Models
         public string icon { get; set; }
         public int sort_no { get; set; }
         public bool hidden { get; set; }
-        public bool away_show { get; set; }
+        public bool always_show { get; set; }
         public string menu_id { get; set; }
         [Editable(false)]
         public string p_title { get; set; }
         [Editable(false)]
         public string hidden_str => hidden ? "√" : "";
         [Editable(false)]
-        public string away_show_str => away_show ? "√" : "";
+        public string always_show_str => always_show ? "√" : "";
     }
 }

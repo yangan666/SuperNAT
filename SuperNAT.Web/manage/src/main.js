@@ -13,6 +13,7 @@ import "roboto-fontface/css/roboto/roboto-fontface.css"
 import "font-awesome/css/font-awesome.css"
 import "./style/app.css"
 import i18n from "./lang/lang"
+import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
 // import "./util/general.js"
 
 Vue.use(Vuetify, {
@@ -26,6 +27,10 @@ Vue.use(Vuetify, {
     warning: "#FFC107"
   },
   customProperties: true
+})
+
+Vue.use(Vuetify, {
+  iconfont: 'mdi'
 })
 
 Vue.use(VuetifyDialog, {

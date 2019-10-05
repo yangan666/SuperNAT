@@ -26,11 +26,11 @@ namespace SuperNAT.Server.Controllers
             if (model.id == 0)
             {
                 model.role_id = EncryptHelper.CreateGuid();
-                rst = bll.Add(model);
+                rst = bll.AddRole(model);
             }
             else
             {
-                rst = bll.Update(model);
+                rst = bll.UpdateRole(model);
             }
 
             return Json(rst);
@@ -60,7 +60,7 @@ namespace SuperNAT.Server.Controllers
                 return Json(defalut);
             }
             using var bll = new RoleBll();
-            var rst = bll.GetOne(model);
+            var rst = bll.GetRole(model);
             return Json(rst);
         }
 

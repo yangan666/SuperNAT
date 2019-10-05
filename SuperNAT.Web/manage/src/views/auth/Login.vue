@@ -114,7 +114,6 @@ export default {
               })
               //记录到cookies
               setJwtToken(data.Data.token)
-              this.$store.dispatch('setUser', data.Data)
               this.$router.push("/dashboard")
             } else {
               this.$dialog.message.error(data.Message, {

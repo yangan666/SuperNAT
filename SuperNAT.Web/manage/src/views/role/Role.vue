@@ -50,9 +50,10 @@
                                         label="描述"></v-text-field>
                         </v-flex>
                         <v-flex>
-                          <v-treeview v-model="tree"
+                          <v-treeview v-model="formItem.menu_ids"
                                       :items="roleList"
                                       activatable
+                                      open-all
                                       active-class="grey lighten-4 indigo--text"
                                       selected-color="indigo"
                                       open-on-click
@@ -135,7 +136,6 @@ export default {
       formTitle: '',
       formItem: {},
       roleList: [],
-      tree: [],
       table: {
         pageIndex: 1,
         pageSize: 10,
@@ -185,13 +185,11 @@ export default {
   methods: {
     //新增
     add () {
-      this.getOne(0)
-      this.getAll()
+      this.getAll({ id: 0 })
     },
     //修改
     edit (item) {
-      this.getOne(item.id)
-      this.getAll()
+      this.getAll(item)
     },
     //删除
     del (item) {
@@ -236,6 +234,7 @@ export default {
     },
     //保存
     save () {
+      this.formItem.menu_ids = this.formItem.menu_ids.filter(c => c != '0')
       this.$validator.validateAll(this.formItem).then(res => {
         if (res) {
           request({
@@ -259,20 +258,18 @@ export default {
       })
     },
     //获取单个
-    getOne (id) {
+    getOne (item) {
       request({
         url: '/Api/Role/GetOne',
         method: 'post',
-        data: {
-          id: id
-        }
+        data: item
       }).then(({ data }) => {
         if (data.Result) {
           if (!this.dialog) {
             this.dialog = true
           }
           this.formItem = data.Data
-          this.formTitle = id == 0 ? '新建角色' : '编辑角色'
+          this.formTitle = item.id == 0 ? '新建角色' : '编辑角色'
         } else {
           this.$dialog.message.error(data.Message, {
             position: 'top'
@@ -303,7 +300,7 @@ export default {
       })
     },
     //获取列表
-    getAll () {
+    getAll (item) {
       request({
         url: '/Api/Menu/GetAll',
         method: 'post',
@@ -343,6 +340,8 @@ export default {
             }
           }
           this.roleList = nodes
+          //加载数据
+          this.getOne(item)
         } else {
           this.$dialog.message.error(data.Message, {
             position: 'top'

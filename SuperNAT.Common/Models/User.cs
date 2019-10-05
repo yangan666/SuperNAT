@@ -24,5 +24,9 @@ namespace SuperNAT.Common.Models
         public string is_disabled_str => is_disabled ? "禁用" : "正常";
         [Editable(false)]
         public string token { get; set; }
+        [Editable(false)]
+        public List<Menu> menu_list { get; set; }
+        [Editable(false)]
+        public string role_name { get; set; }
     }
 }

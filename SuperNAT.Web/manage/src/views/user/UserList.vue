@@ -20,6 +20,7 @@ export default {
       },
       curd: {
         affterAdd: () => {
+          this.getRoleList()
           this.columns[1].text = '密码，不填写默认123456'
         },
         affterGetOne: (item) => {
@@ -72,6 +73,32 @@ export default {
           form: true
         },
         {
+          type: 'input',
+          text: "角色",
+          value: 'role_name',
+          align: 'left',
+          width: 150,
+          sortable: false,
+          table: true
+        },
+        {
+          type: 'select',
+          text: "角色",
+          value: 'role_id',
+          form: true,
+          items: [],
+          itemText: 'name',
+          itemValue: 'role_id',
+          change: (id) => {
+
+          },
+          required: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '请选择角色'
+          }
+        },
+        {
           type: 'tag',
           text: "状态",
           color: (item) => {
@@ -97,6 +124,7 @@ export default {
               },
               handle: (item) => {
                 this.$refs.curd.edit(item)
+                this.getRoleList()
                 this.columns[1].text = '密码，不修改无需填写'
               }
             },
@@ -154,7 +182,19 @@ export default {
           false: '取消'
         }
       })
-    }
+    },
+    //角色列表
+    getRoleList () {
+      request({
+        url: '/Api/Role/GetList',
+        method: 'post',
+        data: {}
+      }).then(({ data }) => {
+        if (data.Result) {
+          this.columns[5].items = data.Data
+        }
+      })
+    },
   }
 }
 </script>

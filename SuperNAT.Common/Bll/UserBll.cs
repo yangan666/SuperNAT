@@ -57,6 +57,7 @@ namespace SuperNAT.Common.Bll
                 var sql = new StringBuilder();
                 sql.Append("update user set ");
                 sql.Append("user_name=@user_name,");
+                sql.Append("role_id=@role_id,");
                 if (!string.IsNullOrWhiteSpace(model.password))
                 {
                     sql.Append("password=@password,");
@@ -113,6 +114,32 @@ namespace SuperNAT.Common.Bll
                 rst.Data = conn.QueryFirstOrDefault<User>("select * from user where user_id=@user_id ", new { user_id });
                 if (rst.Data != null)
                 {
+                    //获取权限菜单
+                    var menus = conn.GetList<Menu>();
+                    var auths = conn.Query<Menu>(@"SELECT
+	                                                    t2.*
+                                                    FROM
+	                                                    `authority` t1
+                                                    INNER JOIN menu t2 ON t1.menu_id = t2.menu_id
+                                                    WHERE
+	                                                    t1.role_id = @role_id
+                                                    ORDER BY
+	                                                    t2.sort_no ASC", new { rst.Data.role_id }).ToList();
+                    var children = auths.FindAll(c => !string.IsNullOrWhiteSpace(c.pid));
+                    foreach (var item in children)
+                    {
+                        //只选中一个子级菜单的情况，父级菜单没入库，需要手动找出来
+                        var father = auths.Find(c => c.menu_id == item.pid);
+                        if (father == null)
+                        {
+                            father = menus.FirstOrDefault(c => c.menu_id == item.pid);
+                            if (father != null)
+                            {
+                                auths.Add(father);
+                            }
+                        }
+                    }
+                    rst.Data.menu_list = auths.OrderBy(c => c.sort_no).ToList();
                     rst.Result = true;
                     rst.Message = "获取成功";
                 }
@@ -132,22 +159,26 @@ namespace SuperNAT.Common.Bll
 
             try
             {
+                var sql = new StringBuilder(@"SELECT
+	                                                t1.*,t2.name role_name
+                                                FROM
+	                                                User t1
+                                                LEFT JOIN Role t2 ON t1.role_id = t2.role_id ");
                 if (model.page_index > 0)
                 {
-                    var where = new StringBuilder();
                     if (!string.IsNullOrWhiteSpace(model.search))
                     {
                         model.search = $"%{model.search}%";
-                        where.Append("where user_name like @search ");
-                        where.Append("or wechat like @search ");
-                        where.Append("or tel like @search ");
+                        sql.Append("where t1.user_name like @search ");
+                        sql.Append("or t1.wechat like @search ");
+                        sql.Append("or t1.tel like @search ");
                     }
-                    rst.Data = conn.GetListPaged<User>(model.page_index, model.page_size, where.ToString(), "id asc", model).ToList();
+                    rst.Data = conn.GetListPaged<User>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,
                         PageSize = model.page_size,
-                        TotalCount = conn.RecordCount<User>("")
+                        TotalCount = totalCount
                     };
                 }
                 else

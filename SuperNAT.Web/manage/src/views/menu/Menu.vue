@@ -156,7 +156,7 @@ export default {
         {
           type: 'switch',
           text: '总是显示',
-          value: 'away_show',
+          value: 'always_show',
           form: true,
           required: true,
           validate: 'required',
@@ -167,7 +167,7 @@ export default {
         {
           type: 'switch',
           text: '总是显示',
-          value: 'away_show_str',
+          value: 'always_show_str',
           table: true,
           align: 'left',
           width: 120,

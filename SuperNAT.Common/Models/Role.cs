@@ -15,5 +15,7 @@ namespace SuperNAT.Common.Models
         public string role_id { get; set; }
         public string name { get; set; }
         public string remark { get; set; }
+        [Editable(false)]
+        public List<string> menu_ids { get; set; }
     }
 }

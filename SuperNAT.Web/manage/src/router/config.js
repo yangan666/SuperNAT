@@ -42,13 +42,13 @@ export const protectedRoute = [
   {
     path: "/",
     component: DefaultLayout,
-    meta: { title: "首页", icon: "dashboard" },
+    meta: { title: "首页", icon: "home" },
     redirect: "/dashboard",
     children: [
       {
         path: "/dashboard",
         name: "Dashboard",
-        meta: { title: "请求统计", icon: "dashboard" },
+        meta: { title: "请求统计", icon: "home" },
         component: () => import("@/views/Dashboard.vue")
       }
     ]
