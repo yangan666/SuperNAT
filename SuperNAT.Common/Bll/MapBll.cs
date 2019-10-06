@@ -55,16 +55,22 @@ namespace SuperNAT.Common.Bll
 	                                                `map` t1
                                                 INNER JOIN client t2 ON t1.client_id = t2.id
                                                 INNER JOIN `user` t3 ON t2.user_id = t3.user_id ");
+                bool is_admin = !string.IsNullOrWhiteSpace(model.user_id) && !model.is_admin;
                 if (model.page_index > 0)
                 {
                     if (!string.IsNullOrWhiteSpace(model.search))
                     {
                         model.search = $"%{model.search}%";
-                        sql.Append("where t1.name like @search ");
+                        sql.Append("where (t1.name like @search ");
                         sql.Append("or t1.local like @search ");
                         sql.Append("or t1.remote like @search ");
                         sql.Append("or t2.name like @search ");
-                        sql.Append("or t3.user_name like @search ");
+                        sql.Append("or t3.user_name like @search) ");
+                        sql.Append(is_admin ? "and t3.user_id = @user_id " : "");
+                    }
+                    else
+                    {
+                        sql.Append(is_admin ? "where t3.user_id = @user_id " : "");
                     }
                     rst.Data = conn.GetListPaged<Map>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "user_id, client_id, remote asc", model).ToList();
                     rst.PageInfo = new PageInfo()

@@ -19,5 +19,7 @@ namespace SuperNAT.Common.Models
         public DateTime? response_time { get; set; }
         public DateTime? handle_time { get; set; }
         public DateTime? create_time { get; set; }
+        [Editable(false)]
+        public bool is_admin { get; set; } = false;
     }
 }

@@ -21,6 +21,7 @@ using log4net.Repository;
 using log4net;
 using log4net.Config;
 using SuperNAT.Common;
+using SuperNAT.Common.Bll;
 
 namespace SuperNAT.Server
 {
@@ -125,6 +126,10 @@ namespace SuperNAT.Server
                 .AddJsonFile("appsettings.json", false);
             var configuration = builder.Build();
 
+            //加载配置到全局
+            GlobalConfig.ConnetionString = configuration.GetValue<string>("DBConfig:ConnetionString");
+            GlobalConfig.ServerPort = configuration.GetValue<int>("PortConfig:ServerPort");
+
             Repository = LogManager.CreateRepository("NETCoreRepository");
             XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
             Log4netUtil.LogRepository = Repository;//类库中定义的静态变量
@@ -136,6 +141,11 @@ namespace SuperNAT.Server
                 }
                 Log4netUtil.Info(log);
             };
+
+            //更新假在线的主机
+            using var bll = new ClientBll();
+            var res = bll.UpdateOfflineClient();
+            HandleLog.WriteLine(res.Message, false);
 
             var appSettingSetion = configuration.GetSection("AppSettingConfig");
             var appSettingConfig = appSettingSetion.Get<AppSettingConfig>();

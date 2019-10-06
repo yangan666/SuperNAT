@@ -367,7 +367,7 @@ namespace SuperNAT.Server
                                 new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
                             options.Limits.MinResponseDataRate =
                                 new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
-                            options.Listen(IPAddress.Any, 8088);
+                            options.Listen(IPAddress.Any, GlobalConfig.ServerPort);
                             //options.Listen(IPAddress.Loopback, 5001, listenOptions =>
                             //{
                             //    listenOptions.UseHttps("testCert.pfx", "testPassword");

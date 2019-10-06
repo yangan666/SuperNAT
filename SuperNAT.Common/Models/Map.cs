@@ -31,5 +31,7 @@ namespace SuperNAT.Common.Models
         public string user_id { get; set; }
         [Editable(false)]
         public string user_name { get; set; }
+        [Editable(false)]
+        public bool is_admin { get; set; } = false;
     }
 }

@@ -23,5 +23,9 @@ namespace SuperNAT.Common.Models
         public string hidden_str => hidden ? "√" : "";
         [Editable(false)]
         public string always_show_str => always_show ? "√" : "";
+        [Editable(false)]
+        public string user_id { get; set; }
+        [Editable(false)]
+        public bool is_admin { get; set; } = false;
     }
 }

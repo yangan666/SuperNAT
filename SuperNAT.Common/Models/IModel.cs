@@ -8,6 +8,8 @@ namespace SuperNAT.Common.Models
     public interface IModel
     {
         int id { get; set; }
+        string user_id { get; set; }
+        bool is_admin { get; set; }
     }
 
     public class BaseModel

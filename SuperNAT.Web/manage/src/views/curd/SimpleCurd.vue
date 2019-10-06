@@ -326,6 +326,8 @@ export default {
         method: 'post',
         data: {
           search: this.search,
+          user_id: this.$store.getters.user.user_id,
+          is_admin: this.$store.getters.user.is_admin,
           page_index: this.table.pageIndex,
           page_size: this.table.pageSize
         }

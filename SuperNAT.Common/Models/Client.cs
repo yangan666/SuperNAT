@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SuperNAT.Common.Models
 {
@@ -23,5 +24,7 @@ namespace SuperNAT.Common.Models
         public string user_name { get; set; }
         [Editable(false)]
         public string is_online_str => is_online ? "在线" : "离线";
+        [Editable(false)]
+        public bool is_admin { get; set; } = false;
     }
 }

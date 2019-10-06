@@ -17,8 +17,7 @@ namespace SuperNAT.Common.Bll
         {
             try
             {
-                var connStr = "server=127.0.0.1;port=3306;User Id=root;Password=123456;Database=nat;pooling=false;character set=utf8;SslMode=none;";
-                conn = new MySqlConnection(connStr);
+                conn = new MySqlConnection(GlobalConfig.ConnetionString);
                 conn.Open();
             }
             catch (Exception ex)

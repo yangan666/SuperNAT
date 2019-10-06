@@ -44,14 +44,20 @@ namespace SuperNAT.Common.Bll
                                                 FROM
 	                                                client t1
                                                 LEFT JOIN `user` t2 ON t1.user_id = t2.user_id ");
+                bool is_admin = !string.IsNullOrWhiteSpace(model.user_id) && !model.is_admin;
                 if (model.page_index > 0)
                 {
                     if (!string.IsNullOrWhiteSpace(model.search))
                     {
                         model.search = $"%{model.search}%";
-                        sql.Append("where t1.name like @search ");
+                        sql.Append("where (t1.name like @search ");
                         sql.Append("or t1.remark like @search ");
-                        sql.Append("or t2.user_name like @search ");
+                        sql.Append("or t2.user_name like @search) ");
+                        sql.Append(is_admin ? "and t2.user_id = @user_id " : "");
+                    }
+                    else
+                    {
+                        sql.Append(is_admin ? "where t2.user_id = @user_id " : "");
                     }
                     rst.Data = conn.GetListPaged<Client>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model).ToList();
                     rst.PageInfo = new PageInfo()
@@ -93,6 +99,36 @@ namespace SuperNAT.Common.Bll
                 {
                     rst.Result = true;
                     rst.Message = "更新成功";
+                }
+            }
+            catch (Exception ex)
+            {
+                rst.Message = $"更新失败：{ex.InnerException ?? ex}";
+                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+            }
+
+            return rst;
+        }
+
+        public ReturnResult<bool> UpdateOfflineClient()
+        {
+            var rst = new ReturnResult<bool>() { Message = "更新失败" };
+
+            try
+            {
+                var clients = conn.GetList<Client>("where (is_online=@is_online && last_heart_time<@last_heart_time) or last_heart_time is null", new { is_online = true, last_heart_time = DateTime.Now.AddMinutes(-1) }).Select(c => c.id).ToList();
+                if (clients.Any())
+                {
+                    int count = conn.Execute($"update client set is_online=0 where id in({string.Join(',', clients)})");
+                    if (count > 0)
+                    {
+                        rst.Result = true;
+                        rst.Message = $"更新假在线主机成功条数：{count}";
+                    }
+                }
+                else
+                {
+                    rst.Message = "暂无需要更新的假在线主机";
                 }
             }
             catch (Exception ex)
