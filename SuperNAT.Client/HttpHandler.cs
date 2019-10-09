@@ -18,10 +18,10 @@ namespace SuperNAT.Client
     public class HttpHandler
     {
         public static EasyClient<NatPackageInfo> NatClient { get; set; }
-        public static int RemoteNatPort { get; set; } = 10006;
         public static string Secret { get; set; } = AppConfig.GetSetting("Secret");
         public static string ServerUrl { get; set; } = AppConfig.GetSetting("ServerUrl");
         public static string ServerPort { get; set; } = AppConfig.GetSetting("ServerPort");
+        public static int NatPort { get; set; } = Convert.ToInt32(AppConfig.GetSetting("NatPort"));
         public static byte[] RegPack => Encoding.UTF8.GetBytes(Secret);
         public static List<Map> MapList { get; set; }
         public static ILoggerRepository Repository { get; set; }
@@ -209,7 +209,7 @@ namespace SuperNAT.Client
                 IPHostEntry ipInfo = Dns.GetHostEntry(ServerUrl);
                 var serverIp = ipInfo.AddressList.Any() ? ipInfo.AddressList[0].ToString() : throw new Exception($"域名【{ServerUrl}】无法解析");
                 //连接NAT转发服务
-                var res = NatClient.ConnectAsync(new IPEndPoint(IPAddress.Parse(serverIp), RemoteNatPort)).Result;
+                var res = NatClient.ConnectAsync(new IPEndPoint(IPAddress.Parse(serverIp), NatPort)).Result;
                 if (!res)
                 {
                     Thread.Sleep(2000);

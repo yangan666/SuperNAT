@@ -44,7 +44,7 @@ namespace SuperNAT.Server
             }, new ServerConfig()
             {
                 Ip = "Any",
-                Port = 10006,
+                Port = GlobalConfig.NatPort,
                 TextEncoding = "ASCII",
                 MaxRequestLength = 102400,
                 MaxConnectionNumber = 1000,
@@ -184,53 +184,56 @@ namespace SuperNAT.Server
         #region 网页Web服务
         private static void StartWebServer()
         {
-            for (var i = 10000; i <= 10005; i++)
+            if (GlobalConfig.WebPortList.Any())
             {
-                var webServer = new HttpAppServer();
-                bool setup = webServer.Setup(new RootConfig()
+                foreach (var i in GlobalConfig.WebPortList)
                 {
-                    DisablePerformanceDataCollector = true
-                }, new ServerConfig()
-                {
-                    Ip = "Any",
-                    Port = i,
-                    TextEncoding = "ASCII",
-                    MaxRequestLength = 102400,
-                    MaxConnectionNumber = 100,
-                    ReceiveBufferSize = 102400,
-                    SendBufferSize = 102400,
-                    LogBasicSessionActivity = true,
-                    LogAllSocketException = true,
-                    SyncSend = false,
-                    //Security = "tls12",
-                    //Certificate = new CertificateConfig()
-                    //{
-                    //    FilePath = CertFile,
-                    //    Password = CertPassword,
-                    //    ClientCertificateRequired = false
-                    //},
-                    DisableSessionSnapshot = true,
-                    SessionSnapshotInterval = 1
-                });
-                if (setup)
-                {
-                    var start = webServer.Start();
-                    if (start)
+                    var webServer = new HttpAppServer();
+                    bool setup = webServer.Setup(new RootConfig()
                     {
-                        webServer.NewSessionConnected += WebServer_NewSessionConnected;
-                        webServer.NewRequestReceived += WebServer_NewRequestReceived;
-                        webServer.SessionClosed += WebServer_SessionClosed;
-                        HandleLog.WriteLine($"Web服务启动成功，监听端口：{webServer.Config.Port}");
-                        WebServerList.Add(webServer);
+                        DisablePerformanceDataCollector = true
+                    }, new ServerConfig()
+                    {
+                        Ip = "Any",
+                        Port = i,
+                        TextEncoding = "ASCII",
+                        MaxRequestLength = 102400,
+                        MaxConnectionNumber = 100,
+                        ReceiveBufferSize = 102400,
+                        SendBufferSize = 102400,
+                        LogBasicSessionActivity = true,
+                        LogAllSocketException = true,
+                        SyncSend = false,
+                        //Security = "tls12",
+                        //Certificate = new CertificateConfig()
+                        //{
+                        //    FilePath = CertFile,
+                        //    Password = CertPassword,
+                        //    ClientCertificateRequired = false
+                        //},
+                        DisableSessionSnapshot = true,
+                        SessionSnapshotInterval = 1
+                    });
+                    if (setup)
+                    {
+                        var start = webServer.Start();
+                        if (start)
+                        {
+                            webServer.NewSessionConnected += WebServer_NewSessionConnected;
+                            webServer.NewRequestReceived += WebServer_NewRequestReceived;
+                            webServer.SessionClosed += WebServer_SessionClosed;
+                            HandleLog.WriteLine($"Web服务启动成功，监听端口：{webServer.Config.Port}");
+                            WebServerList.Add(webServer);
+                        }
+                        else
+                        {
+                            HandleLog.WriteLine($"Web服务启动失败，端口：{webServer.Config.Port}");
+                        }
                     }
                     else
                     {
-                        HandleLog.WriteLine($"Web服务启动失败，端口：{webServer.Config.Port}");
+                        HandleLog.WriteLine($"Web服务初始化失败，端口：{webServer.Config.Port}");
                     }
-                }
-                else
-                {
-                    HandleLog.WriteLine($"Web服务初始化失败，端口：{webServer.Config.Port}");
                 }
             }
         }

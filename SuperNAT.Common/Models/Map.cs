@@ -14,7 +14,7 @@ namespace SuperNAT.Common.Models
         public int id { get; set; }
         public string name { get; set; }
         public string local { get; set; } = "localhost:80";
-        public string remote { get; set; } = "xxx.supernat.cn:10000";
+        public string remote { get; set; } = GlobalConfig.DefaultUrl;
         public string protocol { get; set; } = "http";
         public string certfile { get; set; }
         public string certpwd { get; set; }

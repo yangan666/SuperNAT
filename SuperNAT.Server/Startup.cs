@@ -128,7 +128,10 @@ namespace SuperNAT.Server
 
             //加载配置到全局
             GlobalConfig.ConnetionString = configuration.GetValue<string>("DBConfig:ConnetionString");
-            GlobalConfig.ServerPort = configuration.GetValue<int>("PortConfig:ServerPort");
+            GlobalConfig.NatPort = configuration.GetValue<int>("ServerConfig:NatPort");
+            GlobalConfig.WebPort = configuration.GetValue<string>("ServerConfig:WebPort");
+            GlobalConfig.ServerPort = configuration.GetValue<int>("ServerConfig:ServerPort");
+            GlobalConfig.DefaultUrl = configuration.GetValue<string>("ServerConfig:DefaultUrl");
 
             Repository = LogManager.CreateRepository("NETCoreRepository");
             XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
