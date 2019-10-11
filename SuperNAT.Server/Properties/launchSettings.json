@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SuperNAT.Server": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
