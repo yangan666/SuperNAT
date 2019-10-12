@@ -3,6 +3,10 @@
 ###############################################################################
 * text=auto
 
+*.js linguist-language=Java
+*.css linguist-language=Java
+*.html linguist-language=Java
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #
