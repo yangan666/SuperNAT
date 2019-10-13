@@ -19,10 +19,11 @@ window客户端的部署：<br/>
 穿透示例：
 ![Image text](https://github.com/yangan666/SuperNAT/blob/master/Img/demo.png)<br/><br/>
 已发布测试版，大家可到release下载体验，客户端可使用SuperNAT服务器的配置：<br/>
-{
-  "Secret": "你的主机密钥",
-  "ServerUrl": "www.supernat.cn",
-  "ServerPort": "8088",
-  "NatPort": "10006"//报文传输监听端口
-}
+{<br/>
+  "Secret": "你的主机密钥",<br/>
+  "ServerUrl": "www.supernat.cn",<br/>
+  "ServerPort": "8088",<br/>
+  "NatPort": "10006"//报文传输监听端口<br/>
+}<br/>
+服务器开放的http端口有80,10000-10005
 
