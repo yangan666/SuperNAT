@@ -48,7 +48,7 @@
           data-vv-name="password2"
           required
         />
-        <div v-show="errors.has('password2')">
+        <div v-show="errors.has('password2') && register">
           <p style="color:red">{{ errors.first('password2') }}</p>
         </div>
       </v-form>

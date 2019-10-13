@@ -64,6 +64,21 @@ export default {
         },
         {
           type: 'input',
+          text: "邮箱",
+          value: 'email',
+          align: 'left',
+          width: 150,
+          sortable: false,
+          table: true,
+          form: true,
+          required: true,
+          validate: 'required|email',
+          requiredInfo: {
+            required: () => '邮箱不能为空'
+          }
+        },
+        {
+          type: 'input',
           text: "手机号",
           value: 'tel',
           align: 'left',
