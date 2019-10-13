@@ -15,3 +15,6 @@ window服务器的部署：<br/>
 window客户端的部署：<br/>
 下载源码生成SuperNAT.Client，修改配置文件appsettings.json的配置<br/><br/>
 ![Image text](https://github.com/yangan666/SuperNAT/blob/master/Img/client.config.png)<br/><br/>
+穿透示例：
+![Image text](https://github.com/yangan666/SuperNAT/blob/master/Img/demo.png)
+
