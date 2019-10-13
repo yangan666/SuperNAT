@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+    <Folder Include="DB\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
