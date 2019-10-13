@@ -3,6 +3,8 @@ import App from "./App.vue"
 import Vuetify from "vuetify"
 import VuetifyDialog from "vuetify-dialog"
 import VeeValidate from "vee-validate"
+import zh_CN from "vee-validate/dist/locale/zh_CN"
+import Validator from "./customValidate"
 import "./theme/default.styl"
 import "vuetify-dialog/dist/vuetify-dialog.css"
 import router from "./router/"
@@ -13,7 +15,7 @@ import "roboto-fontface/css/roboto/roboto-fontface.css"
 import "font-awesome/css/font-awesome.css"
 import "./style/app.css"
 import i18n from "./lang/lang"
-import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
+import "@mdi/font/css/materialdesignicons.css" // Ensure you are using css-loader
 // import "./util/general.js"
 
 Vue.use(Vuetify, {
@@ -30,7 +32,7 @@ Vue.use(Vuetify, {
 })
 
 Vue.use(Vuetify, {
-  iconfont: 'mdi'
+  iconfont: "mdi"
 })
 
 Vue.use(VuetifyDialog, {
@@ -50,7 +52,23 @@ Vue.use(VuetifyDialog, {
   prompt: {}
 })
 
-Vue.use(VeeValidate)
+Validator.localize(zh_CN)
+
+const dictionary = {
+  zh_CN: {
+    messages: {
+      email: () => "请输入正确的邮箱格式"
+    },
+    required: field => "请输入" + field,
+    attributes: {}
+  }
+}
+Validator.localize(dictionary)
+
+const config = {
+  locale: "zh_CN"
+}
+Vue.use(VeeValidate, config)
 
 Vue.config.productionTip = false
 window.show = false
