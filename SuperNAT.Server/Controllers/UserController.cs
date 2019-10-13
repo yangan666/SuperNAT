@@ -54,11 +54,11 @@ namespace SuperNAT.Server.Controllers
             if (model.id == 0)
             {
                 model.user_id = EncryptHelper.CreateGuid();
-                model.password = EncryptHelper.MD5Encrypt(model.password);
                 if (string.IsNullOrEmpty(model.password))
                 {
                     model.password = "123456";
                 }
+                model.password = EncryptHelper.MD5Encrypt(model.password);
                 rst = bll.Add(model);
             }
             else
@@ -69,6 +69,25 @@ namespace SuperNAT.Server.Controllers
                 }
                 rst = bll.UpdateUser(model);
             }
+
+            return Json(rst);
+        }
+
+        [HttpPost]
+        [Route("Register")]
+        public IActionResult Register(User model)
+        {
+            var rst = new ReturnResult<bool>();
+
+            using var bll = new UserBll();
+            model.user_id = EncryptHelper.CreateGuid();
+            model.role_id = GlobalConfig.RegRoleId;
+            if (string.IsNullOrEmpty(model.password))
+            {
+                model.password = "123456";
+            }
+            model.password = EncryptHelper.MD5Encrypt(model.password);
+            rst = bll.Add(model);
 
             return Json(rst);
         }

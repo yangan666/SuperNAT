@@ -58,6 +58,7 @@ const dictionary = {
   zh_CN: {
     messages: {
       email: () => "请输入正确的邮箱格式",
+      confirmed: () => "两次输入密码不一致",
       required: field => "请输入" + field,
     },
     attributes: {}

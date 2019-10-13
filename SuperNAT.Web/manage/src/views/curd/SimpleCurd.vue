@@ -48,7 +48,7 @@
                                           :counter="item.counter"
                                           :error-messages="errors.collect(item.value)"
                                           :data-vv-name="item.value"
-                                          :required="item.required"
+                                          :data-vv-as="item.text"
                                           :label="item.text"></v-text-field>
                           </v-flex>
                           <!-- 密码框 -->
@@ -61,7 +61,7 @@
                                           :counter="item.counter"
                                           :error-messages="errors.collect(item.value)"
                                           :data-vv-name="item.value"
-                                          :required="item.required"
+                                          :data-vv-as="item.text"
                                           :label="item.text"></v-text-field>
                           </v-flex>
                           <!-- 下拉框 -->
@@ -72,7 +72,7 @@
                                       v-validate="item.validate"
                                       :error-messages="errors.collect(item.value)"
                                       :data-vv-name="item.value"
-                                      :required="item.required"
+                                      :data-vv-as="item.text"
                                       :items="item.items"
                                       :item-text="item.itemText"
                                       :item-value="item.itemValue"
@@ -87,7 +87,7 @@
                                       v-validate="item.validate"
                                       :error-messages="errors.collect(item.value)"
                                       :data-vv-name="item.value"
-                                      :required="item.required"
+                                      :data-vv-as="item.text"
                                       @change="item.change"
                                       :label="item.text"></v-switch>
                           </v-flex>
@@ -214,7 +214,7 @@ export default {
   mounted () {
     var dictionary = { custom: {} }
     for (let col of this.columns) {
-      if (col.required && col.type != 'action') {
+      if (col.requiredInfo) {
         dictionary.custom[col.value] = col.requiredInfo
       }
     }
@@ -274,7 +274,7 @@ export default {
     },
     //保存
     save () {
-      this.$validator.validateAll(this.formItem).then(res => {
+      this.$validator.validateAll().then(res => {
         if (res) {
           request({
             url: `/Api/${this.basic.controller}/Add`,

@@ -37,7 +37,6 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          required: true,
           validate: 'required|max:15',
           counter: 15,
           requiredInfo: {
@@ -59,8 +58,8 @@ export default {
           align: 'left',
           width: 150,
           sortable: false,
-          table: true,
-          form: true
+          table: false,
+          form: false
         },
         {
           type: 'input',
@@ -71,7 +70,6 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          required: true,
           validate: 'required|email',
           requiredInfo: {
             required: () => '邮箱不能为空'
@@ -84,8 +82,8 @@ export default {
           align: 'left',
           width: 180,
           sortable: false,
-          table: true,
-          form: true
+          table: false,
+          form: false
         },
         {
           type: 'input',
@@ -107,7 +105,6 @@ export default {
           change: (id) => {
 
           },
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '请选择角色'
@@ -206,7 +203,7 @@ export default {
         data: {}
       }).then(({ data }) => {
         if (data.Result) {
-          this.columns[5].items = data.Data
+          this.columns[6].items = data.Data
         }
       })
     },

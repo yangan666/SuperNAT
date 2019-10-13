@@ -63,6 +63,7 @@ namespace SuperNAT.Common.Bll
                     sql.Append("password=@password,");
                 }
                 sql.Append("wechat=@wechat,");
+                sql.Append("email=@email,");
                 sql.Append("tel=@tel ");
                 sql.Append("where user_id=@user_id ");
                 if (conn.Execute(sql.ToString(), model) > 0)
@@ -171,6 +172,7 @@ namespace SuperNAT.Common.Bll
                         model.search = $"%{model.search}%";
                         sql.Append("where t1.user_name like @search ");
                         sql.Append("or t1.wechat like @search ");
+                        sql.Append("or t1.email like @search ");
                         sql.Append("or t1.tel like @search ");
                     }
                     rst.Data = conn.GetListPaged<User>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model).ToList();

@@ -12,6 +12,7 @@ export default {
     SimpleCurd
   },
   data () {
+    var is_admin = this.$store.getters.user.is_admin
     return {
       basic: {
         title: '映射',
@@ -35,20 +36,19 @@ export default {
           align: 'left',
           width: 100,
           sortable: false,
-          table: true
+          table: is_admin
         },
         {
           type: 'select',
           text: "所属用户",
           value: 'user_id',//表单下拉框
-          form: true,
+          form: is_admin,
           items: [],
           itemText: 'user_name',
           itemValue: 'user_id',
           change: (id) => {
             this.selectUserChange(id)
           },
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '请选择所属用户'
@@ -74,7 +74,6 @@ export default {
           change: (id) => {
 
           },
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '请选择主机'
@@ -89,7 +88,6 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '应用名称不能为空'
@@ -104,7 +102,6 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '内网地址不能为空'
@@ -119,7 +116,6 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '外网地址不能为空'
@@ -138,7 +134,6 @@ export default {
           change: (id) => {
 
           },
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '请选择协议类型'
@@ -220,6 +215,9 @@ export default {
       }).then(({ data }) => {
         if (data.Result) {
           this.clientList = data.Data
+          if (!this.$store.getters.user.is_admin) {
+            this.columns[3].items = data.Data.filter(c => c.user_id == this.$store.getters.user.user_id)
+          }
         }
       })
     },
@@ -228,8 +226,10 @@ export default {
       this.$refs.curd.formItem.client_id = null
       if (id) {
         //根据用户id过滤主机名称数据源
-        var items = this.clientList.filter(c => c.user_id == id)
-        this.columns[3].items = items
+        if (this.$store.getters.user.is_admin) {
+          var items = this.clientList.filter(c => c.user_id == id)
+          this.columns[3].items = items
+        }
       } else {
         //清空主机名称数据源
         this.columns[3].items = []

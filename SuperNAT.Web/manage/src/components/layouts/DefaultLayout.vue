@@ -10,9 +10,9 @@
       </div>
       <!-- App Footer -->
       <v-footer height="auto" class="white pa-3 app--footer">
-        <span class="caption">isocked.com Design &copy; {{ new Date().getFullYear() }}</span>
+        <span class="caption">SuperNAT内网穿透 &copy; {{ new Date().getFullYear() }}</span>
         <v-spacer></v-spacer>
-        <span class="caption mr-1"> Make With Love </span>
+        <span class="caption mr-1">作者：卟再任性</span>
         <v-icon color="pink" small>favorite</v-icon>
       </v-footer>
     </v-content>

@@ -41,7 +41,6 @@
                                         v-validate="'required'"
                                         :error-messages="errors.collect('name')"
                                         data-vv-name="name"
-                                        required
                                         label="角色名称"></v-text-field>
                         </v-flex>
                         <v-flex>
@@ -235,7 +234,7 @@ export default {
     //保存
     save () {
       this.formItem.menu_ids = this.formItem.menu_ids.filter(c => c != '0')
-      this.$validator.validateAll(this.formItem).then(res => {
+      this.$validator.validateAll().then(res => {
         if (res) {
           request({
             url: '/Api/Role/Add',

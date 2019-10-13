@@ -55,5 +55,6 @@ namespace SuperNAT.Common
         }
         public static int ServerPort { get; set; }
         public static string DefaultUrl { get; set; }
+        public static string RegRoleId { get; set; }
     }
 }

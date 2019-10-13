@@ -132,6 +132,7 @@ namespace SuperNAT.Server
             GlobalConfig.WebPort = configuration.GetValue<string>("ServerConfig:WebPort");
             GlobalConfig.ServerPort = configuration.GetValue<int>("ServerConfig:ServerPort");
             GlobalConfig.DefaultUrl = configuration.GetValue<string>("ServerConfig:DefaultUrl");
+            GlobalConfig.RegRoleId = configuration.GetValue<string>("ServerConfig:RegRoleId");
 
             Repository = LogManager.CreateRepository("NETCoreRepository");
             XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));

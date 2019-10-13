@@ -12,6 +12,7 @@ export default {
     SimpleCurd
   },
   data () {
+    var is_admin = this.$store.getters.user.is_admin
     return {
       basic: {
         title: '主机',
@@ -23,7 +24,9 @@ export default {
           this.getUserList()
         },
         affterGetOne: (item) => {
-
+          if (!is_admin) {
+            item.user_id = this.$store.getters.user.user_id
+          }
         }
       },
       columns: [
@@ -34,20 +37,19 @@ export default {
           align: 'left',
           width: 100,
           sortable: false,
-          table: true
+          table: is_admin
         },
         {
           type: 'select',
           text: "所属用户",
           value: 'user_id',//表单下拉框
-          form: true,
+          form: is_admin,
           items: [],
           itemText: 'user_name',
           itemValue: 'user_id',
           change: (id) => {
-            
+
           },
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '请选择所属用户'
@@ -62,7 +64,6 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '主机名称不能为空'
@@ -86,7 +87,6 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '二级域名不能为空'

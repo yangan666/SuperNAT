@@ -48,7 +48,6 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '菜单标题不能为空'
@@ -82,7 +81,6 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '路由名称不能为空'
@@ -97,7 +95,6 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '路由地址不能为空'
@@ -112,7 +109,6 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '组件路径不能为空'
@@ -127,7 +123,6 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '排序不能为空'
@@ -138,7 +133,6 @@ export default {
           text: '是否隐藏',
           value: 'hidden',
           form: true,
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '请选择隐藏或显示'
@@ -158,7 +152,6 @@ export default {
           text: '总是显示',
           value: 'always_show',
           form: true,
-          required: true,
           validate: 'required',
           requiredInfo: {
             required: () => '请选择总是显示或总是隐藏'

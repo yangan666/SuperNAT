@@ -18,7 +18,7 @@ namespace SuperNAT.Server.Auth
     {
         private readonly RequestDelegate _next;
         private readonly JwtSetting _jwtSetting;
-        private readonly List<string> _allowAnonymousPathList = new List<string>() { "/Api/User/Login", "/Api/Map/GetMapList" };
+        private readonly List<string> _allowAnonymousPathList = new List<string>() { "/Api/User/Login", "/Api/User/Register", "/Api/Map/GetMapList" };
 
         public AuthMiddleware(RequestDelegate next, IOptions<JwtSetting> option)
         {
@@ -85,6 +85,11 @@ namespace SuperNAT.Server.Auth
                 {
                     using var bll = new UserBll();
                     var user = bll.GetUserInfo(payLoad["user_id"].ToString());
+                    if (user.Result)
+                    {
+                        //密码不传前端
+                        user.Data.password = "";
+                    }
                     await httpContext.Response.WriteAsync(JsonHelper.Instance.Serialize(user));
                 }
                 else
