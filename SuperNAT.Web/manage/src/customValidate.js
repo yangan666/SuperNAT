@@ -16,3 +16,5 @@ Validator.extend("confirmPassword", {
     return val1 === val2
   }
 })
+
+export default Validator

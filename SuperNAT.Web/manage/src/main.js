@@ -57,9 +57,9 @@ Validator.localize(zh_CN)
 const dictionary = {
   zh_CN: {
     messages: {
-      email: () => "请输入正确的邮箱格式"
+      email: () => "请输入正确的邮箱格式",
+      required: field => "请输入" + field,
     },
-    required: field => "请输入" + field,
     attributes: {}
   }
 }
