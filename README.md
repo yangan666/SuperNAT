@@ -13,7 +13,8 @@ window服务器的部署：<br/>
 第五步：内网穿透>主机管理>新建主机，生成主机密钥，然后在端口映射创建你的应用。<br/><br/>
 
 window客户端的部署：<br/>
-下载源码生成SuperNAT.Client，修改配置文件appsettings.json的配置<br/><br/>
+第一步：先下载net core 3.0运行时，地址：https://dotnet.microsoft.com/download/dotnet-core/3.0 选择下载Runtime 3.0.0 ASP.NET Core/.NET Core: Runtime & Hosting Bundle，安装到服务器。<br/>
+第二步：下载源码生成SuperNAT.Client，修改配置文件appsettings.json的配置，启动SuperNAT.Client即可完成内网映射<br/><br/>
 ![Image text](https://github.com/yangan666/SuperNAT/blob/master/Img/client.config.png)<br/><br/>
 穿透示例：
 ![Image text](https://github.com/yangan666/SuperNAT/blob/master/Img/demo.png)
