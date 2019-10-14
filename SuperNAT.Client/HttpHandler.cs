@@ -264,6 +264,7 @@ namespace SuperNAT.Client
             packBytes.AddRange(lenBytes);
             packBytes.AddRange(RegPack);
             NatClient.Send(packBytes.ToArray());
+            //TODO 有服务器返回是否注册成功（验证）
             foreach (var item in MapList)
             {
                 HandleLog.WriteLine($"{item.name}映射成功：{item.local} --> {item.remote}");
