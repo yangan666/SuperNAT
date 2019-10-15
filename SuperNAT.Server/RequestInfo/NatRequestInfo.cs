@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SuperNAT.Server
 {
-    public class MyRequestInfo : IRequestInfo
+    public class NatRequestInfo : IRequestInfo
     {
-        public MyRequestInfo(byte[] header, byte[] body, byte[] data)
+        public NatRequestInfo(byte[] header, byte[] body, byte[] data)
         {
             Header = header;
             Body = body;

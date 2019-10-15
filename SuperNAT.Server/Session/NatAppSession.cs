@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SuperNAT.Server
 {
-    public class NatAppSession : AppSession<NatAppSession, MyRequestInfo>
+    public class NatAppSession : AppSession<NatAppSession, NatRequestInfo>
     {
         public Client Client { get; set; }
         public List<Map> MapList { get; set; }

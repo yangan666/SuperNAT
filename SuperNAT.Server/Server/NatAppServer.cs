@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace SuperNAT.Server
 {
-    public class NatAppServer : AppServer<NatAppSession, MyRequestInfo>
+    public class NatAppServer : AppServer<NatAppSession, NatRequestInfo>
     {
         public NatAppServer()
-           : base(new DefaultReceiveFilterFactory<NatReceiveFilter, MyRequestInfo>())
+           : base(new DefaultReceiveFilterFactory<NatReceiveFilter, NatRequestInfo>())
         {
 
         }

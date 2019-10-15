@@ -85,7 +85,7 @@ namespace SuperNAT.Server
             HandleLog.WriteLine($"内网客户端【{session.RemoteEndPoint}】已连接");
         }
 
-        private static void NATServer_NewRequestReceived(NatAppSession session, MyRequestInfo requestInfo)
+        private static void NATServer_NewRequestReceived(NatAppSession session, NatRequestInfo requestInfo)
         {
             try
             {
@@ -243,7 +243,7 @@ namespace SuperNAT.Server
             //HandleLog.WriteLine($"客户端【{session.SessionID}】已连接");
         }
 
-        private static void WebServer_NewRequestReceived(WebAppSession session, MyRequestInfo requestInfo)
+        private static void WebServer_NewRequestReceived(WebAppSession session, HttpRequestInfo requestInfo)
         {
             Task.Run(() =>
             {
@@ -253,67 +253,8 @@ namespace SuperNAT.Server
                     {
                         session.RequestTime = DateTime.Now;
                     }
-                    session.RequestByteList.AddRange(requestInfo.Data);
-                    var headers = new Dictionary<string, string>();
-                    var firstLine = string.Empty;
-                    var result = string.Empty;
-                    var content = string.Empty;
-                    int contentLength = 0, contentLen = 0, headerIndex = 0;
-                    string method = string.Empty;
-                    string route = string.Empty;
-                    headerIndex = DataHelper.BytesIndexOf(session.RequestByteList.ToArray(), Encoding.UTF8.GetBytes("\r\n\r\n"));
-                    if (headerIndex <= 0)
-                    {
-                        return;
-                    }
-                    result = Encoding.UTF8.GetString(session.RequestByteList.CloneRange(0, headerIndex));
-                    //找到header结束标识 先判断有没有Body
-                    string[] headerStr = result.Substring(0, headerIndex).Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-                    for (int i = 0; i < headerStr.Length; i++)
-                    {
-                        string[] temp = headerStr[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
-                        if (temp.Length == 2)
-                        {
-                            if (headers.ContainsKey(temp[0]))
-                            {
-                                headers[temp[0]] = temp[1];
-                            }
-                            else
-                            {
-                                headers.Add(temp[0], temp[1]);
-                            }
-                        }
-                        else
-                        {
-                            session.RequestInfo = firstLine = string.Join("", temp);
-                            var headItems = firstLine.Split(' ');
-                            method = headItems[0];
-                            route = headItems[1].Trim();
-                        }
-                    }
-                    //if (header.ContainsKey("Transfer-Encoding") && header["Transfer-Encoding"].ToLower().Contains("chunked"))
-                    //{
-                    //    var str = Encoding.UTF8.GetString(requestByteList.ToArray());
-                    //    goto mark;
-                    //}
-                    if (headers.ContainsKey("Content-Length"))
-                    {
-                        contentLength = Convert.ToInt32(headers["Content-Length"]);
-                    }
-                    contentLen = session.RequestByteList.Count - headerIndex - 4;
-                    if (contentLen < contentLength)
-                    {
-                        return;
-                    }
-                    //没有Host直接返回
-                    if (!headers.ContainsKey("Host"))
-                    {
-                        HandleLog.WriteLine("Host不存在，放弃处理！");
-                        session?.Close();
-                        return;
-                    }
                     //转发请求
-                    var host = headers["Host"];
+                    var host = requestInfo.HeaderDict["Host"];
                     var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.remote == host) ?? false).FirstOrDefault();
                     if (natSession == null)
                     {
@@ -321,15 +262,14 @@ namespace SuperNAT.Server
                         HandleLog.WriteLine("Nat客户端连接不存在，放弃处理！");
                         return;
                     }
-                    var request = session.RequestByteList.ToString();
                     var pack = new PackJson()
                     {
                         Host = host,
                         UserId = session.UserId,
-                        Method = method,
-                        Route = route,
-                        Headers = headers,
-                        Content = contentLen > 0 ? session.RequestByteList.CloneRange(headerIndex + 4, session.RequestByteList.Count - headerIndex - 4) : null
+                        Method = requestInfo.Method,
+                        Route = requestInfo.Route,
+                        Headers = requestInfo.HeaderDict,
+                        Content = requestInfo.Content
                     };
                     var json = JsonHelper.Instance.Serialize(pack);
                     var jsonBytes = Encoding.UTF8.GetBytes(json);
@@ -338,11 +278,10 @@ namespace SuperNAT.Server
                     sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
                     sendBytes.AddRange(jsonBytes);
                     natSession.Send(sendBytes.ToArray(), 0, sendBytes.Count);
-                    session.RequestByteList.Clear();
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.WriteLine($"【{session.RemoteEndPoint}】请求参数：{Encoding.UTF8.GetString(session.RequestByteList.ToArray())}，处理发生异常：{ex}");
+                    HandleLog.WriteLine($"【{session.RemoteEndPoint}】请求参数：{Encoding.UTF8.GetString(requestInfo.Data)}，处理发生异常：{ex}");
                 }
             });
         }

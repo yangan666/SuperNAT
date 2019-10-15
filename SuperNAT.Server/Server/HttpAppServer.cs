@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace SuperNAT.Server
 {
-    public class HttpAppServer : AppServer<WebAppSession, MyRequestInfo>
+    public class HttpAppServer : AppServer<WebAppSession, HttpRequestInfo>
     {
         public HttpAppServer()
-            : base(new DefaultReceiveFilterFactory<HttpReceiveFilter, MyRequestInfo>())
+            : base(new DefaultReceiveFilterFactory<HttpReceiveFilter, HttpRequestInfo>())
         {
 
         }

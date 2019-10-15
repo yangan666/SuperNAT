@@ -10,22 +10,16 @@ using System.Threading.Tasks;
 namespace SuperNAT.Server
 {
     /// <summary>
-    /// FixedHeaderReceiveFilter过滤器
+    /// Nat穿透过滤器
     /// </summary>
-    public class NatReceiveFilter : FixedHeaderReceiveFilter<MyRequestInfo>
+    public class NatReceiveFilter : FixedHeaderReceiveFilter<NatRequestInfo>
     {
-        /// +-------+---+-------------------------------+
-        /// |request| l |                               |
-        /// | name  | e |    request body               |
-        /// |  (2)  | n |                               |
-        /// |       |(1)|                               |
-        /// +-------+---+-------------------------------+
         public NatReceiveFilter()
         : base(6)
         {
             //地址码(1) 功能码(1) 数据长度(4) 正文数据(n)
-            //01 01 数据长度(4) Host(n)   ---注册包
-            //01 02 数据长度(4) Host(n)   ---心跳包
+            //01 01 数据长度(4) 正文数据(n)   ---注册包
+            //01 02 数据长度(4) 正文数据(n)   ---心跳包
             //01 03 数据长度(4) 正文数据(n)   ---http响应包
         }
         protected override int GetBodyLengthFromHeader(byte[] header, int offset, int length)
@@ -37,7 +31,7 @@ namespace SuperNAT.Server
             return len;
         }
 
-        protected override MyRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
+        protected override NatRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
         {
             int len = header.Count + length;
             //预先分配大小，分配多少就是多少个。预先分配的大小一定要大于等于加进去的元素数量。否则，说不定比不分配更加糟糕。
@@ -46,7 +40,7 @@ namespace SuperNAT.Server
             var bodyBytes = new byte[length];
             Array.Copy(bodyBuffer, offset, bodyBytes, 0, length);
             listData.AddRange(bodyBytes.ToList());
-            return new MyRequestInfo(header.ToArray(), bodyBytes, listData.ToArray());
+            return new NatRequestInfo(header.ToArray(), bodyBytes, listData.ToArray());
         }
     }
 }
