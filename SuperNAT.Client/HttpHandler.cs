@@ -264,19 +264,24 @@ namespace SuperNAT.Client
             packBytes.AddRange(lenBytes);
             packBytes.AddRange(RegPack);
             NatClient.Send(packBytes.ToArray());
-            //TODO 有服务器返回是否注册成功（验证）
-            foreach (var item in MapList)
-            {
-                HandleLog.WriteLine($"{item.name}映射成功：{item.local} --> {item.remote}");
-            }
         }
 
         static void OnPackageReceived(object sender, PackageEventArgs<NatPackageInfo> e)
         {
             switch (e.Package.FunCode)
             {
+                case 0x1:
+                    {
+                        //注册包回复
+                        foreach (var item in MapList)
+                        {
+                            HandleLog.WriteLine($"{item.name}映射成功：{item.local} --> {item.remote}");
+                        }
+                    }
+                    break;
                 case 0x3:
                     {
+                        //http请求
                         HandleRequest(e);
                     }
                     break;

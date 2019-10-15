@@ -118,6 +118,8 @@ namespace SuperNAT.Server
 
                             using var mapBll = new MapBll();
                             session.MapList = mapBll.GetMapList(secret).Data ?? new List<Map>();
+                            //原样返回回复客户端注册成功
+                            session.Send(requestInfo.Data);
                         }
                         break;
                     case 0x2:
@@ -259,7 +261,7 @@ namespace SuperNAT.Server
                     if (natSession == null)
                     {
                         session?.Close();
-                        HandleLog.WriteLine("Nat客户端连接不存在，放弃处理！");
+                        HandleLog.WriteLine($"请求：{host}失败，Nat客户端连接不在线！");
                         return;
                     }
                     var pack = new PackJson()

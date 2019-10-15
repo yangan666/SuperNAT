@@ -13,6 +13,9 @@ namespace SuperNAT.Client
         : base(6)
         {
             //地址码(1) 功能码(1) 数据长度(4) 正文数据(n)
+            //01 01 数据长度(4) 正文数据(n)   ---注册包
+            //01 02 数据长度(4) 正文数据(n)   ---心跳包
+            //01 03 数据长度(4) 正文数据(n)   ---http响应包
         }
 
         protected override int GetBodyLengthFromHeader(IBufferStream bufferStream, int length)
