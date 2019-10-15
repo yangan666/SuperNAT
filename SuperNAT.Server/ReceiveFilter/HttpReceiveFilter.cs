@@ -17,6 +17,7 @@ namespace SuperNAT.Server
         public IReceiveFilter<HttpRequestInfo> NextReceiveFilter { get; set; }
 
         public FilterState State { get; set; }
+
         public static byte[] EndHeader = Encoding.UTF8.GetBytes("\r\n\r\n");
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace SuperNAT.Server
             Array.Copy(readBuffer, offset, bodyBytes, 0, length);
 
             //包含结束符截断报文解析
-            var headerIndex = DataHelper.BytesIndexOf(bodyBytes, Encoding.UTF8.GetBytes("\r\n\r\n"));
+            var headerIndex = DataHelper.BytesIndexOf(bodyBytes, EndHeader);
             if (headerIndex == -1)
             {
                 //头部未结束 Tips：当你在接收缓冲区中没有找到一个完整的请求时, 你需要返回 NULL.
@@ -43,18 +44,20 @@ namespace SuperNAT.Server
             }
 
             //判断是否存在Content-Length
-            var result = Encoding.UTF8.GetString(bodyBytes.CloneRange(0, headerIndex));
-            if (!result.Contains("Content-Length"))
+            var headerStr = Encoding.UTF8.GetString(bodyBytes.CloneRange(0, headerIndex));
+            if (!headerStr.Contains("Content-Length"))
             {
                 //不包含Body直接返回 Tips：已经是完整报文
-                return new HttpRequestInfo(result, result);
+                return new HttpRequestInfo(headerStr, headerStr);
             }
+
+            //TODO 判断请求头是否有Transfer-Encoding
 
             //解析头部找到Content-Length
             var firstLine = string.Empty;
             var headers = new Dictionary<string, string>();
-            string[] headerStr = result.Substring(0, headerIndex).Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            var lenStr = headerStr.FirstOrDefault(c => c.Contains("Content-Length"));
+            string[] headerArr = headerStr.Substring(0, headerIndex).Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var lenStr = headerArr.FirstOrDefault(c => c.Contains("Content-Length"));
             var lenArr = lenStr.Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
             //Body长度
             var contentLen = Convert.ToInt32(lenStr[1]);
@@ -69,11 +72,13 @@ namespace SuperNAT.Server
             {
                 //当你在接收缓冲区中找到一条完整的请求, 但接收到的数据并不仅仅包含一个请求时，设置剩余数据的长度到输出变量 "rest".
                 rest = receiveLen - contentLen;
-                var @return = bodyBytes.CloneRange(0, length - rest);
+
+                //返回一个完整的http请求实例
+                return new HttpRequestInfo(headerStr, Encoding.UTF8.GetString(bodyBytes.CloneRange(headerIndex + 4, length - rest - headerIndex - 4)));
             }
 
             //返回一个完整的http请求实例
-            return new HttpRequestInfo(result, Encoding.UTF8.GetString(bodyBytes.CloneRange(headerIndex + 4, length - headerIndex - 4)));
+            return new HttpRequestInfo(headerStr, Encoding.UTF8.GetString(bodyBytes.CloneRange(headerIndex + 4, length - headerIndex - 4)));
         }
 
         public void Reset()
