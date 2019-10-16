@@ -76,9 +76,6 @@ namespace SuperNAT.Client
 
             NatClient?.Close();
             NatClient = null;
-
-            //结束进程
-            Process.GetCurrentProcess().Kill();
         }
 
         /// <summary>
