@@ -133,6 +133,13 @@ namespace SuperNAT.Server
                             session.MapList = mapBll.GetMapList(secret).Data ?? new List<Map>();
                             //原样返回回复客户端注册成功
                             session.Send(requestInfo.Data);
+                            Task.Run(() =>
+                            {
+                                //更新在线状态
+                                using var bll = new ClientBll();
+                                var updateRst = bll.UpdateOnlineStatus(new Client() { secret = session.Client.secret, is_online = true, last_heart_time = DateTime.Now });
+                                HandleLog.WriteLine($"更新主机【{session.Client.name}】在线状态结果：{updateRst.Message}", false);
+                            });
                         }
                         break;
                     case 0x2:
