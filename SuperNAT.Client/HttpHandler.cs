@@ -6,6 +6,7 @@ using SuperNAT.Common.Models;
 using SuperSocket.ClientEngine;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -25,9 +26,10 @@ namespace SuperNAT.Client
         public static byte[] RegPack => Encoding.UTF8.GetBytes(Secret);
         public static List<Map> MapList { get; set; }
         public static ILoggerRepository Repository { get; set; }
+        public static Thread reConnectThread, heartThread;
 
 
-        public static void Start()
+        public void Start()
         {
             try
             {
@@ -47,10 +49,10 @@ namespace SuperNAT.Client
                 {
                     ConnectNatServer();
 
-                    Thread reConnectThread = new Thread(ReConnect) { IsBackground = true };
+                    reConnectThread = new Thread(ReConnect) { IsBackground = true };
                     reConnectThread.Start();
 
-                    Thread heartThread = new Thread(SendHeart) { IsBackground = true };
+                    heartThread = new Thread(SendHeart) { IsBackground = true };
                     heartThread.Start();
                 }
                 else
@@ -62,6 +64,21 @@ namespace SuperNAT.Client
             {
                 HandleLog.WriteLine($"{ex}");
             }
+        }
+
+        public void Stop()
+        {
+            reConnectThread?.Abort();
+            reConnectThread = null;
+
+            heartThread?.Abort();
+            heartThread = null;
+
+            NatClient?.Close();
+            NatClient = null;
+
+            //结束进程
+            Process.GetCurrentProcess().Kill();
         }
 
         /// <summary>

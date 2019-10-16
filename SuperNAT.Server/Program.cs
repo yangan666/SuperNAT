@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using System.Threading;
 using System.Reflection;
+using Topshelf;
 
 namespace SuperNAT.Server
 {
@@ -22,12 +23,19 @@ namespace SuperNAT.Server
                 return;
             }
             #endregion
-            Dapper.SimpleCRUD.SetDialect(Dapper.SimpleCRUD.Dialect.MySQL);
-            Startup.Init();
-            ServerHanlder.Start();
-            Task.Run(() =>
+            HostFactory.Run(x =>
             {
-                ServerHanlder.CreateHostBuilder(args).Build().Run();
+                x.Service<ServerHanlder>(s =>
+                {
+                    s.ConstructUsing(name => new ServerHanlder());
+                    s.WhenStarted(tc => tc.Start(args));
+                    s.WhenStopped(tc => tc.Stop());
+                });
+                x.RunAsLocalSystem();
+
+                x.SetDescription("SuperNATServer");
+                x.SetDisplayName("SuperNATServer");
+                x.SetServiceName("SuperNATServer");
             });
 
             Console.ReadKey();

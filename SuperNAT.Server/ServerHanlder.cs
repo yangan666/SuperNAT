@@ -23,15 +23,27 @@ namespace SuperNAT.Server
     {
         public static string CertFile = "iot3rd.p12";
         public static string CertPassword = "IoM@1234";
-        static List<HttpAppServer> WebServerList { get; set; } = new List<HttpAppServer>();
+        static HttpAppServer HttpServer { get; set; }
         static NatAppServer NATServer { get; set; }
 
-        public static void Start()
+        public void Start(string[] args)
         {
+            Dapper.SimpleCRUD.SetDialect(Dapper.SimpleCRUD.Dialect.MySQL);
+            Startup.Init();
             //开启内网TCP服务
             Task.Run(StartNATServer);
             //开启外网Web服务
             Task.Run(StartWebServer);
+            Task.Run(() =>
+            {
+                CreateHostBuilder(args).Build().Run();
+            });
+        }
+
+        public void Stop()
+        {
+            HttpServer.Stop();
+            NATServer.Stop();
         }
 
         #region 内网TCP服务
@@ -142,7 +154,7 @@ namespace SuperNAT.Server
                             var packJson = JsonHelper.Instance.Deserialize<PackJson>(requestInfo.BodyRaw);
                             int count = 0;
                             mark:
-                            var webSession = WebServerList.SelectMany(s => s.GetAllSessions()).Where(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
+                            var webSession = HttpServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
                             if (webSession == null)
                             {
                                 count++;
@@ -188,54 +200,54 @@ namespace SuperNAT.Server
         {
             if (GlobalConfig.WebPortList.Any())
             {
-                foreach (var i in GlobalConfig.WebPortList)
+                HttpServer = new HttpAppServer();
+                bool setup = HttpServer.Setup(new RootConfig()
                 {
-                    var webServer = new HttpAppServer();
-                    bool setup = webServer.Setup(new RootConfig()
+                    DisablePerformanceDataCollector = true
+                }, new ServerConfig()
+                {
+                    Listeners = from s in GlobalConfig.WebPortList
+                                select new ListenerConfig
+                                {
+                                    Ip = "Any",
+                                    Port = s
+                                },//批量监听
+                    TextEncoding = "ASCII",
+                    MaxRequestLength = 102400,
+                    MaxConnectionNumber = 1000,
+                    ReceiveBufferSize = 102400,
+                    SendBufferSize = 102400,
+                    LogBasicSessionActivity = true,
+                    LogAllSocketException = true,
+                    SyncSend = false,
+                    //Security = "tls12",
+                    //Certificate = new CertificateConfig()
+                    //{
+                    //    FilePath = CertFile,
+                    //    Password = CertPassword,
+                    //    ClientCertificateRequired = false
+                    //},
+                    DisableSessionSnapshot = true,
+                    SessionSnapshotInterval = 1
+                });
+                if (setup)
+                {
+                    var start = HttpServer.Start();
+                    if (start)
                     {
-                        DisablePerformanceDataCollector = true
-                    }, new ServerConfig()
-                    {
-                        Ip = "Any",
-                        Port = i,
-                        TextEncoding = "ASCII",
-                        MaxRequestLength = 102400,
-                        MaxConnectionNumber = 100,
-                        ReceiveBufferSize = 102400,
-                        SendBufferSize = 102400,
-                        LogBasicSessionActivity = true,
-                        LogAllSocketException = true,
-                        SyncSend = false,
-                        //Security = "tls12",
-                        //Certificate = new CertificateConfig()
-                        //{
-                        //    FilePath = CertFile,
-                        //    Password = CertPassword,
-                        //    ClientCertificateRequired = false
-                        //},
-                        DisableSessionSnapshot = true,
-                        SessionSnapshotInterval = 1
-                    });
-                    if (setup)
-                    {
-                        var start = webServer.Start();
-                        if (start)
-                        {
-                            webServer.NewSessionConnected += WebServer_NewSessionConnected;
-                            webServer.NewRequestReceived += WebServer_NewRequestReceived;
-                            webServer.SessionClosed += WebServer_SessionClosed;
-                            HandleLog.WriteLine($"Web服务启动成功，监听端口：{webServer.Config.Port}");
-                            WebServerList.Add(webServer);
-                        }
-                        else
-                        {
-                            HandleLog.WriteLine($"Web服务启动失败，端口：{webServer.Config.Port}");
-                        }
+                        HttpServer.NewSessionConnected += WebServer_NewSessionConnected;
+                        HttpServer.NewRequestReceived += WebServer_NewRequestReceived;
+                        HttpServer.SessionClosed += WebServer_SessionClosed;
+                        HandleLog.WriteLine($"Web服务启动成功，监听端口：{GlobalConfig.WebPort}");
                     }
                     else
                     {
-                        HandleLog.WriteLine($"Web服务初始化失败，端口：{webServer.Config.Port}");
+                        HandleLog.WriteLine($"Web服务启动失败，端口：{GlobalConfig.WebPort}");
                     }
+                }
+                else
+                {
+                    HandleLog.WriteLine($"Web服务初始化失败，端口：{GlobalConfig.WebPort}");
                 }
             }
         }
