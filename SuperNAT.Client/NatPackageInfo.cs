@@ -10,12 +10,6 @@ namespace SuperNAT.Client
 {
     public class NatPackageInfo : IPackageInfo
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="header">头部</param>
-        /// <param name="bodyBuffer">数据</param>
-        /// <param name="allBuffer">整个数据包</param>
         public NatPackageInfo(byte[] data)
         {
             Header = data.CloneRange(0, 6);
