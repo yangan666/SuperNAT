@@ -24,8 +24,8 @@ namespace SuperNAT.Server
     {
         public static string CertFile = "iot3rd.p12";
         public static string CertPassword = "IoM@1234";
-        static HttpAppServer HttpServer { get; set; }
-        static NatAppServer NATServer { get; set; }
+        public static HttpAppServer HttpServer { get; set; }
+        public static NatAppServer NATServer { get; set; }
 
         public void Start(string[] args)
         {
@@ -35,16 +35,31 @@ namespace SuperNAT.Server
             Task.Run(StartNATServer);
             //开启外网Web服务
             Task.Run(StartWebServer);
+            //接口服务
             Task.Run(() =>
             {
                 CreateHostBuilder(args).Build().Run();
             });
+            //管理后台修改映射通知客户端
+            HandleEvent.MapAction += ChangeMap;
         }
 
         public void Stop()
         {
             HttpServer.Stop();
             NATServer.Stop();
+        }
+
+        public void ChangeMap(int type, Map map)
+        {
+            map.ChangeType = type;
+            //请求头 01 04 长度(4)
+            var sendBytes = new List<byte>() { 0x1, 0x4 };
+            var jsonBytes = Encoding.UTF8.GetBytes(JsonHelper.Instance.Serialize(map));
+            sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
+            sendBytes.AddRange(jsonBytes);
+            var natClient = NATServer.GetSessions(c => c.Client.id == map.client_id).FirstOrDefault();
+            natClient?.Send(sendBytes.ToArray());
         }
 
         #region 内网TCP服务

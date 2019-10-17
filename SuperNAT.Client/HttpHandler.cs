@@ -299,6 +299,13 @@ namespace SuperNAT.Client
                         HandleRequest(e);
                     }
                     break;
+                case 0x4:
+                    {
+                        //Map变动
+                        var map = JsonHelper.Instance.Deserialize<Map>(e.Package.BodyRaw);
+                        ChangeMap(map);
+                    }
+                    break;
             }
         }
 
@@ -310,6 +317,28 @@ namespace SuperNAT.Client
         static void OnClientError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
             HandleLog.WriteLine($"连接错误：{e.Exception}");
+        }
+
+        static void ChangeMap(Map map)
+        {
+            if (MapList == null)
+            {
+                MapList = new List<Map>();
+            }
+            switch (map.ChangeType)
+            {
+                case (int)ChangeMapType.新增:
+                    MapList.Add(map);
+                    break;
+                case (int)ChangeMapType.修改:
+                    var item = MapList.Find(c => c.id == map.id);
+                    item = map;
+                    break;
+                case (int)ChangeMapType.删除:
+                    MapList.RemoveAll(c => c.id == map.id);
+                    break;
+            }
+            HandleLog.WriteLine($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}");
         }
     }
 }
