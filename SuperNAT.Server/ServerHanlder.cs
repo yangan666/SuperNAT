@@ -81,7 +81,7 @@ namespace SuperNAT.Server
                     break;
                 case (int)ChangeMapType.修改:
                     var item = session.MapList.Find(c => c.id == map.id);
-                    if(item != null)
+                    if (item != null)
                     {
                         item = map;
                     }
@@ -164,8 +164,10 @@ namespace SuperNAT.Server
                             var client = bll.GetOne(secret).Data;
                             if (client == null)
                             {
-                                HandleLog.WriteLine($"Token非法，关闭连接【{session.RemoteEndPoint}】");
-                                session.Close(CSuperSocket.SocketBase.CloseReason.ServerClosing);
+                                HandleLog.WriteLine($"连接【{session.RemoteEndPoint}】Token非法！！");
+                                //通知客户端
+                                
+                                session.Send(sendBytes.ToArray());
                                 return;
                             }
                             var sessionList = NATServer.GetSessions(c => c.Client?.secret == secret).ToList();

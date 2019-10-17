@@ -44,21 +44,24 @@ namespace SuperNAT.Client
                     }
                     Log4netUtil.Info(log);
                 };
-                MapList = GetMapList(Secret)?.Data;
-                if (MapList?.Any() ?? false)
+                //加载映射列表
+                var maps = GetMapList(Secret);
+                while (!maps.Result && maps.Status == -1)
                 {
-                    ConnectNatServer();
-
-                    reConnectThread = new Thread(ReConnect) { IsBackground = true };
-                    reConnectThread.Start();
-
-                    heartThread = new Thread(SendHeart) { IsBackground = true };
-                    heartThread.Start();
+                    maps = GetMapList(Secret);
+                    //请求失败5s后重新请求
+                    HandleLog.WriteLine($"请求获取映射列表失败！5s后重新请求！");
+                    Thread.Sleep(5000);
                 }
-                else
-                {
-                    HandleLog.WriteLine($"端口映射列表为空！");
-                }
+                MapList = maps.Data ?? new List<Map>();
+                //连接服务器
+                ConnectNatServer();
+                //开启重连线程
+                reConnectThread = new Thread(ReConnect) { IsBackground = true };
+                reConnectThread.Start();
+                //开启心跳线程
+                heartThread = new Thread(SendHeart) { IsBackground = true };
+                heartThread.Start();
             }
             catch (Exception ex)
             {
@@ -188,6 +191,11 @@ namespace SuperNAT.Client
                 {
                     res = JsonHelper.Instance.Deserialize<ReturnResult<List<Map>>>(response);
                 }
+                else
+                {
+                    //请求失败
+                    res.Status = -1;
+                }
             }
             catch (Exception ex)
             {
@@ -287,9 +295,17 @@ namespace SuperNAT.Client
                 case 0x1:
                     {
                         //注册包回复
-                        foreach (var item in MapList)
+                        HandleLog.WriteLine($"主机密钥验证成功！");
+                        if (MapList.Any())
                         {
-                            HandleLog.WriteLine($"【{item.name}】映射成功：{item.local} --> {item.remote}");
+                            foreach (var item in MapList)
+                            {
+                                HandleLog.WriteLine($"【{item.name}】映射成功：{item.local} --> {item.remote}");
+                            }
+                        }
+                        else
+                        {
+                            HandleLog.WriteLine($"端口映射列表为空,请到管理后台创建映射！");
                         }
                     }
                     break;

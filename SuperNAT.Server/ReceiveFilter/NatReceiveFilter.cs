@@ -21,6 +21,8 @@ namespace SuperNAT.Server
             //01 01 数据长度(4) 正文数据(n)   ---注册包
             //01 02 数据长度(4) 正文数据(n)   ---心跳包
             //01 03 数据长度(4) 正文数据(n)   ---http响应包
+            //01 04 数据长度(4) 正文数据(n)   ---Map变动
+            //01 05 数据长度(4) 正文数据(n)   ---通知客户端
         }
         protected override int GetBodyLengthFromHeader(byte[] header, int offset, int length)
         {
