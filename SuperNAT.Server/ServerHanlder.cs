@@ -53,6 +53,7 @@ namespace SuperNAT.Server
         public void ChangeMap(int type, Map map)
         {
             map.ChangeType = type;
+            ChangeMap(map);
             //请求头 01 04 长度(4)
             var sendBytes = new List<byte>() { 0x1, 0x4 };
             var jsonBytes = Encoding.UTF8.GetBytes(JsonHelper.Instance.Serialize(map));
@@ -60,6 +61,41 @@ namespace SuperNAT.Server
             sendBytes.AddRange(jsonBytes);
             var natClient = NATServer.GetSessions(c => c.Client.id == map.client_id).FirstOrDefault();
             natClient?.Send(sendBytes.ToArray());
+        }
+
+        static void ChangeMap(Map map)
+        {
+            var session = NATServer.GetSessions(c => c.Client.id == map.client_id).FirstOrDefault();
+            if (session == null)
+            {
+                return;
+            }
+            if (session.MapList == null)
+            {
+                session.MapList = new List<Map>();
+            }
+            switch (map.ChangeType)
+            {
+                case (int)ChangeMapType.新增:
+                    session.MapList.Add(map);
+                    break;
+                case (int)ChangeMapType.修改:
+                    var item = session.MapList.Find(c => c.id == map.id);
+                    if(item != null)
+                    {
+                        item = map;
+                    }
+                    else
+                    {
+                        session.MapList.Add(map);
+                    }
+                    break;
+                case (int)ChangeMapType.删除:
+                    session.MapList.RemoveAll(c => c.id == map.id);
+                    break;
+            }
+            HandleLog.WriteLine($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
+            HandleLog.WriteLine($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local} --> {map.remote}");
         }
 
         #region 内网TCP服务

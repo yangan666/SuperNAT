@@ -332,7 +332,14 @@ namespace SuperNAT.Client
                     break;
                 case (int)ChangeMapType.修改:
                     var item = MapList.Find(c => c.id == map.id);
-                    item = map;
+                    if (item != null)
+                    {
+                        item = map;
+                    }
+                    else
+                    {
+                        MapList.Add(map);
+                    }
                     break;
                 case (int)ChangeMapType.删除:
                     MapList.RemoveAll(c => c.id == map.id);
