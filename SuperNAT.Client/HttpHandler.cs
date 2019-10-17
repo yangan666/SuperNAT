@@ -27,6 +27,7 @@ namespace SuperNAT.Client
         public static List<Map> MapList { get; set; }
         public static ILoggerRepository Repository { get; set; }
         public static Thread reConnectThread, heartThread;
+        public static bool IsStop = false;
 
 
         public void Start()
@@ -209,6 +210,10 @@ namespace SuperNAT.Client
         {
             try
             {
+                if (IsStop)
+                {
+                    return;
+                }
                 HandleLog.WriteLine($"正在连接服务器...");
                 NatClient?.Close();
                 NatClient = null;
@@ -248,7 +253,7 @@ namespace SuperNAT.Client
 
         static void ReConnect()
         {
-            while (true)
+            while (!IsStop)
             {
                 Thread.Sleep(5000);
                 if (!NatClient.IsConnected)
@@ -262,7 +267,7 @@ namespace SuperNAT.Client
 
         static void SendHeart()
         {
-            while (true)
+            while (!IsStop)
             {
                 Thread.Sleep(30000);
                 if (NatClient.IsConnected)
@@ -320,6 +325,14 @@ namespace SuperNAT.Client
                         //Map变动
                         var map = JsonHelper.Instance.Deserialize<Map>(e.Package.BodyRaw);
                         ChangeMap(map);
+                    }
+                    break;
+                case 0x5:
+                    {
+                        //服务端消息
+                        var msg = JsonHelper.Instance.Deserialize<ReturnResult<bool>>(e.Package.BodyRaw);
+                        IsStop = msg.Result;
+                        HandleLog.WriteLine(msg.Message);
                     }
                     break;
             }

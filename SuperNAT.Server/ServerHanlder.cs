@@ -164,20 +164,14 @@ namespace SuperNAT.Server
                             var client = bll.GetOne(secret).Data;
                             if (client == null)
                             {
-                                HandleLog.WriteLine($"连接【{session.RemoteEndPoint}】Token非法！！");
-                                //通知客户端
-                                
-                                session.Send(sendBytes.ToArray());
+                                HandleLog.WriteLine($"主机【{session.RemoteEndPoint}】密钥不正确！！");
+                                session.SendMsg("主机密钥不正确，请确认是否填写正确！");
                                 return;
                             }
-                            var sessionList = NATServer.GetSessions(c => c.Client?.secret == secret).ToList();
-                            if (sessionList?.Count > 0)
+                            var checkSession = NATServer.GetSessions(c => c.Client?.secret == secret).FirstOrDefault();
+                            if (checkSession != null)
                             {
-                                sessionList.ForEach(c =>
-                                {
-                                    c?.Close();
-                                    HandleLog.WriteLine($"【{session.Client.secret}】连接重复，强制关闭{c.RemoteEndPoint}");
-                                });
+                                session.SendMsg($"密钥{secret}已被主机：{checkSession.Client.name},{checkSession.RemoteEndPoint}使用！");
                                 return;
                             }
                             session.Client = client;

@@ -13,19 +13,20 @@ namespace SuperNAT.Server
     {
         public Client Client { get; set; }
         public List<Map> MapList { get; set; }
-        public void SendMsg(string msg)
+        public void SendMsg(string msg, bool isError = true)
         {
             try
             {
                 //请求头 01 05 长度(4)
                 var sendBytes = new List<byte>() { 0x1, 0x5 };
-                var jsonBytes = Encoding.UTF8.GetBytes(msg);
+                var jsonBytes = Encoding.UTF8.GetBytes(JsonHelper.Instance.Serialize(new ReturnResult<bool>() { Result = !isError, Message = msg }));
                 sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
                 sendBytes.AddRange(jsonBytes);
+                Send(sendBytes.ToArray());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                HandleLog.WriteLine($"发送下次消息失败");
+                HandleLog.WriteLine($"发送客户端消息失败：{ex}");
             }
         }
     }
