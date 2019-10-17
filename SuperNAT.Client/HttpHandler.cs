@@ -289,7 +289,7 @@ namespace SuperNAT.Client
                         //注册包回复
                         foreach (var item in MapList)
                         {
-                            HandleLog.WriteLine($"{item.name}映射成功：{item.local} --> {item.remote}");
+                            HandleLog.WriteLine($"【{item.name}】映射成功：{item.local} --> {item.remote}");
                         }
                     }
                     break;
@@ -338,7 +338,8 @@ namespace SuperNAT.Client
                     MapList.RemoveAll(c => c.id == map.id);
                     break;
             }
-            HandleLog.WriteLine($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}");
+            HandleLog.WriteLine($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
+            HandleLog.WriteLine($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local} --> {map.remote}");
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using SuperNAT.Common;
 using SuperNAT.Common.Bll;
 using SuperNAT.Common.Models;
 
@@ -22,10 +23,18 @@ namespace SuperNAT.Server.Controllers
             if (model.id == 0)
             {
                 rst = bll.Add(model);
+                if (rst.Result)
+                {
+                    HandleEvent.ChangeMap((int)ChangeMapType.新增, model);
+                }
             }
             else
             {
                 rst = bll.Update(model);
+                if (rst.Result)
+                {
+                    HandleEvent.ChangeMap((int)ChangeMapType.修改, model);
+                }
             }
 
             return Json(rst);
@@ -37,6 +46,10 @@ namespace SuperNAT.Server.Controllers
         {
             using var bll = new MapBll();
             var rst = bll.Delete(model);
+            if (rst.Result)
+            {
+                HandleEvent.ChangeMap((int)ChangeMapType.删除, model);
+            }
 
             return Json(rst);
         }
