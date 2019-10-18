@@ -295,46 +295,73 @@ namespace SuperNAT.Client
 
         static void OnPackageReceived(object sender, PackageEventArgs<NatPackageInfo> e)
         {
-            switch (e.Package.FunCode)
+            if (e.Package.Mode == 0x1)//nat
             {
-                case 0x1:
-                    {
-                        //注册包回复
-                        HandleLog.WriteLine($"主机密钥验证成功！");
-                        if (MapList.Any())
+                switch (e.Package.FunCode)
+                {
+                    case 0x1:
                         {
-                            foreach (var item in MapList)
+                            //注册包回复
+                            HandleLog.WriteLine($"主机密钥验证成功！");
+                            if (MapList.Any())
                             {
-                                HandleLog.WriteLine($"【{item.name}】映射成功：{item.local} --> {item.remote}");
+                                foreach (var item in MapList)
+                                {
+                                    HandleLog.WriteLine($"【{item.name}】映射成功：{item.local} --> {item.remote}");
+                                }
+                            }
+                            else
+                            {
+                                HandleLog.WriteLine($"端口映射列表为空,请到管理后台创建映射！");
                             }
                         }
-                        else
+                        break;
+                    case 0x4:
                         {
-                            HandleLog.WriteLine($"端口映射列表为空,请到管理后台创建映射！");
+                            //Map变动
+                            var map = JsonHelper.Instance.Deserialize<Map>(e.Package.BodyRaw);
+                            ChangeMap(map);
                         }
-                    }
-                    break;
-                case 0x3:
-                    {
-                        //http请求
-                        HandleRequest(e);
-                    }
-                    break;
-                case 0x4:
-                    {
-                        //Map变动
-                        var map = JsonHelper.Instance.Deserialize<Map>(e.Package.BodyRaw);
-                        ChangeMap(map);
-                    }
-                    break;
-                case 0x5:
-                    {
-                        //服务端消息
-                        var msg = JsonHelper.Instance.Deserialize<ReturnResult<bool>>(e.Package.BodyRaw);
-                        IsStop = msg.Result;
-                        HandleLog.WriteLine(msg.Message);
-                    }
-                    break;
+                        break;
+                    case 0x5:
+                        {
+                            //服务端消息
+                            var msg = JsonHelper.Instance.Deserialize<ReturnResult<bool>>(e.Package.BodyRaw);
+                            IsStop = msg.Result;
+                            HandleLog.WriteLine(msg.Message);
+                        }
+                        break;
+                }
+            }
+            else if (e.Package.Mode == 0x2)//http
+            {
+                switch (e.Package.FunCode)
+                {
+                    case 0x1:
+                        {
+                            //http请求
+                            HandleRequest(e);
+                        }
+                        break;
+                }
+            }
+            else if (e.Package.Mode == 0x3)//tcp
+            {
+                switch (e.Package.FunCode)
+                {
+                    case 0x1:
+                        {
+                            //tcp注册包  发起连接到内网服务器
+
+                        }
+                        break;
+                    case 0x2:
+                        {
+                            //tcp注册包  发起连接到内网服务器
+
+                        }
+                        break;
+                }
             }
         }
 
