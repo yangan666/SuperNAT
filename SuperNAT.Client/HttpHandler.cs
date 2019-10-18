@@ -32,42 +32,45 @@ namespace SuperNAT.Client
 
         public void Start()
         {
-            try
+            Task.Run(() =>
             {
-                Repository = LogManager.CreateRepository("NETCoreRepository");
-                XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
-                Log4netUtil.LogRepository = Repository;//类库中定义的静态变量
-                HandleLog.WriteLog += (log, isPrint) =>
+                try
                 {
-                    if (isPrint)
+                    Repository = LogManager.CreateRepository("NETCoreRepository");
+                    XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
+                    Log4netUtil.LogRepository = Repository;//类库中定义的静态变量
+                    HandleLog.WriteLog += (log, isPrint) =>
                     {
-                        Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {log}");
+                        if (isPrint)
+                        {
+                            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {log}");
+                        }
+                        Log4netUtil.Info(log);
+                    };
+                    //加载映射列表
+                    var maps = GetMapList(Secret);
+                    while (!maps.Result && maps.Status == -1)
+                    {
+                        maps = GetMapList(Secret);
+                        //请求失败5s后重新请求
+                        HandleLog.WriteLine($"请求获取映射列表失败！5s后重新请求！");
+                        Thread.Sleep(5000);
                     }
-                    Log4netUtil.Info(log);
-                };
-                //加载映射列表
-                var maps = GetMapList(Secret);
-                while (!maps.Result && maps.Status == -1)
-                {
-                    maps = GetMapList(Secret);
-                    //请求失败5s后重新请求
-                    HandleLog.WriteLine($"请求获取映射列表失败！5s后重新请求！");
-                    Thread.Sleep(5000);
+                    MapList = maps.Data ?? new List<Map>();
+                    //连接服务器
+                    ConnectNatServer();
+                    //开启重连线程
+                    reConnectThread = new Thread(ReConnect) { IsBackground = true };
+                    reConnectThread.Start();
+                    //开启心跳线程
+                    heartThread = new Thread(SendHeart) { IsBackground = true };
+                    heartThread.Start();
                 }
-                MapList = maps.Data ?? new List<Map>();
-                //连接服务器
-                ConnectNatServer();
-                //开启重连线程
-                reConnectThread = new Thread(ReConnect) { IsBackground = true };
-                reConnectThread.Start();
-                //开启心跳线程
-                heartThread = new Thread(SendHeart) { IsBackground = true };
-                heartThread.Start();
-            }
-            catch (Exception ex)
-            {
-                HandleLog.WriteLine($"{ex}");
-            }
+                catch (Exception ex)
+                {
+                    HandleLog.WriteLine($"{ex}");
+                }
+            });
         }
 
         public void Stop()
