@@ -19,6 +19,7 @@ namespace SuperNAT.Client
     public class ClientHandler
     {
         public static EasyClient<NatPackageInfo> NatClient { get; set; }
+        public static List<TcpClientInfo> TcpClientList { get; set; } = new List<TcpClientInfo>();
         public static string Secret { get; set; } = AppConfig.GetSetting("Secret");
         public static string ServerUrl { get; set; } = AppConfig.GetSetting("ServerUrl");
         public static string ServerPort { get; set; } = AppConfig.GetSetting("ServerPort");
@@ -347,18 +348,41 @@ namespace SuperNAT.Client
             }
             else if (e.Package.Mode == 0x3)//tcp
             {
+                var packJson = JsonHelper.Instance.Deserialize<PackJson>(e.Package.BodyRaw);
                 switch (e.Package.FunCode)
                 {
                     case 0x1:
                         {
                             //tcp注册包  发起连接到内网服务器
-
+                            TcpClientList.RemoveAll(c => c.PackJson.Local == packJson.Local);
+                            var client = new TcpClientInfo(packJson, NatClient);
+                            TcpClientList.Add(client);
                         }
                         break;
                     case 0x2:
                         {
-                            //tcp注册包  发起连接到内网服务器
-
+                            //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
+                            mark:
+                            var client = TcpClientList.Find(c => c.PackJson.UserId == packJson.UserId);
+                            if (client == null)
+                            {
+                                Thread.Sleep(50);
+                                goto mark;
+                            }
+                            if (client.TcpClient == null)
+                            {
+                                Thread.Sleep(50);
+                                goto mark;
+                            }
+                            if (client.TcpClient.IsConnected == false)
+                            {
+                                Thread.Sleep(50);
+                                goto mark;
+                            }
+                            //先讲16进制字符串转为byte数组  再gzip解压
+                            var request = DataHelper.Decompress(packJson.Content);
+                            //发送原始包
+                            client.TcpClient.Send(request);
                         }
                         break;
                 }

@@ -244,7 +244,7 @@ namespace SuperNAT.Server
                 {
                     switch (requestInfo.FunCode)
                     {
-                        case 0x1:
+                        case 0x2:
                             {
                                 //响应请求
                                 var packJson = JsonHelper.Instance.Deserialize<PackJson>(requestInfo.BodyRaw);
@@ -460,7 +460,44 @@ namespace SuperNAT.Server
 
         private static void TcpServer_NewSessionConnected(TcpAppSession session)
         {
-            //HandleLog.WriteLine($"客户端【{session.SessionID}】已连接");
+            HandleLog.WriteLine($"客户端【{session.RemoteEndPoint}】已连接");
+            Task.Run(() =>
+            {
+                try
+                {
+                    //转发请求
+                    var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.TcpPort == session.LocalEndPoint.Port) ?? false).FirstOrDefault();
+                    if (natSession == null)
+                    {
+                        session?.Close();
+                        HandleLog.WriteLine($"请求：{session.LocalEndPoint}失败，Nat客户端连接不在线！");
+                        return;
+                    }
+                    var map = natSession.MapList?.Find(c => c.TcpPort == session.LocalEndPoint.Port);
+                    session.Map = map;
+                    var pack = new PackJson()
+                    {
+                        Host = map?.remote,
+                        Local = map?.local,
+                        UserId = session.UserId,
+                        Method = "TCP"
+                    };
+                    session.PackJson = pack;
+                    var json = JsonHelper.Instance.Serialize(pack);
+                    var jsonBytes = Encoding.UTF8.GetBytes(json);
+                    //03 01 数据长度(4) 正文数据(n)   ---tcp连接注册包
+                    var sendBytes = new List<byte>() { 0x3, 0x1 };
+                    sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
+                    sendBytes.AddRange(jsonBytes);
+                    natSession.Send(sendBytes.ToArray(), 0, sendBytes.Count);
+
+                    session.NatSession = natSession;
+                }
+                catch (Exception ex)
+                {
+                    HandleLog.WriteLine($"连接【{session.LocalEndPoint}】发生异常：{ex}");
+                }
+            });
         }
 
         private static void TcpServer_NewRequestReceived(TcpAppSession session, TcpRequestInfo requestInfo)
@@ -469,36 +506,35 @@ namespace SuperNAT.Server
             {
                 try
                 {
+                    while (session.NatSession == null)
+                    {
+                        Thread.Sleep(50);
+                    }
                     if (session.RequestTime == null)
                     {
                         session.RequestTime = DateTime.Now;
                     }
-                    //转发请求
-                    var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.TcpPort == session.RemoteEndPoint.Port) ?? false).FirstOrDefault();
-                    if (natSession == null)
-                    {
-                        session?.Close();
-                        HandleLog.WriteLine($"请求：{session.RemoteEndPoint}失败，Nat客户端连接不在线！");
-                        return;
-                    }
+                    //先gzip压缩  再转为16进制字符串
+                    var body = DataHelper.Compress(requestInfo.Data);
                     var pack = new PackJson()
                     {
-                        Host = natSession.MapList?.Find(c => c.TcpPort == session.RemoteEndPoint.Port)?.remote,
+                        Host = session.Map?.remote,
+                        Local = session.Map?.local,
                         UserId = session.UserId,
                         Method = "TCP",
-                        Content = requestInfo.Data
+                        Content = body
                     };
                     var json = JsonHelper.Instance.Serialize(pack);
                     var jsonBytes = Encoding.UTF8.GetBytes(json);
-                    //请求头 01 03 长度(4)
-                    var sendBytes = new List<byte>() { 0x1, 0x3 };
+                    //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
+                    var sendBytes = new List<byte>() { 0x3, 0x2 };
                     sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
                     sendBytes.AddRange(jsonBytes);
-                    natSession.Send(sendBytes.ToArray(), 0, sendBytes.Count);
+                    session.NatSession.Send(sendBytes.ToArray(), 0, sendBytes.Count);
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.WriteLine($"【{session.RemoteEndPoint}】请求参数：{Encoding.UTF8.GetString(requestInfo.Data)}，处理发生异常：{ex}");
+                    HandleLog.WriteLine($"【{session.LocalEndPoint}】请求参数：{Encoding.UTF8.GetString(requestInfo.Data)}，处理发生异常：{ex}");
                 }
             });
         }

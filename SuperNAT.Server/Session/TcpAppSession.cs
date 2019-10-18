@@ -16,5 +16,8 @@ namespace SuperNAT.Server
         public string UserId { get; set; } = Guid.NewGuid().ToString();
         public string RequestInfo { get; set; }
         public DateTime? RequestTime { get; set; }
+        public NatAppSession NatSession { get; set; }
+        public Map Map { get; set; }
+        public PackJson PackJson { get; set; }
     }
 }

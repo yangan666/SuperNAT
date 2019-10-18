@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace SuperNAT.Client
 {
-    public class HttpReceiveFilter : IReceiveFilter<HttpPackageInfo>
+    public class ClientReceiveFilter : IReceiveFilter<ClientPackageInfo>
     {
-        public HttpReceiveFilter()
+        public ClientReceiveFilter()
         {
             
         }
 
-        public IReceiveFilter<HttpPackageInfo> NextReceiveFilter { get; set; }
+        public IReceiveFilter<ClientPackageInfo> NextReceiveFilter { get; set; }
 
         public FilterState State { get; set; }
 
-        public HttpPackageInfo Filter(BufferList data, out int rest)
+        public ClientPackageInfo Filter(BufferList data, out int rest)
         {
             rest = 0;
             List<byte> bytes = new List<byte>();
@@ -26,7 +26,7 @@ namespace SuperNAT.Client
             {
                 bytes.AddRange(item.ToList());
             }
-            return new HttpPackageInfo(bytes.ToArray());
+            return new ClientPackageInfo(bytes.ToArray());
         }
 
         public void Reset()
