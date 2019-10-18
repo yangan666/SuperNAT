@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace SuperNAT.Client
 {
-    public class HttpHandler
+    public class ClientHandler
     {
         public static EasyClient<NatPackageInfo> NatClient { get; set; }
         public static string Secret { get; set; } = AppConfig.GetSetting("Secret");

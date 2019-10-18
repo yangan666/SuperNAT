@@ -35,5 +35,35 @@ namespace SuperNAT.Common.Models
         public bool is_admin { get; set; } = false;
         [Editable(false)]
         public int ChangeType { get; set; }
+        [Editable(false)]
+        public int TcpPort
+        {
+            get
+            {
+                int port = 0;
+
+                try
+                {
+                    if (!string.IsNullOrEmpty(remote))
+                    {
+                        var arr = remote.Split(":");
+                        if (arr.Length == 1)
+                        {
+                            port = 80;
+                        }
+                        else if (arr.Length == 2)
+                        {
+                            int.TryParse(arr[1], out port);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+                return port;
+            }
+        }
     }
 }

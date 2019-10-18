@@ -12,12 +12,20 @@ namespace SuperNAT.Client
         public NatReceiveFilter()
         : base(6)
         {
-            //地址码(1) 功能码(1) 数据长度(4) 正文数据(n)
+            //协议 01:nat 02:http 03:tcp 04:udp
+            //协议(1) 功能码(1) 数据长度(4) 正文数据(n)
+
+            //nat
             //01 01 数据长度(4) 正文数据(n)   ---注册包
             //01 02 数据长度(4) 正文数据(n)   ---心跳包
-            //01 03 数据长度(4) 正文数据(n)   ---http响应包
+            //01 03 数据长度(4) 正文数据(n)   ---服务器推送消息（成功/失败信息）
             //01 04 数据长度(4) 正文数据(n)   ---Map变动
-            //01 05 数据长度(4) 正文数据(n)   ---通知客户端
+
+            //http
+            //02 01 数据长度(4) 正文数据(n)   ---http响应包
+
+            //tcp
+            //03 01 数据长度(4) 正文数据(n)   ---tcp响应包
         }
 
         protected override int GetBodyLengthFromHeader(IBufferStream bufferStream, int length)

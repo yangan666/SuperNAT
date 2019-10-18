@@ -9,9 +9,9 @@ namespace SuperNAT.Client
         {
             HostFactory.Run(x =>
             {
-                x.Service<HttpHandler>(s =>
+                x.Service<ClientHandler>(s =>
                 {
-                    s.ConstructUsing(name => new HttpHandler());
+                    s.ConstructUsing(name => new ClientHandler());
                     s.WhenStarted(tc => tc.Start());
                     s.WhenStopped(tc => tc.Stop());
                 });
