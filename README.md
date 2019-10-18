@@ -1,6 +1,6 @@
 # SuperNAT
 SuperNAT是基于NET Core 3.0开源跨平台的内网穿透程序，服务端端使用的是SuperSokcet，客户端使用的是EasyClient，功能类似花生壳，可用于穿透内网web应用，微信公众号本地调试，目前仅支持http穿透，tcp穿透会在后续加入，SuperNAT.Server为服务端，SuperNAT.Client为客户端。<br/>
-目前属于开发阶段，大家可自行注册体验，SuperNAT管理后台：http://www.supernat.cn:8088
+目前属于开发阶段，大家可自行注册免费使用，SuperNAT管理后台：http://www.supernat.cn:8088
 ![Image text](https://github.com/yangan666/SuperNAT/blob/master/Img/manage.png)
 <br/>
 <br/>
