@@ -9,6 +9,7 @@ namespace SuperNAT.Common
     public class PackJson
     {
         public string Host { get; set; }
+        public string Local { get; set; }
         public string UserId { get; set; }
         public string Method { get; set; }
         public string Route { get; set; }

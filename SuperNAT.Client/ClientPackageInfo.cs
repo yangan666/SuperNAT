@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SuperNAT.Client
 {
-    public class HttpPackageInfo : IPackageInfo
+    public class ClientPackageInfo : IPackageInfo
     {
         /// <summary>
         /// 
@@ -16,7 +16,7 @@ namespace SuperNAT.Client
         /// <param name="header">头部</param>
         /// <param name="bodyBuffer">数据</param>
         /// <param name="allBuffer">整个数据包</param>
-        public HttpPackageInfo(byte[] data)
+        public ClientPackageInfo(byte[] data)
         {
             Data = data;
             Raw = data == null ? string.Empty : Encoding.UTF8.GetString(data);

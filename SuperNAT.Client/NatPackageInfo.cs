@@ -18,6 +18,7 @@ namespace SuperNAT.Client
             BodyRaw = Body == null ? string.Empty : Encoding.UTF8.GetString(Body);
             Raw = data == null ? string.Empty : Encoding.UTF8.GetString(data);
             Hex = data == null ? string.Empty : DataHelper.ByteToHex(data);
+            Mode = Header == null ? (byte)0x0 : Header[0];
             FunCode = Header == null ? (byte)0x0 : Header[1];
         }
 
@@ -37,6 +38,7 @@ namespace SuperNAT.Client
         public string BodyRaw { get; set; }
         public string Raw { get; set; }
         public string Hex { get; set; }
+        public byte Mode { get; set; }
         public byte FunCode { get; set; }
     }
 }

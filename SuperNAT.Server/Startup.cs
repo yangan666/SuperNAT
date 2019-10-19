@@ -130,6 +130,7 @@ namespace SuperNAT.Server
             GlobalConfig.ConnetionString = configuration.GetValue<string>("DBConfig:ConnetionString");
             GlobalConfig.NatPort = configuration.GetValue<int>("ServerConfig:NatPort");
             GlobalConfig.WebPort = configuration.GetValue<string>("ServerConfig:WebPort");
+            GlobalConfig.TcpPort = configuration.GetValue<string>("ServerConfig:TcpPort");
             GlobalConfig.ServerPort = configuration.GetValue<int>("ServerConfig:ServerPort");
             GlobalConfig.DefaultUrl = configuration.GetValue<string>("ServerConfig:DefaultUrl");
             GlobalConfig.RegRoleId = configuration.GetValue<string>("ServerConfig:RegRoleId");

@@ -25,6 +25,7 @@ namespace SuperNAT.Server
         public static string CertFile = "iot3rd.p12";
         public static string CertPassword = "IoM@1234";
         public static HttpAppServer HttpServer { get; set; }
+        public static TcpAppServer TcpAppServer { get; set; }
         public static NatAppServer NATServer { get; set; }
 
         public void Start(string[] args)
@@ -35,6 +36,8 @@ namespace SuperNAT.Server
             Task.Run(StartNATServer);
             //开启外网Web服务
             Task.Run(StartWebServer);
+            //开启外网Tcp服务
+            Task.Run(StartTcpServer);
             //接口服务
             Task.Run(() =>
             {
@@ -154,81 +157,118 @@ namespace SuperNAT.Server
             try
             {
                 //HandleLog.WriteLine($"NAT服务收到数据：{requestInfo.Hex}");
-                switch (requestInfo.FunCode)
+                if (requestInfo.Mode == 0x1)//nat
                 {
-                    case 0x1:
-                        {
-                            //注册包
-                            var secret = requestInfo.BodyRaw;
-                            using var bll = new ClientBll();
-                            var client = bll.GetOne(secret).Data;
-                            if (client == null)
+                    switch (requestInfo.FunCode)
+                    {
+                        case 0x1:
                             {
-                                HandleLog.WriteLine($"主机【{session.RemoteEndPoint}】密钥不正确！！");
-                                session.SendMsg("主机密钥不正确，请确认是否填写正确！");
-                                return;
-                            }
-                            var checkSession = NATServer.GetSessions(c => c.Client?.secret == secret).FirstOrDefault();
-                            if (checkSession != null)
-                            {
-                                session.SendMsg($"密钥{secret}已被主机：{checkSession.Client.name},{checkSession.RemoteEndPoint}使用！");
-                                return;
-                            }
-                            session.Client = client;
-
-                            using var mapBll = new MapBll();
-                            session.MapList = mapBll.GetMapList(secret).Data ?? new List<Map>();
-                            //原样返回回复客户端注册成功
-                            session.Send(requestInfo.Data);
-                            Task.Run(() =>
-                            {
-                                //更新在线状态
+                                //注册包
+                                var secret = requestInfo.BodyRaw;
                                 using var bll = new ClientBll();
-                                var updateRst = bll.UpdateOnlineStatus(new Client() { secret = session.Client.secret, is_online = true, last_heart_time = DateTime.Now });
-                                HandleLog.WriteLine($"更新主机【{session.Client.name}】在线状态结果：{updateRst.Message}", false);
-                            });
-                        }
-                        break;
-                    case 0x2:
-                        {
-                            //心跳包
-                            var secret = requestInfo.BodyRaw;
-                            HandleLog.WriteLine($"收到连接{session.RemoteEndPoint}的心跳包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
-                            Task.Run(() =>
-                            {
-                                //更新在线状态
-                                using var bll = new ClientBll();
-                                var updateRst = bll.UpdateOnlineStatus(new Client() { secret = session.Client.secret, is_online = true, last_heart_time = DateTime.Now });
-                                HandleLog.WriteLine($"更新主机【{session.Client.name}】在线状态结果：{updateRst.Message}", false);
-                            });
-                        }
-                        break;
-                    case 0x3:
-                        {
-                            //响应请求
-                            var packJson = JsonHelper.Instance.Deserialize<PackJson>(requestInfo.BodyRaw);
-                            int count = 0;
-                            mark:
-                            var webSession = HttpServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
-                            if (webSession == null)
-                            {
-                                count++;
-                                Thread.Sleep(500);
-                                if (count < 5)
+                                var client = bll.GetOne(secret).Data;
+                                if (client == null)
                                 {
-                                    goto mark;
+                                    HandleLog.WriteLine($"主机【{session.RemoteEndPoint}】密钥不正确！！");
+                                    session.SendMsg("主机密钥不正确，请确认是否填写正确！");
+                                    return;
                                 }
-                                HandleLog.WriteLine($"webSession【{packJson.UserId}】不存在");
-                                return;
+                                var checkSession = NATServer.GetSessions(c => c.Client?.secret == secret).FirstOrDefault();
+                                if (checkSession != null)
+                                {
+                                    session.SendMsg($"密钥{secret}已被主机：{checkSession.Client.name},{checkSession.RemoteEndPoint}使用！");
+                                    return;
+                                }
+                                session.Client = client;
+
+                                using var mapBll = new MapBll();
+                                session.MapList = mapBll.GetMapList(secret).Data ?? new List<Map>();
+                                //原样返回回复客户端注册成功
+                                session.Send(requestInfo.Data);
+                                Task.Run(() =>
+                                {
+                                    //更新在线状态
+                                    using var bll = new ClientBll();
+                                    var updateRst = bll.UpdateOnlineStatus(new Client() { secret = session.Client.secret, is_online = true, last_heart_time = DateTime.Now });
+                                    HandleLog.WriteLine($"更新主机【{session.Client.name}】在线状态结果：{updateRst.Message}", false);
+                                });
                             }
-                            //先讲16进制字符串转为byte数组  再gzip解压
-                            var response = DataHelper.Decompress(packJson.Content);
-                            var rawResponse = Encoding.UTF8.GetString(response);
-                            var res = webSession.TrySend(response, 0, response.Length);
-                            HandleLog.WriteLine($"{packJson.ResponseInfo} {Math.Ceiling((DateTime.Now - webSession.RequestTime).Value.TotalMilliseconds)}ms");
-                            //webSession?.Close();
-                        }
-                        break;
+                            break;
+                        case 0x2:
+                            {
+                                //心跳包
+                                var secret = requestInfo.BodyRaw;
+                                HandleLog.WriteLine($"收到连接{session.RemoteEndPoint}的心跳包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
+                                Task.Run(() =>
+                                {
+                                    //更新在线状态
+                                    using var bll = new ClientBll();
+                                    var updateRst = bll.UpdateOnlineStatus(new Client() { secret = session.Client.secret, is_online = true, last_heart_time = DateTime.Now });
+                                    HandleLog.WriteLine($"更新主机【{session.Client.name}】在线状态结果：{updateRst.Message}", false);
+                                });
+                            }
+                            break;
+                    }
+                }
+                else if (requestInfo.Mode == 0x2)//http
+                {
+                    switch (requestInfo.FunCode)
+                    {
+                        case 0x1:
+                            {
+                                //响应请求
+                                var packJson = JsonHelper.Instance.Deserialize<PackJson>(requestInfo.BodyRaw);
+                                int count = 0;
+                                mark:
+                                var webSession = HttpServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
+                                if (webSession == null)
+                                {
+                                    count++;
+                                    Thread.Sleep(500);
+                                    if (count < 5)
+                                    {
+                                        goto mark;
+                                    }
+                                    HandleLog.WriteLine($"webSession【{packJson.UserId}】不存在");
+                                    return;
+                                }
+                                //先讲16进制字符串转为byte数组  再gzip解压
+                                var response = DataHelper.Decompress(packJson.Content);
+                                var res = webSession.TrySend(response, 0, response.Length);
+                                HandleLog.WriteLine($"{packJson.ResponseInfo} {Math.Ceiling((DateTime.Now - webSession.RequestTime).Value.TotalMilliseconds)}ms");
+                            }
+                            break;
+                    }
+                }
+                else if (requestInfo.Mode == 0x3)//tcp
+                {
+                    switch (requestInfo.FunCode)
+                    {
+                        case 0x2:
+                            {
+                                //响应请求
+                                var packJson = JsonHelper.Instance.Deserialize<PackJson>(requestInfo.BodyRaw);
+                                int count = 0;
+                                mark:
+                                var tcpSession = TcpAppServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
+                                if (tcpSession == null)
+                                {
+                                    count++;
+                                    Thread.Sleep(500);
+                                    if (count < 5)
+                                    {
+                                        goto mark;
+                                    }
+                                    HandleLog.WriteLine($"tcpSession【{packJson.UserId}】不存在");
+                                    return;
+                                }
+                                //先讲16进制字符串转为byte数组  再gzip解压
+                                var response = DataHelper.Decompress(packJson.Content);
+                                var res = tcpSession.TrySend(response, 0, response.Length);
+                                HandleLog.WriteLine($"{packJson.ResponseInfo} {Math.Ceiling((DateTime.Now - tcpSession.RequestTime).Value.TotalMilliseconds)}ms");
+                            }
+                            break;
+                    }
                 }
             }
             catch (Exception ex)
@@ -250,7 +290,7 @@ namespace SuperNAT.Server
         }
         #endregion
 
-        #region 网页Web服务
+        #region Web服务
         private static void StartWebServer()
         {
             if (GlobalConfig.WebPortList.Any())
@@ -356,6 +396,150 @@ namespace SuperNAT.Server
         }
 
         private static void WebServer_SessionClosed(WebAppSession session, CSuperSocket.SocketBase.CloseReason value)
+        {
+            //HandleLog.WriteLine($"客户端【{session.SessionID}】已下线：{value}");
+        }
+        #endregion
+
+        #region Tcp服务
+        private static void StartTcpServer()
+        {
+            if (GlobalConfig.TcpPortList.Any())
+            {
+                TcpAppServer = new TcpAppServer();
+                bool setup = TcpAppServer.Setup(new RootConfig()
+                {
+                    DisablePerformanceDataCollector = true
+                }, new ServerConfig()
+                {
+                    Listeners = from s in GlobalConfig.TcpPortList
+                                select new ListenerConfig
+                                {
+                                    Ip = "Any",
+                                    Port = s
+                                },//批量监听
+                    TextEncoding = "ASCII",
+                    MaxRequestLength = 102400,
+                    MaxConnectionNumber = 1000,
+                    ReceiveBufferSize = 102400,
+                    SendBufferSize = 102400,
+                    LogBasicSessionActivity = true,
+                    LogAllSocketException = true,
+                    SyncSend = false,
+                    //Security = "tls12",
+                    //Certificate = new CertificateConfig()
+                    //{
+                    //    FilePath = CertFile,
+                    //    Password = CertPassword,
+                    //    ClientCertificateRequired = false
+                    //},
+                    DisableSessionSnapshot = true,
+                    SessionSnapshotInterval = 1
+                });
+                if (setup)
+                {
+                    var start = TcpAppServer.Start();
+                    if (start)
+                    {
+                        TcpAppServer.NewSessionConnected += TcpServer_NewSessionConnected;
+                        TcpAppServer.NewRequestReceived += TcpServer_NewRequestReceived;
+                        TcpAppServer.SessionClosed += TcpServer_SessionClosed;
+                        HandleLog.WriteLine($"Tcp服务启动成功，监听端口：{GlobalConfig.TcpPort}");
+                    }
+                    else
+                    {
+                        HandleLog.WriteLine($"Tcp服务启动失败，端口：{GlobalConfig.TcpPort}");
+                    }
+                }
+                else
+                {
+                    HandleLog.WriteLine($"Tcp服务初始化失败，端口：{GlobalConfig.TcpPort}");
+                }
+            }
+        }
+
+        private static void TcpServer_NewSessionConnected(TcpAppSession session)
+        {
+            HandleLog.WriteLine($"客户端【{session.RemoteEndPoint}】已连接");
+            Task.Run(() =>
+            {
+                try
+                {
+                    //转发请求
+                    var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.TcpPort == session.LocalEndPoint.Port) ?? false).FirstOrDefault();
+                    if (natSession == null)
+                    {
+                        session?.Close();
+                        HandleLog.WriteLine($"请求：{session.LocalEndPoint}失败，Nat客户端连接不在线！");
+                        return;
+                    }
+                    var map = natSession.MapList?.Find(c => c.TcpPort == session.LocalEndPoint.Port);
+                    session.Map = map;
+                    var pack = new PackJson()
+                    {
+                        Host = map?.remote,
+                        Local = map?.local,
+                        UserId = session.UserId,
+                        Method = "TCP"
+                    };
+                    session.PackJson = pack;
+                    var json = JsonHelper.Instance.Serialize(pack);
+                    var jsonBytes = Encoding.UTF8.GetBytes(json);
+                    //03 01 数据长度(4) 正文数据(n)   ---tcp连接注册包
+                    var sendBytes = new List<byte>() { 0x3, 0x1 };
+                    sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
+                    sendBytes.AddRange(jsonBytes);
+                    natSession.Send(sendBytes.ToArray(), 0, sendBytes.Count);
+
+                    session.NatSession = natSession;
+                }
+                catch (Exception ex)
+                {
+                    HandleLog.WriteLine($"连接【{session.LocalEndPoint}】发生异常：{ex}");
+                }
+            });
+        }
+
+        private static void TcpServer_NewRequestReceived(TcpAppSession session, TcpRequestInfo requestInfo)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    while (session.NatSession == null)
+                    {
+                        Thread.Sleep(50);
+                    }
+                    if (session.RequestTime == null)
+                    {
+                        session.RequestTime = DateTime.Now;
+                    }
+                    //先gzip压缩  再转为16进制字符串
+                    var body = DataHelper.Compress(requestInfo.Data);
+                    var pack = new PackJson()
+                    {
+                        Host = session.Map?.remote,
+                        Local = session.Map?.local,
+                        UserId = session.UserId,
+                        Method = "TCP",
+                        Content = body
+                    };
+                    var json = JsonHelper.Instance.Serialize(pack);
+                    var jsonBytes = Encoding.UTF8.GetBytes(json);
+                    //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
+                    var sendBytes = new List<byte>() { 0x3, 0x2 };
+                    sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
+                    sendBytes.AddRange(jsonBytes);
+                    session.NatSession.Send(sendBytes.ToArray(), 0, sendBytes.Count);
+                }
+                catch (Exception ex)
+                {
+                    HandleLog.WriteLine($"【{session.LocalEndPoint}】请求参数：{Encoding.UTF8.GetString(requestInfo.Data)}，处理发生异常：{ex}");
+                }
+            });
+        }
+
+        private static void TcpServer_SessionClosed(TcpAppSession session, CSuperSocket.SocketBase.CloseReason value)
         {
             //HandleLog.WriteLine($"客户端【{session.SessionID}】已下线：{value}");
         }
