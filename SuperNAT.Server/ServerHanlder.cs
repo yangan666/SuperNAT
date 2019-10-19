@@ -33,11 +33,16 @@ namespace SuperNAT.Server
             Dapper.SimpleCRUD.SetDialect(Dapper.SimpleCRUD.Dialect.MySQL);
             Startup.Init();
             //开启内网TCP服务
-            Task.Run(StartNATServer);
-            //开启外网Web服务
-            Task.Run(StartWebServer);
-            //开启外网Tcp服务
-            Task.Run(StartTcpServer);
+            Task.Run(() =>
+            {
+                StartNATServer();
+                StartWebServer();
+                StartTcpServer();
+            });
+            ////开启外网Web服务
+            //Task.Run(StartWebServer);
+            ////开启外网Tcp服务
+            //Task.Run(StartTcpServer);
             //接口服务
             Task.Run(() =>
             {
@@ -212,12 +217,12 @@ namespace SuperNAT.Server
                 }
                 else if (requestInfo.Mode == 0x2)//http
                 {
+                    var packJson = JsonHelper.Instance.Deserialize<PackJson>(requestInfo.BodyRaw);
                     switch (requestInfo.FunCode)
                     {
                         case 0x1:
                             {
                                 //响应请求
-                                var packJson = JsonHelper.Instance.Deserialize<PackJson>(requestInfo.BodyRaw);
                                 int count = 0;
                                 mark:
                                 var webSession = HttpServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
@@ -242,12 +247,12 @@ namespace SuperNAT.Server
                 }
                 else if (requestInfo.Mode == 0x3)//tcp
                 {
+                    var packJson = JsonHelper.Instance.Deserialize<PackJson>(requestInfo.BodyRaw);
                     switch (requestInfo.FunCode)
                     {
                         case 0x2:
                             {
                                 //响应请求
-                                var packJson = JsonHelper.Instance.Deserialize<PackJson>(requestInfo.BodyRaw);
                                 int count = 0;
                                 mark:
                                 var tcpSession = TcpAppServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
@@ -263,9 +268,21 @@ namespace SuperNAT.Server
                                     return;
                                 }
                                 //先讲16进制字符串转为byte数组  再gzip解压
-                                var response = DataHelper.Decompress(packJson.Content);
-                                var res = tcpSession.TrySend(response, 0, response.Length);
-                                HandleLog.WriteLine($"{packJson.ResponseInfo} {Math.Ceiling((DateTime.Now - tcpSession.RequestTime).Value.TotalMilliseconds)}ms");
+                                var response = packJson.Content;// DataHelper.Decompress(packJson.Content);
+                                tcpSession.Send(response, 0, response.Length);
+                                HandleLog.WriteLine($"连接【{tcpSession.PackJson.UserId},{tcpSession.RemoteEndPoint}】发送{response.Length}字节：{DataHelper.ByteToHex(response)}  {Math.Ceiling((DateTime.Now - tcpSession.RequestTime).Value.TotalMilliseconds)}ms");
+
+                            }
+                            break;
+                        case 0x3:
+                            {
+                                //响应请求
+                                var tcpSession = TcpAppServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
+                                if (tcpSession != null)
+                                {
+                                    tcpSession.Close();
+                                    HandleLog.WriteLine($"连接【{tcpSession.PackJson.UserId},{tcpSession.RemoteEndPoint}】关闭成功");
+                                }
                             }
                             break;
                     }
@@ -273,7 +290,7 @@ namespace SuperNAT.Server
             }
             catch (Exception ex)
             {
-                HandleLog.WriteLine($"webSession响应请求异常：{ex}");
+                HandleLog.WriteLine($"tcpSession响应请求异常：{ex}");
             }
         }
 
@@ -404,144 +421,168 @@ namespace SuperNAT.Server
         #region Tcp服务
         private static void StartTcpServer()
         {
-            if (GlobalConfig.TcpPortList.Any())
+            try
             {
-                TcpAppServer = new TcpAppServer();
-                bool setup = TcpAppServer.Setup(new RootConfig()
+                if (GlobalConfig.TcpPortList.Any())
                 {
-                    DisablePerformanceDataCollector = true
-                }, new ServerConfig()
-                {
-                    Listeners = from s in GlobalConfig.TcpPortList
-                                select new ListenerConfig
-                                {
-                                    Ip = "Any",
-                                    Port = s
-                                },//批量监听
-                    TextEncoding = "ASCII",
-                    MaxRequestLength = 102400,
-                    MaxConnectionNumber = 1000,
-                    ReceiveBufferSize = 102400,
-                    SendBufferSize = 102400,
-                    LogBasicSessionActivity = true,
-                    LogAllSocketException = true,
-                    SyncSend = false,
-                    //Security = "tls12",
-                    //Certificate = new CertificateConfig()
-                    //{
-                    //    FilePath = CertFile,
-                    //    Password = CertPassword,
-                    //    ClientCertificateRequired = false
-                    //},
-                    DisableSessionSnapshot = true,
-                    SessionSnapshotInterval = 1
-                });
-                if (setup)
-                {
-                    var start = TcpAppServer.Start();
-                    if (start)
+                    TcpAppServer = new TcpAppServer();
+                    bool setup = TcpAppServer.Setup(new RootConfig()
                     {
-                        TcpAppServer.NewSessionConnected += TcpServer_NewSessionConnected;
-                        TcpAppServer.NewRequestReceived += TcpServer_NewRequestReceived;
-                        TcpAppServer.SessionClosed += TcpServer_SessionClosed;
-                        HandleLog.WriteLine($"Tcp服务启动成功，监听端口：{GlobalConfig.TcpPort}");
+                        DisablePerformanceDataCollector = true
+                    }, new ServerConfig()
+                    {
+                        Listeners = from s in GlobalConfig.TcpPortList
+                                    select new ListenerConfig
+                                    {
+                                        Ip = "Any",
+                                        Port = s
+                                    },//批量监听
+                        TextEncoding = "ASCII",
+                        MaxRequestLength = 102400,
+                        MaxConnectionNumber = 1000,
+                        ReceiveBufferSize = 102400,
+                        SendBufferSize = 102400,
+                        LogBasicSessionActivity = true,
+                        LogAllSocketException = true,
+                        SyncSend = false,
+                        //Security = "tls12",
+                        //Certificate = new CertificateConfig()
+                        //{
+                        //    FilePath = CertFile,
+                        //    Password = CertPassword,
+                        //    ClientCertificateRequired = false
+                        //},
+                        DisableSessionSnapshot = true,
+                        SessionSnapshotInterval = 1
+                    });
+                    if (setup)
+                    {
+                        var start = TcpAppServer.Start();
+                        if (start)
+                        {
+                            TcpAppServer.NewSessionConnected += TcpServer_NewSessionConnected;
+                            TcpAppServer.NewRequestReceived += TcpServer_NewRequestReceived;
+                            TcpAppServer.SessionClosed += TcpServer_SessionClosed;
+                            HandleLog.WriteLine($"Tcp服务启动成功，监听端口：{GlobalConfig.TcpPort}");
+                        }
+                        else
+                        {
+                            HandleLog.WriteLine($"Tcp服务启动失败，端口：{GlobalConfig.TcpPort}");
+                        }
                     }
                     else
                     {
-                        HandleLog.WriteLine($"Tcp服务启动失败，端口：{GlobalConfig.TcpPort}");
+                        HandleLog.WriteLine($"Tcp服务初始化失败，端口：{GlobalConfig.TcpPort}");
                     }
                 }
-                else
-                {
-                    HandleLog.WriteLine($"Tcp服务初始化失败，端口：{GlobalConfig.TcpPort}");
-                }
+            }
+            catch (Exception ex)
+            {
+                HandleLog.WriteLine($"启动TCP服务发生异常：{ex}");
             }
         }
 
         private static void TcpServer_NewSessionConnected(TcpAppSession session)
         {
-            HandleLog.WriteLine($"客户端【{session.RemoteEndPoint}】已连接【{session.LocalEndPoint}】");
-            Task.Run(() =>
+            try
             {
-                try
+                //转发请求
+                var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.TcpPort == session.LocalEndPoint.Port) ?? false).FirstOrDefault();
+                if (natSession == null)
                 {
-                    //转发请求
-                    var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.TcpPort == session.LocalEndPoint.Port) ?? false).FirstOrDefault();
-                    if (natSession == null)
-                    {
-                        session?.Close();
-                        HandleLog.WriteLine($"请求：{session.LocalEndPoint}失败，Nat客户端连接不在线！");
-                        return;
-                    }
-                    var map = natSession.MapList?.Find(c => c.TcpPort == session.LocalEndPoint.Port);
-                    session.Map = map;
-                    var pack = new PackJson()
-                    {
-                        Host = map?.remote,
-                        Local = map?.local,
-                        UserId = session.UserId,
-                        Method = "TCP"
-                    };
-                    session.PackJson = pack;
-                    var json = JsonHelper.Instance.Serialize(pack);
-                    var jsonBytes = Encoding.UTF8.GetBytes(json);
-                    //03 01 数据长度(4) 正文数据(n)   ---tcp连接注册包
-                    var sendBytes = new List<byte>() { 0x3, 0x1 };
-                    sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
-                    sendBytes.AddRange(jsonBytes);
-                    natSession.Send(sendBytes.ToArray(), 0, sendBytes.Count);
+                    session?.Close();
+                    HandleLog.WriteLine($"请求：{session.LocalEndPoint}失败，Nat客户端连接不在线！");
+                    return;
+                }
+                var map = natSession.MapList?.Find(c => c.TcpPort == session.LocalEndPoint.Port);
+                session.Map = map;
+                var pack = new PackJson()
+                {
+                    Host = map?.remote,
+                    Local = map?.local,
+                    UserId = session.UserId,
+                    Method = "TCP"
+                };
+                session.PackJson = pack;
+                var json = JsonHelper.Instance.Serialize(pack);
+                var jsonBytes = Encoding.UTF8.GetBytes(json);
+                //03 01 数据长度(4) 正文数据(n)   ---tcp连接注册包
+                var sendBytes = new List<byte>() { 0x3, 0x1 };
+                sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
+                sendBytes.AddRange(jsonBytes);
+                natSession.Send(sendBytes.ToArray(), 0, sendBytes.Count);
 
-                    session.NatSession = natSession;
-                }
-                catch (Exception ex)
-                {
-                    HandleLog.WriteLine($"连接【{session.LocalEndPoint}】发生异常：{ex}");
-                }
-            });
+                session.NatSession = natSession;
+                HandleLog.WriteLine($"客户端【{session.PackJson.UserId},{session.RemoteEndPoint}】已连接【{session.LocalEndPoint}】");
+            }
+            catch (Exception ex)
+            {
+                HandleLog.WriteLine($"连接【{session.PackJson.UserId},{session.LocalEndPoint}】发生异常：{ex}");
+            }
         }
 
         private static void TcpServer_NewRequestReceived(TcpAppSession session, TcpRequestInfo requestInfo)
         {
-            Task.Run(() =>
+            try
             {
-                try
+                while (session.NatSession == null)
                 {
-                    while (session.NatSession == null)
-                    {
-                        Thread.Sleep(50);
-                    }
-                    if (session.RequestTime == null)
-                    {
-                        session.RequestTime = DateTime.Now;
-                    }
-                    //先gzip压缩  再转为16进制字符串
-                    var body = DataHelper.Compress(requestInfo.Data);
-                    var pack = new PackJson()
-                    {
-                        Host = session.Map?.remote,
-                        Local = session.Map?.local,
-                        UserId = session.UserId,
-                        Method = "TCP",
-                        Content = body
-                    };
-                    var json = JsonHelper.Instance.Serialize(pack);
-                    var jsonBytes = Encoding.UTF8.GetBytes(json);
-                    //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
-                    var sendBytes = new List<byte>() { 0x3, 0x2 };
-                    sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
-                    sendBytes.AddRange(jsonBytes);
-                    session.NatSession.Send(sendBytes.ToArray(), 0, sendBytes.Count);
+                    Thread.Sleep(50);
                 }
-                catch (Exception ex)
+                session.RequestTime = DateTime.Now;
+                //先gzip压缩  再转为16进制字符串
+                var body = DataHelper.Compress(requestInfo.Data);
+                var pack = new PackJson()
                 {
-                    HandleLog.WriteLine($"【{session.LocalEndPoint}】请求参数：{Encoding.UTF8.GetString(requestInfo.Data)}，处理发生异常：{ex}");
-                }
-            });
+                    Host = session.Map?.remote,
+                    Local = session.Map?.local,
+                    UserId = session.UserId,
+                    Method = "TCP",
+                    Content = body
+                };
+                var json = JsonHelper.Instance.Serialize(pack);
+                var jsonBytes = Encoding.UTF8.GetBytes(json);
+                //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
+                var sendBytes = new List<byte>() { 0x3, 0x2 };
+                sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
+                sendBytes.AddRange(jsonBytes);
+                session.NatSession.Send(sendBytes.ToArray(), 0, sendBytes.Count);
+                HandleLog.WriteLine($"连接【{session.PackJson.UserId},{session.LocalEndPoint}】收到报文并响应{requestInfo.Data.Length}字节：{DataHelper.ByteToHex(requestInfo.Data)}", false);
+            }
+            catch (Exception ex)
+            {
+                HandleLog.WriteLine($"【{session.LocalEndPoint}】请求参数：{Encoding.UTF8.GetString(requestInfo.Data)}，处理发生异常：{ex}");
+            }
         }
 
         private static void TcpServer_SessionClosed(TcpAppSession session, CSuperSocket.SocketBase.CloseReason value)
         {
-            //HandleLog.WriteLine($"客户端【{session.SessionID}】已下线：{value}");
+            try
+            {
+                CloseLocalClient(session);
+                HandleLog.WriteLine($"客户端【{session.PackJson.UserId},{session.RemoteEndPoint}】已下线：{value}");
+            }
+            catch (Exception ex)
+            {
+                HandleLog.WriteLine($"关闭连接【{session.LocalEndPoint}】发生异常：{ex}");
+            }
+        }
+
+        public static void CloseLocalClient(TcpAppSession session)
+        {
+            var pack = new PackJson()
+            {
+                Host = session.PackJson.Host,
+                UserId = session.PackJson.UserId
+            };
+            var json = JsonHelper.Instance.Serialize(pack);
+            var jsonBytes = Encoding.UTF8.GetBytes(json);
+            //03 03 数据长度(4) 正文数据(n)   ---tcp连接关闭包
+            var sendBytes = new List<byte>() { 0x3, 0x3 };
+            sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
+            sendBytes.AddRange(jsonBytes);
+            //转发给服务器
+            session.NatSession?.Send(sendBytes.ToArray());
         }
         #endregion
 

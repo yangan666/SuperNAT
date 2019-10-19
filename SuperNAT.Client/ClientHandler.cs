@@ -55,7 +55,7 @@ namespace SuperNAT.Client
                         maps = GetMapList(Secret);
                         //请求失败5s后重新请求
                         HandleLog.WriteLine($"请求获取映射列表失败！5s后重新请求！");
-                        Thread.Sleep(5000);
+                        Thread.Sleep(1000);
                     }
                     MapList = maps.Data ?? new List<Map>();
                     //连接服务器
@@ -221,7 +221,7 @@ namespace SuperNAT.Client
                 HandleLog.WriteLine($"正在连接服务器...");
                 NatClient?.Close();
                 NatClient = null;
-                NatClient = new EasyClient<NatPackageInfo>
+                NatClient = new EasyClient<NatPackageInfo>()
                 {
                     Security = new SecurityOption()
                     {
@@ -299,107 +299,129 @@ namespace SuperNAT.Client
 
         static void OnPackageReceived(object sender, PackageEventArgs<NatPackageInfo> e)
         {
-            if (e.Package.Mode == 0x1)//nat
+            Task.Run(() =>
             {
-                switch (e.Package.FunCode)
+                if (e.Package.Mode == 0x1)//nat
                 {
-                    case 0x1:
-                        {
-                            //注册包回复
-                            HandleLog.WriteLine($"主机密钥验证成功！");
-                            if (MapList.Any())
+                    switch (e.Package.FunCode)
+                    {
+                        case 0x1:
                             {
-                                foreach (var item in MapList)
+                                //注册包回复
+                                HandleLog.WriteLine($"主机密钥验证成功！");
+                                if (MapList.Any())
                                 {
-                                    HandleLog.WriteLine($"【{item.name}】映射成功：{item.local} --> {item.remote}");
+                                    foreach (var item in MapList)
+                                    {
+                                        HandleLog.WriteLine($"【{item.name}】映射成功：{item.local} --> {item.remote}");
+                                    }
+                                }
+                                else
+                                {
+                                    HandleLog.WriteLine($"端口映射列表为空,请到管理后台创建映射！");
                                 }
                             }
-                            else
+                            break;
+                        case 0x4:
                             {
-                                HandleLog.WriteLine($"端口映射列表为空,请到管理后台创建映射！");
+                                //Map变动
+                                var map = JsonHelper.Instance.Deserialize<Map>(e.Package.BodyRaw);
+                                ChangeMap(map);
                             }
-                        }
-                        break;
-                    case 0x4:
-                        {
-                            //Map变动
-                            var map = JsonHelper.Instance.Deserialize<Map>(e.Package.BodyRaw);
-                            ChangeMap(map);
-                        }
-                        break;
-                    case 0x5:
-                        {
-                            //服务端消息
-                            var msg = JsonHelper.Instance.Deserialize<ReturnResult<bool>>(e.Package.BodyRaw);
-                            IsStop = msg.Result;
-                            HandleLog.WriteLine(msg.Message);
-                        }
-                        break;
+                            break;
+                        case 0x5:
+                            {
+                                //服务端消息
+                                var msg = JsonHelper.Instance.Deserialize<ReturnResult<bool>>(e.Package.BodyRaw);
+                                IsStop = msg.Result;
+                                HandleLog.WriteLine(msg.Message);
+                            }
+                            break;
+                    }
                 }
-            }
-            else if (e.Package.Mode == 0x2)//http
-            {
-                switch (e.Package.FunCode)
+                else if (e.Package.Mode == 0x2)//http
                 {
-                    case 0x1:
-                        {
-                            //http请求
-                            HandleRequest(e);
-                        }
-                        break;
+                    switch (e.Package.FunCode)
+                    {
+                        case 0x1:
+                            {
+                                //http请求
+                                HandleRequest(e);
+                            }
+                            break;
+                    }
                 }
-            }
-            else if (e.Package.Mode == 0x3)//tcp
-            {
-                var packJson = JsonHelper.Instance.Deserialize<PackJson>(e.Package.BodyRaw);
-                switch (e.Package.FunCode)
+                else if (e.Package.Mode == 0x3)//tcp
                 {
-                    case 0x1:
-                        {
-                            //tcp注册包  发起连接到内网服务器
-                            var client = new TcpClientInfo(packJson, NatClient);
-                            TcpClientList.Add(client);
-                        }
-                        break;
-                    case 0x2:
-                        {
-                            //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
-                            mark:
-                            var client = TcpClientList.Find(c => c.PackJson.UserId == packJson.UserId);
-                            if (client == null)
+                    var packJson = JsonHelper.Instance.Deserialize<PackJson>(e.Package.BodyRaw);
+                    switch (e.Package.FunCode)
+                    {
+                        case 0x1:
                             {
-                                Thread.Sleep(50);
-                                goto mark;
+                                //tcp注册包  发起连接到内网服务器
+                                TcpClientList.Add(new TcpClientInfo(packJson, NatClient));
                             }
-                            if (client.TcpClient == null)
+                            break;
+                        case 0x2:
                             {
-                                Thread.Sleep(50);
-                                goto mark;
+                                //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
+                                mark:
+                                var client = TcpClientList.Find(c => c.PackJson.UserId == packJson.UserId);
+                                if (client == null)
+                                {
+                                    Thread.Sleep(1);
+                                    goto mark;
+                                }
+                                if (client.TcpClient == null)
+                                {
+                                    Thread.Sleep(1);
+                                    goto mark;
+                                }
+                                if (client.TcpClient.IsConnected == false)
+                                {
+                                    Thread.Sleep(1);
+                                    goto mark;
+                                }
+                                //先讲16进制字符串转为byte数组  再gzip解压
+                                var request = DataHelper.Decompress(packJson.Content);
+                                //发送原始包
+                                if (client.TcpClient.IsConnected)
+                                {
+                                    client.TcpClient.Send(request);
+                                    HandleLog.WriteLine($"连接【{client.PackJson.UserId}】发送到【{client.PackJson.Local}】{request.Length}字节：{ DataHelper.ByteToHex(request)}", false);
+                                }
                             }
-                            if (client.TcpClient.IsConnected == false)
+                            break;
+                        case 0x3:
                             {
-                                Thread.Sleep(50);
-                                goto mark;
+                                //03 03 数据长度(4) 正文数据(n)   ---tcp连接关闭包
+                                var client = TcpClientList.Find(c => c.PackJson.UserId == packJson.UserId);
+                                if (client == null)
+                                {
+                                    return;
+                                }
+                                if (client.TcpClient == null || client.TcpClient.IsConnected == false)
+                                {
+                                    TcpClientList.RemoveAll(c => c.PackJson.UserId == packJson.UserId);
+                                    return;
+                                }
+                                client.TcpClient.Close();
+                                HandleLog.WriteLine($"本地连接【{client.PackJson.UserId},{client.LocalEndPoint}】关闭成功");
                             }
-                            //先讲16进制字符串转为byte数组  再gzip解压
-                            var request = DataHelper.Decompress(packJson.Content);
-                            //发送原始包
-                            client.TcpClient.Send(request);
-                            HandleLog.WriteLine($"连接【{client.TcpClient.Socket.LocalEndPoint}】发送到【{client.TcpClient.Socket.RemoteEndPoint}】：{DataHelper.ByteToHex(request)}");
-                        }
-                        break;
+                            break;
+                    }
                 }
-            }
+            });
         }
 
         static void OnClientClosed(object sender, EventArgs e)
         {
-            HandleLog.WriteLine($"连接{NatClient.LocalEndPoint}已关闭");
+            HandleLog.WriteLine($"NatClient{NatClient.LocalEndPoint}已关闭");
         }
 
         static void OnClientError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
-            HandleLog.WriteLine($"连接错误：{e.Exception}");
+            HandleLog.WriteLine($"NatClient连接错误：{e.Exception}");
         }
 
         static void ChangeMap(Map map)

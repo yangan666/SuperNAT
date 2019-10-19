@@ -90,7 +90,7 @@ namespace SuperNAT.Common
                 for (int i = 0; i < comByte.Length; i++)
                 {
                     returnStr.Append(comByte[i].ToString("X2"));
-                    //returnStr.Append(" ");
+                    returnStr.Append(" ");
                 }
             }
             return returnStr.ToString();

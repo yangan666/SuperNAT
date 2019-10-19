@@ -30,7 +30,9 @@ namespace SuperNAT.Server
             //02 01 数据长度(4) 正文数据(n)   ---http响应包
 
             //tcp
-            //03 01 数据长度(4) 正文数据(n)   ---tcp响应包
+            //03 01 数据长度(4) 正文数据(n)   ---tcp连接注册包
+            //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
+            //03 03 数据长度(4) 正文数据(n)   ---tcp连接关闭包
         }
         protected override int GetBodyLengthFromHeader(byte[] header, int offset, int length)
         {
