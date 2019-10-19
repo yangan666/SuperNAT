@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace SuperNAT.Client
 {
@@ -25,6 +26,7 @@ namespace SuperNAT.Client
         {
             TcpClient = new EasyClient<ClientPackageInfo>()
             {
+                NoDelay = true
                 //Security = new SecurityOption()
                 //{
                 //    EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12,
@@ -59,23 +61,26 @@ namespace SuperNAT.Client
 
         public void OnPackageReceived(object sender, PackageEventArgs<ClientPackageInfo> e)
         {
-            //先gzip压缩  再转为16进制字符串
-            //var body = DataHelper.Compress(e.Package.Data);
-            var pack = new PackJson()
+            Task.Run(() =>
             {
-                Host = PackJson.Host,
-                UserId = PackJson.UserId,
-                Content = e.Package.Data
-            };
-            var json = JsonHelper.Instance.Serialize(pack);
-            var jsonBytes = Encoding.UTF8.GetBytes(json);
-            //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
-            var sendBytes = new List<byte>() { 0x3, 0x2 };
-            sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
-            sendBytes.AddRange(jsonBytes);
-            //转发给服务器
-            NatClient.Send(sendBytes.ToArray());
-            HandleLog.WriteLine($"连接【{PackJson.UserId},{PackJson.Local}】收到报文并响应{e.Package.Data.Length}字节：{DataHelper.ByteToHex(e.Package.Data)}", false);
+                //先gzip压缩  再转为16进制字符串
+                var body = DataHelper.Compress(e.Package.Data);
+                var pack = new PackJson()
+                {
+                    Host = PackJson.Host,
+                    UserId = PackJson.UserId,
+                    Content = body
+                };
+                var json = JsonHelper.Instance.Serialize(pack);
+                var jsonBytes = Encoding.UTF8.GetBytes(json);
+                //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
+                var sendBytes = new List<byte>() { 0x3, 0x2 };
+                sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
+                sendBytes.AddRange(jsonBytes);
+                //转发给服务器
+                NatClient.Send(sendBytes.ToArray());
+                HandleLog.WriteLine($"<---- {PackJson.UserId} 收到报文{e.Package.Data.Length}字节");
+            });
         }
 
         public void OnClientClosed(object sender, EventArgs e)

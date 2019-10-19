@@ -44,7 +44,7 @@ namespace SuperNAT.Client
                     {
                         if (isPrint)
                         {
-                            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {log}");
+                            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
                         }
                         Log4netUtil.Info(log);
                     };
@@ -55,7 +55,7 @@ namespace SuperNAT.Client
                         maps = GetMapList(Secret);
                         //请求失败5s后重新请求
                         HandleLog.WriteLine($"请求获取映射列表失败！5s后重新请求！");
-                        Thread.Sleep(1000);
+                        Thread.Sleep(5000);
                     }
                     MapList = maps.Data ?? new List<Map>();
                     //连接服务器
@@ -223,6 +223,7 @@ namespace SuperNAT.Client
                 NatClient = null;
                 NatClient = new EasyClient<NatPackageInfo>()
                 {
+                    NoDelay = true,
                     Security = new SecurityOption()
                     {
                         EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12,
@@ -388,7 +389,7 @@ namespace SuperNAT.Client
                                 if (client.TcpClient.IsConnected)
                                 {
                                     client.TcpClient.Send(request);
-                                    HandleLog.WriteLine($"连接【{client.PackJson.UserId}】发送到【{client.PackJson.Local}】{request.Length}字节：{ DataHelper.ByteToHex(request)}", false);
+                                    HandleLog.WriteLine($"----> {client.PackJson.UserId} 发送报文{request.Length}字节");
                                 }
                             }
                             break;

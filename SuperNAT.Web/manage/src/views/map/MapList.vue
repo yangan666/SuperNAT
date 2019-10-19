@@ -130,7 +130,7 @@ export default {
           sortable: false,
           table: true,
           form: true,
-          items: ['http', 'https'],
+          items: ['http', 'https', 'tcp', 'udp'],
           change: (id) => {
 
           },
