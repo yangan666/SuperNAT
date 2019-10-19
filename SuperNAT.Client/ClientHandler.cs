@@ -357,7 +357,6 @@ namespace SuperNAT.Client
                     case 0x1:
                         {
                             //tcp注册包  发起连接到内网服务器
-                            TcpClientList.RemoveAll(c => c.PackJson.Local == packJson.Local);
                             var client = new TcpClientInfo(packJson, NatClient);
                             TcpClientList.Add(client);
                         }
@@ -386,6 +385,7 @@ namespace SuperNAT.Client
                             var request = DataHelper.Decompress(packJson.Content);
                             //发送原始包
                             client.TcpClient.Send(request);
+                            HandleLog.WriteLine($"连接【{client.TcpClient.Socket.LocalEndPoint}】发送到【{client.TcpClient.Socket.RemoteEndPoint}】：{DataHelper.ByteToHex(request)}");
                         }
                         break;
                 }

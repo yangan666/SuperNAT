@@ -21,8 +21,6 @@ namespace SuperNAT.Server
 
         public FilterState State { get; set; }
 
-        public static byte[] EndHeader = Encoding.UTF8.GetBytes("\r\n\r\n");
-
         public TcpRequestInfo Filter(byte[] readBuffer, int offset, int length, bool toBeCopied, out int rest)
         {
             rest = 0;

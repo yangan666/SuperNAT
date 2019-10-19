@@ -460,7 +460,7 @@ namespace SuperNAT.Server
 
         private static void TcpServer_NewSessionConnected(TcpAppSession session)
         {
-            HandleLog.WriteLine($"客户端【{session.RemoteEndPoint}】已连接");
+            HandleLog.WriteLine($"客户端【{session.RemoteEndPoint}】已连接【{session.LocalEndPoint}】");
             Task.Run(() =>
             {
                 try
