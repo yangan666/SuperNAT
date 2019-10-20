@@ -14,9 +14,9 @@ namespace SuperNAT.Common.Models
         public int id { get; set; }
         public string name { get; set; }
         public string local { get; set; } = "localhost:80";
-        public int? local_port { get; set; }
+        public int? local_port { get; set; } = 80;
         public string remote { get; set; } = GlobalConfig.DefaultUrl;
-        public int? remote_port { get; set; }
+        public int? remote_port { get; set; } = 80;
         public string protocol { get; set; } = "http";
         public string certfile { get; set; }
         public string certpwd { get; set; }
@@ -39,34 +39,8 @@ namespace SuperNAT.Common.Models
         [Editable(false)]
         public int ChangeType { get; set; }
         [Editable(false)]
-        public int TcpPort
-        {
-            get
-            {
-                int port = 0;
-
-                try
-                {
-                    if (!string.IsNullOrEmpty(remote))
-                    {
-                        var arr = remote.Split(":");
-                        if (arr.Length == 1)
-                        {
-                            port = 80;
-                        }
-                        else if (arr.Length == 2)
-                        {
-                            int.TryParse(arr[1], out port);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                }
-
-                return port;
-            }
-        }
+        public string local_endpoint => $"{local}{(local_port == 80 ? "" : $":{local_port}")}";
+        [Editable(false)]
+        public string remote_endpoint => $"{remote}{(remote_port == 80 ? "" : $":{remote_port}")}";
     }
 }

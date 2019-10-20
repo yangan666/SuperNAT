@@ -16,7 +16,8 @@ export default {
       basic: {
         title: '菜单',
         controller: 'Menu',
-        showValue: 'name'
+        showValue: 'name',
+        dialogWith: 600
       },
       curd: {
         affterAdd: () => {
@@ -32,6 +33,7 @@ export default {
           text: "上级菜单",
           value: 'pid',//表单下拉框
           form: true,
+          formRowXs: 12,
           items: [],
           itemText: 'title',
           itemValue: 'menu_id',
@@ -48,6 +50,7 @@ export default {
           sortable: false,
           table: true,
           form: true,
+          formRowXs: 6,
           validate: 'required',
           requiredInfo: {
             required: () => '菜单标题不能为空'
@@ -70,7 +73,8 @@ export default {
           width: 150,
           sortable: false,
           table: true,
-          form: true
+          form: true,
+          formRowXs: 6
         },
         {
           type: 'input',
@@ -81,6 +85,7 @@ export default {
           sortable: false,
           table: true,
           form: true,
+          formRowXs: 6,
           validate: 'required',
           requiredInfo: {
             required: () => '路由名称不能为空'
@@ -95,6 +100,7 @@ export default {
           sortable: false,
           table: true,
           form: true,
+          formRowXs: 6,
           validate: 'required',
           requiredInfo: {
             required: () => '路由地址不能为空'
@@ -109,6 +115,7 @@ export default {
           sortable: false,
           table: true,
           form: true,
+          formRowXs: 6,
           validate: 'required',
           requiredInfo: {
             required: () => '组件路径不能为空'
@@ -123,6 +130,7 @@ export default {
           sortable: false,
           table: true,
           form: true,
+          formRowXs: 6,
           validate: 'required',
           requiredInfo: {
             required: () => '排序不能为空'
@@ -133,6 +141,7 @@ export default {
           text: '是否隐藏',
           value: 'hidden',
           form: true,
+          formRowXs: 6,
           validate: 'required',
           requiredInfo: {
             required: () => '请选择隐藏或显示'
@@ -152,6 +161,7 @@ export default {
           text: '总是显示',
           value: 'always_show',
           form: true,
+          formRowXs: 6,
           validate: 'required',
           requiredInfo: {
             required: () => '请选择总是显示或总是隐藏'
@@ -173,7 +183,6 @@ export default {
           width: 200,
           sortable: false,
           table: true,
-          form: false,
           actions: [
             {
               name: (item) => {

@@ -17,7 +17,8 @@ export default {
       basic: {
         title: '映射',
         controller: 'Map',
-        showValue: 'name'
+        showValue: 'name',
+        dialogWith: 600
       },
       curd: {
         affterAdd: () => {
@@ -26,6 +27,7 @@ export default {
         },
         affterGetOne: (item) => {
           this.selectUserChange(item.user_id)
+          // this.selectProtocolChange(item.protocol)
         }
       },
       columns: [
@@ -43,6 +45,7 @@ export default {
           text: "所属用户",
           value: 'user_id',//表单下拉框
           form: is_admin,
+          formRowXs: is_admin ? 6 : 12,
           items: [],
           itemText: 'user_name',
           itemValue: 'user_id',
@@ -52,6 +55,25 @@ export default {
           validate: 'required',
           requiredInfo: {
             required: () => '请选择所属用户'
+          }
+        },
+        {
+          type: 'select',
+          text: "协议类型",
+          value: 'protocol',
+          align: 'left',
+          width: 100,
+          sortable: false,
+          table: true,
+          form: true,
+          formRowXs: is_admin ? 6 : 12,
+          items: ['http', 'https', 'tcp', 'udp'],
+          change: (val) => {
+            // this.selectProtocolChange(val)
+          },
+          validate: 'required',
+          requiredInfo: {
+            required: () => '请选择协议类型'
           }
         },
         {
@@ -68,6 +90,7 @@ export default {
           text: "主机名称",
           value: 'client_id',//表单下拉框
           form: true,
+          formRowXs: 6,
           items: [],
           itemText: 'name',
           itemValue: 'id',
@@ -88,6 +111,7 @@ export default {
           sortable: false,
           table: true,
           form: true,
+          formRowXs: 6,
           validate: 'required',
           requiredInfo: {
             required: () => '应用名称不能为空'
@@ -95,13 +119,10 @@ export default {
         },
         {
           type: 'input',
-          text: '内网地址',
+          text: '内网主机',
           value: 'local',
-          align: 'left',
-          width: 150,
-          sortable: false,
-          table: true,
           form: true,
+          formRowXs: 6,
           validate: 'required',
           requiredInfo: {
             required: () => '内网地址不能为空'
@@ -111,11 +132,8 @@ export default {
           type: 'input',
           text: '内网端口',
           value: 'local_port',
-          align: 'left',
-          width: 150,
-          sortable: false,
-          table: true,
           form: true,
+          formRowXs: 6,
           validate: 'required',
           requiredInfo: {
             required: () => '内网端口不能为空'
@@ -123,13 +141,19 @@ export default {
         },
         {
           type: 'input',
-          text: '外网地址',
-          value: 'remote',
+          text: '内网主机',
+          value: 'local_endpoint',
           align: 'left',
           width: 150,
           sortable: false,
-          table: true,
+          table: true
+        },
+        {
+          type: 'input',
+          text: '外网域名',
+          value: 'remote',
           form: true,
+          formRowXs: 6,
           validate: 'required',
           requiredInfo: {
             required: () => '外网地址不能为空'
@@ -139,33 +163,21 @@ export default {
           type: 'input',
           text: '外网端口',
           value: 'remote_port',
-          align: 'left',
-          width: 150,
-          sortable: false,
-          table: true,
           form: true,
+          formRowXs: 6,
           validate: 'required',
           requiredInfo: {
             required: () => '外网端口不能为空'
           }
         },
         {
-          type: 'select',
-          text: "协议类型",
-          value: 'protocol',
+          type: 'input',
+          text: '访问地址',
+          value: 'remote_endpoint',
           align: 'left',
-          width: 100,
+          width: 150,
           sortable: false,
-          table: true,
-          form: true,
-          items: ['http', 'https', 'tcp', 'udp'],
-          change: (id) => {
-
-          },
-          validate: 'required',
-          requiredInfo: {
-            required: () => '请选择协议类型'
-          }
+          table: true
         },
         {
           type: 'switch',
@@ -174,11 +186,15 @@ export default {
           align: 'left',
           width: 120,
           sortable: false,
-          table: true,
-          textFormat: ({is_ssl}) => {
+          table: false,
+          textFormat: ({ is_ssl }) => {
             return is_ssl ? "是" : "否"
           },
-          form: true,
+          form: false,
+          formRowXs: 6,
+          change: (val) => {
+            // this.selectIsSsl(val)
+          },
           validate: 'required',
           requiredInfo: {
             required: () => '请选择是否加密传输'
@@ -188,21 +204,23 @@ export default {
           type: 'input',
           text: '证书文件',
           value: 'certfile',
-          form: true,
-          validate: 'required',
-          requiredInfo: {
-            required: () => '请选择证书文件'
-          }
+          form: false,
+          formRowXs: 6,
+          // validate: 'required',
+          // requiredInfo: {
+          //   required: () => '请选择证书文件'
+          // }
         },
         {
           type: 'input',
           text: '证书密码',
           value: 'certfile',
-          form: true,
-          validate: 'required',
-          requiredInfo: {
-            required: () => '请填写证书密码'
-          }
+          form: false,
+          formRowXs: 6,
+          // validate: 'required',
+          // requiredInfo: {
+          //   required: () => '请填写证书密码'
+          // }
         },
         {
           type: 'tag',
@@ -223,7 +241,6 @@ export default {
           width: 200,
           sortable: false,
           table: true,
-          form: false,
           actions: [
             {
               name: (item) => {
@@ -272,7 +289,7 @@ export default {
         if (data.Result) {
           this.clientList = data.Data
           if (!this.$store.getters.user.is_admin) {
-            this.columns[3].items = data.Data.filter(c => c.user_id == this.$store.getters.user.user_id)
+            this.columns[4].items = data.Data.filter(c => c.user_id == this.$store.getters.user.user_id)
           }
         }
       })
@@ -284,13 +301,41 @@ export default {
         //根据用户id过滤主机名称数据源
         if (this.$store.getters.user.is_admin) {
           var items = this.clientList.filter(c => c.user_id == id)
-          this.columns[3].items = items
+          this.columns[4].items = items
         }
       } else {
         //清空主机名称数据源
-        this.columns[3].items = []
+        this.columns[4].items = []
       }
-    }
+    },
+    // selectProtocolChange (val) {
+    //   if (val == "http") {
+    //     //协议栏占一行 隐藏证书文件 证书密码 345
+    //     this.columns[this.columns.length - 3].form = false
+    //     this.columns[this.columns.length - 4].form = false
+    //     this.columns[this.columns.length - 5].form = false
+    //     this.columns[this.columns.length - 6].formRowXs = 12
+    //   } else if (val == "https") {
+    //     //协议栏占一行 隐藏证书文件 证书密码
+    //     this.columns[this.columns.length - 3].form = true
+    //     this.columns[this.columns.length - 4].form = true
+    //     this.columns[this.columns.length - 5].form = false
+    //     this.columns[this.columns.length - 6].formRowXs = 12
+    //   } else {
+    //     //tcp udp
+    //     this.columns[this.columns.length - 3].form = false
+    //     this.columns[this.columns.length - 4].form = false
+    //     this.columns[this.columns.length - 5].form = true
+    //     this.columns[this.columns.length - 6].formRowXs = 12
+
+    //     this.selectIsSsl(this.$refs.curd.formItem.is_ssl)
+    //   }
+    // },
+    // selectIsSsl (val) {
+    //   this.columns[this.columns.length - 3].form = val
+    //   this.columns[this.columns.length - 4].form = val
+    //   this.columns[this.columns.length - 6].formRowXs = val ? 6 : 12
+    // }
   }
 }
 </script>

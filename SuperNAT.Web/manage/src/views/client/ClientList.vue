@@ -145,6 +145,7 @@ export default {
                 return '编辑'
               },
               handle: (item) => {
+                this.getUserList()
                 this.$refs.curd.edit(item)
               }
             },

@@ -100,7 +100,7 @@ namespace SuperNAT.Server
                         break;
                 }
                 HandleLog.WriteLine($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
-                HandleLog.WriteLine($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local} --> {map.remote}");
+                HandleLog.WriteLine($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
             }
             catch (Exception ex)
             {
@@ -386,7 +386,7 @@ namespace SuperNAT.Server
                     }
                     //转发请求
                     var host = requestInfo.HeaderDict["Host"];
-                    var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.remote == host) ?? false).FirstOrDefault();
+                    var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.remote_endpoint == host) ?? false).FirstOrDefault();
                     if (natSession == null)
                     {
                         session?.Close();
@@ -492,19 +492,19 @@ namespace SuperNAT.Server
             try
             {
                 //转发请求
-                var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.TcpPort == session.LocalEndPoint.Port) ?? false).FirstOrDefault();
+                var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.local_port == session.LocalEndPoint.Port) ?? false).FirstOrDefault();
                 if (natSession == null)
                 {
                     session?.Close();
                     HandleLog.WriteLine($"请求：{session.LocalEndPoint}失败，Nat客户端连接不在线！");
                     return;
                 }
-                var map = natSession.MapList?.Find(c => c.TcpPort == session.LocalEndPoint.Port);
+                var map = natSession.MapList?.Find(c => c.local_port == session.LocalEndPoint.Port);
                 session.Map = map;
                 var pack = new PackJson()
                 {
-                    Host = map?.remote,
-                    Local = map?.local,
+                    Host = map?.remote_endpoint,
+                    Local = map?.local_endpoint,
                     UserId = session.UserId,
                     Method = "TCP"
                 };
@@ -540,8 +540,8 @@ namespace SuperNAT.Server
                     var body = DataHelper.Compress(requestInfo.Data);
                     var pack = new PackJson()
                     {
-                        Host = session.Map?.remote,
-                        Local = session.Map?.local,
+                        Host = session.Map?.remote_endpoint,
+                        Local = session.Map?.local_endpoint,
                         UserId = session.UserId,
                         Method = "TCP",
                         Content = body

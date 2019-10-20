@@ -109,7 +109,7 @@ namespace SuperNAT.Client
                             contentType = contentType.Substring(0, index);
                         }
                     }
-                    var map = MapList.Find(c => c.remote == packJson.Host);
+                    var map = MapList.Find(c => c.remote_endpoint == packJson.Host);
                     if (map == null)
                     {
                         HandleLog.WriteLine($"映射不存在，外网访问地址：{packJson.Host}");
@@ -314,7 +314,7 @@ namespace SuperNAT.Client
                                 {
                                     foreach (var item in MapList)
                                     {
-                                        HandleLog.WriteLine($"【{item.name}】映射成功：{item.local} --> {item.remote}");
+                                        HandleLog.WriteLine($"【{item.name}】映射成功：{item.local_endpoint} --> {item.remote_endpoint}");
                                     }
                                 }
                                 else
@@ -445,7 +445,7 @@ namespace SuperNAT.Client
                     break;
             }
             HandleLog.WriteLine($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
-            HandleLog.WriteLine($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local} --> {map.remote}");
+            HandleLog.WriteLine($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
         }
     }
 }

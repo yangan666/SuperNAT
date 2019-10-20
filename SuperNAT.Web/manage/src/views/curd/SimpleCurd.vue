@@ -21,7 +21,7 @@
               <!-- 弹框 -->
               <v-dialog v-model="dialog"
                         persistent
-                        max-width="500px">
+                        :width="basic.dialogWith || 500">
                 <template v-slot:activator="{ on }">
                   <v-btn color="primary"
                          dark
@@ -38,60 +38,67 @@
                     <v-container grid-list-md>
                       <!-- 动态form表单 -->
                       <form>
-                        <template v-for="(item,index) in forms">
-                          <!-- 输入框 -->
-                          <v-flex v-if="item.type == 'input'"
-                                  :key="index">
-                            <v-text-field clearable
-                                          v-model="formItem[item.value]"
-                                          v-validate="item.validate"
-                                          :counter="item.counter"
-                                          :error-messages="errors.collect(item.value)"
-                                          :data-vv-name="item.value"
-                                          :data-vv-as="item.text"
-                                          :label="item.text"></v-text-field>
-                          </v-flex>
-                          <!-- 密码框 -->
-                          <v-flex v-else-if="item.type == 'password'"
-                                  :key="index">
-                            <v-text-field clearable
-                                          type='password'
-                                          v-model="formItem[item.value]"
-                                          v-validate="item.validate"
-                                          :counter="item.counter"
-                                          :error-messages="errors.collect(item.value)"
-                                          :data-vv-name="item.value"
-                                          :data-vv-as="item.text"
-                                          :label="item.text"></v-text-field>
-                          </v-flex>
-                          <!-- 下拉框 -->
-                          <v-flex v-else-if="item.type == 'select'"
-                                  :key="index">
-                            <v-select clearable
-                                      v-model="formItem[item.value]"
-                                      v-validate="item.validate"
-                                      :error-messages="errors.collect(item.value)"
-                                      :data-vv-name="item.value"
-                                      :data-vv-as="item.text"
-                                      :items="item.items"
-                                      :item-text="item.itemText"
-                                      :item-value="item.itemValue"
-                                      @change="item.change"
-                                      :label="item.text"></v-select>
-                          </v-flex>
-                          <!-- 开关 -->
-                          <v-flex v-else-if="item.type == 'switch'"
-                                  :key="index">
-                            <v-switch clearable
-                                      v-model="formItem[item.value]"
-                                      v-validate="item.validate"
-                                      :error-messages="errors.collect(item.value)"
-                                      :data-vv-name="item.value"
-                                      :data-vv-as="item.text"
-                                      @change="item.change"
-                                      :label="item.text"></v-switch>
-                          </v-flex>
-                        </template>
+                        <v-layout row
+                                  wrap>
+                          <template v-for="(item,index) in forms">
+                            <!-- 输入框 -->
+                            <v-flex v-if="item.type == 'input'"
+                                    v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
+                                    :key="index">
+                              <v-text-field clearable
+                                            v-model="formItem[item.value]"
+                                            v-validate="item.validate"
+                                            :counter="item.counter"
+                                            :error-messages="errors.collect(item.value)"
+                                            :data-vv-name="item.value"
+                                            :data-vv-as="item.text"
+                                            :label="item.text"></v-text-field>
+                            </v-flex>
+                            <!-- 密码框 -->
+                            <v-flex v-else-if="item.type == 'password'"
+                                    v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
+                                    :key="index">
+                              <v-text-field clearable
+                                            type='password'
+                                            v-model="formItem[item.value]"
+                                            v-validate="item.validate"
+                                            :counter="item.counter"
+                                            :error-messages="errors.collect(item.value)"
+                                            :data-vv-name="item.value"
+                                            :data-vv-as="item.text"
+                                            :label="item.text"></v-text-field>
+                            </v-flex>
+                            <!-- 下拉框 -->
+                            <v-flex v-else-if="item.type == 'select'"
+                                    v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
+                                    :key="index">
+                              <v-select clearable
+                                        v-model="formItem[item.value]"
+                                        v-validate="item.validate"
+                                        :error-messages="errors.collect(item.value)"
+                                        :data-vv-name="item.value"
+                                        :data-vv-as="item.text"
+                                        :items="item.items"
+                                        :item-text="item.itemText"
+                                        :item-value="item.itemValue"
+                                        @change="item.change"
+                                        :label="item.text"></v-select>
+                            </v-flex>
+                            <!-- 开关 -->
+                            <v-flex v-else-if="item.type == 'switch'"
+                                    v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
+                                    :key="index">
+                              <v-switch clearable
+                                        v-model="formItem[item.value]"
+                                        v-validate="item.validate"
+                                        :error-messages="errors.collect(item.value)"
+                                        :data-vv-name="item.value"
+                                        :data-vv-as="item.text"
+                                        @change="item.change"
+                                        :label="item.text"></v-switch>
+                            </v-flex>
+                          </template>
+                        </v-layout>
                       </form>
                     </v-container>
                   </v-card-text>
