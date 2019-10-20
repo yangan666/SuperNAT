@@ -170,8 +170,8 @@ namespace SuperNAT.Client
                         };
                         var json = JsonHelper.Instance.Serialize(pack);
                         var jsonBytes = Encoding.UTF8.GetBytes(json);
-                        //请求头 01 03 长度(4)
-                        var sendBytes = new List<byte>() { 0x1, 0x3 };
+                        //02 01 数据长度(4) 正文数据(n)   ---http响应包
+                        var sendBytes = new List<byte>() { 0x2, 0x1 };
                         sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
                         sendBytes.AddRange(jsonBytes);
                         NatClient.Send(sendBytes.ToArray());
@@ -437,15 +437,8 @@ namespace SuperNAT.Client
                     MapList.Add(map);
                     break;
                 case (int)ChangeMapType.修改:
-                    var item = MapList.Find(c => c.id == map.id);
-                    if (item != null)
-                    {
-                        item = map;
-                    }
-                    else
-                    {
-                        MapList.Add(map);
-                    }
+                    MapList.RemoveAll(c => c.id == map.id);
+                    MapList.Add(map);
                     break;
                 case (int)ChangeMapType.删除:
                     MapList.RemoveAll(c => c.id == map.id);

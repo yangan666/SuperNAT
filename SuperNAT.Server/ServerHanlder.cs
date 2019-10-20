@@ -33,16 +33,11 @@ namespace SuperNAT.Server
             Dapper.SimpleCRUD.SetDialect(Dapper.SimpleCRUD.Dialect.MySQL);
             Startup.Init();
             //开启内网TCP服务
-            Task.Run(() =>
-            {
-                StartNATServer();
-                StartWebServer();
-                StartTcpServer();
-            });
-            ////开启外网Web服务
-            //Task.Run(StartWebServer);
-            ////开启外网Tcp服务
-            //Task.Run(StartTcpServer);
+            Task.Run(StartNATServer);
+            //开启外网Web服务
+            Task.Run(StartWebServer);
+            //开启外网Tcp服务
+            Task.Run(StartTcpServer);
             //接口服务
             Task.Run(() =>
             {
@@ -60,50 +55,57 @@ namespace SuperNAT.Server
 
         public void ChangeMap(int type, Map map)
         {
-            map.ChangeType = type;
-            ChangeMap(map);
-            //请求头 01 04 长度(4)
-            var sendBytes = new List<byte>() { 0x1, 0x4 };
-            var jsonBytes = Encoding.UTF8.GetBytes(JsonHelper.Instance.Serialize(map));
-            sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
-            sendBytes.AddRange(jsonBytes);
-            var natClient = NATServer.GetSessions(c => c.Client.id == map.client_id).FirstOrDefault();
-            natClient?.Send(sendBytes.ToArray());
+            try
+            {
+                map.ChangeType = type;
+                ChangeMap(map);
+                //请求头 01 04 长度(4)
+                var sendBytes = new List<byte>() { 0x1, 0x4 };
+                var jsonBytes = Encoding.UTF8.GetBytes(JsonHelper.Instance.Serialize(map));
+                sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
+                sendBytes.AddRange(jsonBytes);
+                var natClient = NATServer.GetSessions(c => c.Client?.id == map.client_id).FirstOrDefault();
+                natClient?.Send(sendBytes.ToArray());
+            }
+            catch (Exception ex)
+            {
+                HandleLog.WriteLine($"映射更新异常：{ex}，参数为：{JsonHelper.Instance.Serialize(map)}");
+            }
         }
 
         static void ChangeMap(Map map)
         {
-            var session = NATServer.GetSessions(c => c.Client.id == map.client_id).FirstOrDefault();
-            if (session == null)
+            try
             {
-                return;
-            }
-            if (session.MapList == null)
-            {
-                session.MapList = new List<Map>();
-            }
-            switch (map.ChangeType)
-            {
-                case (int)ChangeMapType.新增:
-                    session.MapList.Add(map);
-                    break;
-                case (int)ChangeMapType.修改:
-                    var item = session.MapList.Find(c => c.id == map.id);
-                    if (item != null)
-                    {
-                        item = map;
-                    }
-                    else
-                    {
+                var session = NATServer.GetSessions(c => c.Client.id == map.client_id).FirstOrDefault();
+                if (session == null)
+                {
+                    return;
+                }
+                if (session.MapList == null)
+                {
+                    session.MapList = new List<Map>();
+                }
+                switch (map.ChangeType)
+                {
+                    case (int)ChangeMapType.新增:
                         session.MapList.Add(map);
-                    }
-                    break;
-                case (int)ChangeMapType.删除:
-                    session.MapList.RemoveAll(c => c.id == map.id);
-                    break;
+                        break;
+                    case (int)ChangeMapType.修改:
+                        session.MapList.RemoveAll(c => c.id == map.id);
+                        session.MapList.Add(map);
+                        break;
+                    case (int)ChangeMapType.删除:
+                        session.MapList.RemoveAll(c => c.id == map.id);
+                        break;
+                }
+                HandleLog.WriteLine($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
+                HandleLog.WriteLine($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local} --> {map.remote}");
             }
-            HandleLog.WriteLine($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
-            HandleLog.WriteLine($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local} --> {map.remote}");
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         #region 内网TCP服务
@@ -224,7 +226,7 @@ namespace SuperNAT.Server
                         {
                             case 0x1:
                                 {
-                                    //响应请求
+                                    //02 01 数据长度(4) 正文数据(n)   ---http响应包
                                     int count = 0;
                                     mark:
                                     var webSession = HttpServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
@@ -292,7 +294,7 @@ namespace SuperNAT.Server
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.WriteLine($"tcpSession响应请求异常：{ex}");
+                    HandleLog.WriteLine($"穿透传输连接【{session.RemoteEndPoint},{session.Client?.name}】响应请求异常：{ex}");
                 }
             });
         }
@@ -402,8 +404,8 @@ namespace SuperNAT.Server
                     };
                     var json = JsonHelper.Instance.Serialize(pack);
                     var jsonBytes = Encoding.UTF8.GetBytes(json);
-                    //请求头 01 03 长度(4)
-                    var sendBytes = new List<byte>() { 0x1, 0x3 };
+                    //02 01 数据长度(4) 正文数据(n)   ---http响应包
+                    var sendBytes = new List<byte>() { 0x2, 0x1 };
                     sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
                     sendBytes.AddRange(jsonBytes);
                     natSession.Send(sendBytes.ToArray(), 0, sendBytes.Count);

@@ -141,7 +141,7 @@
                     </td>
                     <td v-else
                         :key="index"
-                        class="text-xs-left">{{ props.item[item.value] }}</td>
+                        class="text-xs-left">{{ item.textFormat ? item.textFormat(props.item) : props.item[item.value] }}</td>
                   </template>
                 </template>
                 <!-- 分页 -->

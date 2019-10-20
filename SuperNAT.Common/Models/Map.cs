@@ -14,10 +14,13 @@ namespace SuperNAT.Common.Models
         public int id { get; set; }
         public string name { get; set; }
         public string local { get; set; } = "localhost:80";
+        public int? local_port { get; set; }
         public string remote { get; set; } = GlobalConfig.DefaultUrl;
+        public int? remote_port { get; set; }
         public string protocol { get; set; } = "http";
         public string certfile { get; set; }
         public string certpwd { get; set; }
+        public bool is_ssl { get; set; } = false;
         public int? ssl_type { get; set; }
         public int? client_id { get; set; }
         public bool is_disabled { get; set; }

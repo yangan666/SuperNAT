@@ -109,6 +109,20 @@ export default {
         },
         {
           type: 'input',
+          text: '内网端口',
+          value: 'local_port',
+          align: 'left',
+          width: 150,
+          sortable: false,
+          table: true,
+          form: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '内网端口不能为空'
+          }
+        },
+        {
+          type: 'input',
           text: '外网地址',
           value: 'remote',
           align: 'left',
@@ -119,6 +133,20 @@ export default {
           validate: 'required',
           requiredInfo: {
             required: () => '外网地址不能为空'
+          }
+        },
+        {
+          type: 'input',
+          text: '外网端口',
+          value: 'remote_port',
+          align: 'left',
+          width: 150,
+          sortable: false,
+          table: true,
+          form: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '外网端口不能为空'
           }
         },
         {
@@ -140,13 +168,41 @@ export default {
           }
         },
         {
+          type: 'switch',
+          text: '加密传输',
+          value: 'is_ssl',
+          align: 'left',
+          width: 120,
+          sortable: false,
+          table: true,
+          textFormat: ({is_ssl}) => {
+            return is_ssl ? "是" : "否"
+          },
+          form: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '请选择是否加密传输'
+          }
+        },
+        {
           type: 'input',
           text: '证书文件',
           value: 'certfile',
-          align: 'left',
-          width: 250,
-          sortable: false,
-          table: true
+          form: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '请选择证书文件'
+          }
+        },
+        {
+          type: 'input',
+          text: '证书密码',
+          value: 'certfile',
+          form: true,
+          validate: 'required',
+          requiredInfo: {
+            required: () => '请填写证书密码'
+          }
         },
         {
           type: 'tag',
