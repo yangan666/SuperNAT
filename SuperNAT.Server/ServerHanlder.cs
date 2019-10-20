@@ -492,14 +492,20 @@ namespace SuperNAT.Server
             try
             {
                 //转发请求
-                var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.local_port == session.LocalEndPoint.Port) ?? false).FirstOrDefault();
+                var natSession = NATServer.GetSessions(c => c.MapList?.Any(m => m.remote_port == session.LocalEndPoint.Port) ?? false).FirstOrDefault();
                 if (natSession == null)
                 {
                     session?.Close();
                     HandleLog.WriteLine($"请求：{session.LocalEndPoint}失败，Nat客户端连接不在线！");
                     return;
                 }
-                var map = natSession.MapList?.Find(c => c.local_port == session.LocalEndPoint.Port);
+                var map = natSession.MapList?.Find(c => c.remote_port == session.LocalEndPoint.Port);
+                if (map == null)
+                {
+                    session?.Close();
+                    HandleLog.WriteLine($"请求：{session.LocalEndPoint}失败，映射{session.LocalEndPoint}不存在！");
+                    return;
+                }
                 session.Map = map;
                 var pack = new PackJson()
                 {

@@ -33,6 +33,15 @@ namespace SuperNAT.Client
 
         public void Start()
         {
+            //TODO Console.WriteLine放在线程里会阻塞 放在主线程待测试是否阻塞
+            HandleLog.WriteLog += (log, isPrint) =>
+            {
+                if (isPrint)
+                {
+                    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
+                }
+                Log4netUtil.Info(log);
+            };
             Task.Run(() =>
             {
                 try
@@ -40,14 +49,6 @@ namespace SuperNAT.Client
                     Repository = LogManager.CreateRepository("NETCoreRepository");
                     XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
                     Log4netUtil.LogRepository = Repository;//类库中定义的静态变量
-                    HandleLog.WriteLog += (log, isPrint) =>
-                    {
-                        if (isPrint)
-                        {
-                            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
-                        }
-                        Log4netUtil.Info(log);
-                    };
                     //加载映射列表
                     var maps = GetMapList(Secret);
                     while (!maps.Result && maps.Status == -1)
@@ -115,7 +116,7 @@ namespace SuperNAT.Client
                         HandleLog.WriteLine($"映射不存在，外网访问地址：{packJson.Host}");
                         return;
                     }
-                    var res = HttpHelper.Request(packJson.Method, $"{map.protocol}://{map.local}{packJson.Route}", data, headers: headers, contentType: contentType);
+                    var res = HttpHelper.Request(packJson.Method, $"{map.protocol}://{map.local_endpoint}{packJson.Route}", data, headers: headers, contentType: contentType);
                     if (res == null)
                     {
                         HandleLog.WriteLine("服务器返回NULL");
