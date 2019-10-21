@@ -13,7 +13,7 @@ namespace SuperNAT.Common.Models
         [Key]
         public int id { get; set; }
         public string name { get; set; }
-        public string local { get; set; } = "localhost:80";
+        public string local { get; set; } = "localhost";
         public int? local_port { get; set; } = 80;
         public string remote { get; set; } = GlobalConfig.DefaultUrl;
         public int? remote_port { get; set; } = 80;
