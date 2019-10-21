@@ -149,7 +149,7 @@ export default {
           children: children
         }
       })
-      // console.log(routers)
+      console.log(routers)
       return routers
     }
   },

@@ -23,7 +23,7 @@ namespace SuperNAT.Common.Models
         public bool is_ssl { get; set; } = false;
         public int? ssl_type { get; set; }
         public int? client_id { get; set; }
-        public bool is_disabled { get; set; }
+        public bool is_disabled { get; set; } = false;
         [Editable(false)]
         public string client_name { get; set; }
         [Editable(false)]

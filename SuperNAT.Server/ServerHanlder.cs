@@ -115,7 +115,7 @@ namespace SuperNAT.Server
             var setup = NATServer.Setup(new RootConfig()
             {
                 DisablePerformanceDataCollector = true
-            }, new ServerConfig()
+            }, new CSuperSocket.SocketBase.Config.ServerConfig()
             {
                 Ip = "Any",
                 Port = GlobalConfig.NatPort,
@@ -325,7 +325,7 @@ namespace SuperNAT.Server
                 bool setup = HttpServer.Setup(new RootConfig()
                 {
                     DisablePerformanceDataCollector = true
-                }, new ServerConfig()
+                }, new CSuperSocket.SocketBase.Config.ServerConfig()
                 {
                     Listeners = from s in GlobalConfig.WebPortList
                                 select new ListenerConfig
@@ -438,7 +438,7 @@ namespace SuperNAT.Server
                     bool setup = TcpAppServer.Setup(new RootConfig()
                     {
                         DisablePerformanceDataCollector = true
-                    }, new ServerConfig()
+                    }, new CSuperSocket.SocketBase.Config.ServerConfig()
                     {
                         Listeners = from s in GlobalConfig.TcpPortList
                                     select new ListenerConfig
