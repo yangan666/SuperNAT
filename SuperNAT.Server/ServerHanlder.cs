@@ -182,11 +182,15 @@ namespace SuperNAT.Server
                                         session.SendMsg("主机密钥不正确，请确认是否填写正确！");
                                         return;
                                     }
-                                    var checkSession = NATServer.GetSessions(c => c.Client?.secret == secret).FirstOrDefault();
-                                    if (checkSession != null)
+                                    var checkSessions = NATServer.GetSessions(c => c.Client?.secret == secret).ToList();
+                                    if (checkSessions.Any())
                                     {
-                                        session.SendMsg($"密钥{secret}已被主机：{checkSession.Client.name},{checkSession.RemoteEndPoint}使用！");
-                                        return;
+                                        checkSessions.ForEach(c =>
+                                        {
+                                            session.SendMsg($"您的密钥已被主机{client.name},{session.RemoteEndPoint}使用，已强制下线！！");
+                                            Thread.Sleep(500);
+                                            c.Close();
+                                        });
                                     }
                                     session.Client = client;
 
