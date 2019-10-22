@@ -1,7 +1,12 @@
+import {
+  publicRoute
+} from "@/router/config"
+
 const user = {
   state: {
     dialog: false,
-    user: {}
+    user: {},
+    routes: publicRoute
   },
   mutations: {
     setDialog(state, data) {
@@ -9,6 +14,9 @@ const user = {
     },
     setUser(state, data) {
       state.user = data
+    },
+    setRoutes(state, data) {
+      state.routes = data
     }
   },
   actions: {
@@ -17,6 +25,9 @@ const user = {
     },
     setUser({ commit }, data) {
       commit("setUser", data)
+    },
+    setRoutes({ commit }, data) {
+      commit("setRoutes", data)
     }
   }
 }

@@ -3,7 +3,8 @@ const getters = {
   theme: state => state.app.theme,
   color: state => state.app.color,
   user: state => state.user.user,
-  dialog: state => state.user.dialog
+  dialog: state => state.user.dialog,
+  routes: state => state.user.routes
 }
 
 export default getters
