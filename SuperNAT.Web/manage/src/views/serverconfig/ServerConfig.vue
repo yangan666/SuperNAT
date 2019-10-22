@@ -15,7 +15,7 @@ export default {
     var is_admin = this.$store.getters.user.is_admin
     return {
       basic: {
-        title: '映射',
+        title: '配置',
         controller: 'ServerConfig',
         showValue: 'protocol',
         dialogWith: 500
@@ -25,7 +25,7 @@ export default {
 
         },
         affterGetOne: (item) => {
-          // this.selectProtocolChange(item.protocol)
+          this.selectProtocolChange(item.protocol)
         }
       },
       columns: [
@@ -40,7 +40,7 @@ export default {
           form: true,
           items: ['http', 'https', 'tcp', 'udp'],
           change: (val) => {
-            // this.selectProtocolChange(val)
+            this.selectProtocolChange(val)
           },
           validate: 'required',
           requiredInfo: {
@@ -50,7 +50,7 @@ export default {
         {
           type: 'input',
           text: '监听端口',
-          value: 'name',
+          value: 'port',
           align: 'left',
           width: 150,
           sortable: false,
@@ -68,14 +68,13 @@ export default {
           align: 'left',
           width: 120,
           sortable: false,
-          table: false,
+          table: true,
           textFormat: ({ is_ssl }) => {
             return is_ssl ? "是" : "否"
           },
-          form: false,
-          formRowXs: 6,
+          form: true,
           change: (val) => {
-            // this.selectIsSsl(val)
+            this.selectIsSsl(val)
           },
           validate: 'required',
           requiredInfo: {
@@ -86,8 +85,7 @@ export default {
           type: 'input',
           text: '证书文件',
           value: 'certfile',
-          form: false,
-          formRowXs: 6,
+          form: true,
           // validate: 'required',
           // requiredInfo: {
           //   required: () => '请选择证书文件'
@@ -97,8 +95,7 @@ export default {
           type: 'input',
           text: '证书密码',
           value: 'certfile',
-          form: false,
-          formRowXs: 6,
+          form: true,
           // validate: 'required',
           // requiredInfo: {
           //   required: () => '请填写证书密码'
@@ -147,34 +144,31 @@ export default {
     }
   },
   methods: {
-    // selectProtocolChange (val) {
-    //   if (val == "http") {
-    //     //协议栏占一行 隐藏证书文件 证书密码 345
-    //     this.columns[this.columns.length - 3].form = false
-    //     this.columns[this.columns.length - 4].form = false
-    //     this.columns[this.columns.length - 5].form = false
-    //     this.columns[this.columns.length - 6].formRowXs = 12
-    //   } else if (val == "https") {
-    //     //协议栏占一行 隐藏证书文件 证书密码
-    //     this.columns[this.columns.length - 3].form = true
-    //     this.columns[this.columns.length - 4].form = true
-    //     this.columns[this.columns.length - 5].form = false
-    //     this.columns[this.columns.length - 6].formRowXs = 12
-    //   } else {
-    //     //tcp udp
-    //     this.columns[this.columns.length - 3].form = false
-    //     this.columns[this.columns.length - 4].form = false
-    //     this.columns[this.columns.length - 5].form = true
-    //     this.columns[this.columns.length - 6].formRowXs = 12
+    selectProtocolChange (val) {
+      if (val == "http") {
+        //协议栏占一行 隐藏证书文件 证书密码 345
+        this.columns[this.columns.length - 3].form = false
+        this.columns[this.columns.length - 4].form = false
+        this.columns[this.columns.length - 5].form = false
+      } else if (val == "https") {
+        //协议栏占一行 隐藏证书文件 证书密码
+        this.columns[this.columns.length - 3].form = true
+        this.columns[this.columns.length - 4].form = true
+        this.columns[this.columns.length - 5].form = false
+        this.$refs.curd.formItem.is_ssl = true
+      } else {
+        //tcp udp
+        this.columns[this.columns.length - 3].form = false
+        this.columns[this.columns.length - 4].form = false
+        this.columns[this.columns.length - 5].form = true
 
-    //     this.selectIsSsl(this.$refs.curd.formItem.is_ssl)
-    //   }
-    // },
-    // selectIsSsl (val) {
-    //   this.columns[this.columns.length - 3].form = val
-    //   this.columns[this.columns.length - 4].form = val
-    //   this.columns[this.columns.length - 6].formRowXs = val ? 6 : 12
-    // }
+        this.selectIsSsl(this.$refs.curd.formItem.is_ssl)
+      }
+    },
+    selectIsSsl (val) {
+      this.columns[this.columns.length - 3].form = val
+      this.columns[this.columns.length - 4].form = val
+    }
   }
 }
 </script>

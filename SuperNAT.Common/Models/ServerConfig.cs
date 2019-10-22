@@ -23,6 +23,7 @@ namespace SuperNAT.Common.Models
         public string user_id { get; set; }
         [Editable(false)]
         public bool is_admin { get; set; }
+        [Editable(false)]
         public string is_disabled_str => is_disabled ? "禁用" : "启用";
     }
 }

@@ -17,6 +17,7 @@ import "./style/app.css"
 import i18n from "./lang/lang"
 import "@mdi/font/css/materialdesignicons.css" // Ensure you are using css-loader
 // import "./util/general.js"
+import './permission' // permission control
 
 Vue.use(Vuetify, {
   theme: {

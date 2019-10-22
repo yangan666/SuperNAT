@@ -1,12 +1,11 @@
-import {
-  publicRoute
-} from "@/router/config"
+import { publicRoute } from "@/router"
 
 const user = {
   state: {
     dialog: false,
     user: {},
-    routes: publicRoute
+    routes: publicRoute,
+    addRouters: []
   },
   mutations: {
     setDialog(state, data) {
@@ -16,7 +15,8 @@ const user = {
       state.user = data
     },
     setRoutes(state, data) {
-      state.routes = data
+      state.routes = publicRoute.concat(data)
+      state.addRouters = data
     }
   },
   actions: {
