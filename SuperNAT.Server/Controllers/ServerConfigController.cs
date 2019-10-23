@@ -64,7 +64,7 @@ namespace SuperNAT.Server.Controllers
         public IActionResult GetList(ServerConfig model)
         {
             using var bll = new ServerConfigBll();
-            var rst = bll.GetList("");
+            var rst = bll.GetList(model);
             return Json(rst);
         }
     }
