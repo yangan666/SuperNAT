@@ -25,5 +25,50 @@ namespace SuperNAT.Common.Models
         public bool is_admin { get; set; }
         [Editable(false)]
         public string is_disabled_str => is_disabled ? "禁用" : "启用";
+        [Editable(false)]
+        public List<int> port_list
+        {
+            get
+            {
+                var list = new List<int>();
+
+                try
+                {
+                    if (!string.IsNullOrEmpty(port))
+                    {
+                        var portArr = port.Split(",");
+                        foreach (var item in portArr)
+                        {
+                            if (item.Contains("-"))
+                            {
+                                var arr = item.Split("-");
+                                int.TryParse(arr[0], out int start);
+                                int.TryParse(arr[1], out int end);
+                                if (start > 0 && end > 0)
+                                {
+                                    for (var i = start; i <= end; i++)
+                                    {
+                                        list.Add(i);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (int.TryParse(item, out int port))
+                                {
+                                    list.Add(port);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+
+                }
+
+                return list;
+            }
+        }
     }
 }

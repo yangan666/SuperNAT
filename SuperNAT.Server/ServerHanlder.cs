@@ -24,20 +24,22 @@ namespace SuperNAT.Server
     {
         public static string CertFile = "iot3rd.p12";
         public static string CertPassword = "IoM@1234";
-        public static HttpAppServer HttpServer { get; set; }
-        public static TcpAppServer TcpAppServer { get; set; }
         public static NatAppServer NATServer { get; set; }
+        public static List<HttpAppServer> HttpServerList { get; set; } = new List<HttpAppServer>();
+        public static List<TcpAppServer> TcpServerList { get; set; } = new List<TcpAppServer>();
 
         public void Start(string[] args)
         {
             Dapper.SimpleCRUD.SetDialect(Dapper.SimpleCRUD.Dialect.MySQL);
             Startup.Init();
+
             //开启内网TCP服务
-            Task.Run(StartNATServer);
-            //开启外网Web服务
-            Task.Run(StartWebServer);
-            //开启外网Tcp服务
-            Task.Run(StartTcpServer);
+            Task.Run(() =>
+            {
+                StartNATServer(GlobalConfig.NatPort);
+            });
+            //启动所有服务
+            StartAllServer();
             //接口服务
             Task.Run(() =>
             {
@@ -49,8 +51,44 @@ namespace SuperNAT.Server
 
         public void Stop()
         {
-            HttpServer.Stop();
-            NATServer.Stop();
+            HttpServerList.ForEach(c => c.Stop());
+            TcpServerList.ForEach(c => c.Stop());
+        }
+
+        public void StartAllServer()
+        {
+            try
+            {
+                using var bll = new ServerConfigBll();
+                var serverList = bll.GetList("").Data ?? new List<Common.Models.ServerConfig>();
+                if (serverList.Any())
+                {
+                    foreach (var item in serverList)
+                    {
+                        switch (item.protocol)
+                        {
+                            case "http":
+                            case "https":
+                                Task.Run(() =>
+                                {
+                                    StartWebServer(item);
+                                });
+                                break;
+                            case "tcp":
+                            case "udp":
+                                Task.Run(() =>
+                                {
+                                    StartTcpServer(item);
+                                });
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HandleLog.WriteLine($"启动服务失败：{ex}");
+            }
         }
 
         public void ChangeMap(int type, Map map)
@@ -109,7 +147,7 @@ namespace SuperNAT.Server
         }
 
         #region 内网TCP服务
-        private static void StartNATServer()
+        private static void StartNATServer(int port)
         {
             NATServer = new NatAppServer();
             var setup = NATServer.Setup(new RootConfig()
@@ -118,7 +156,7 @@ namespace SuperNAT.Server
             }, new CSuperSocket.SocketBase.Config.ServerConfig()
             {
                 Ip = "Any",
-                Port = GlobalConfig.NatPort,
+                Port = port,
                 TextEncoding = "ASCII",
                 MaxRequestLength = 102400,
                 MaxConnectionNumber = 1000,
@@ -233,7 +271,7 @@ namespace SuperNAT.Server
                                     //02 01 数据长度(4) 正文数据(n)   ---http响应包
                                     int count = 0;
                                     mark:
-                                    var webSession = HttpServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
+                                    var webSession = HttpServerList.SelectMany(c => c.GetAllSessions()).Where(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
                                     if (webSession == null)
                                     {
                                         count++;
@@ -263,7 +301,7 @@ namespace SuperNAT.Server
                                     //响应请求
                                     int count = 0;
                                     mark:
-                                    var tcpSession = TcpAppServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
+                                    var tcpSession = TcpServerList.SelectMany(c => c.GetAllSessions()).Where(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
                                     if (tcpSession == null)
                                     {
                                         count++;
@@ -285,7 +323,7 @@ namespace SuperNAT.Server
                             case 0x3:
                                 {
                                     //响应请求
-                                    var tcpSession = TcpAppServer.GetSessions(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
+                                    var tcpSession = TcpServerList.SelectMany(c => c.GetAllSessions()).Where(c => c.UserId.ToLower() == packJson.UserId.ToLower()).FirstOrDefault();
                                     if (tcpSession != null)
                                     {
                                         tcpSession.Close();
@@ -317,17 +355,17 @@ namespace SuperNAT.Server
         #endregion
 
         #region Web服务
-        private static void StartWebServer()
+        private static void StartWebServer(Common.Models.ServerConfig serverConfig)
         {
-            if (GlobalConfig.WebPortList.Any())
+            if (serverConfig.port_list.Any())
             {
-                HttpServer = new HttpAppServer();
-                bool setup = HttpServer.Setup(new RootConfig()
+                var server = new HttpAppServer();
+                bool setup = server.Setup(new RootConfig()
                 {
                     DisablePerformanceDataCollector = true
                 }, new CSuperSocket.SocketBase.Config.ServerConfig()
                 {
-                    Listeners = from s in GlobalConfig.WebPortList
+                    Listeners = from s in serverConfig.port_list
                                 select new ListenerConfig
                                 {
                                     Ip = "Any",
@@ -341,34 +379,35 @@ namespace SuperNAT.Server
                     LogBasicSessionActivity = true,
                     LogAllSocketException = true,
                     SyncSend = false,
-                    //Security = "tls12",
-                    //Certificate = new CertificateConfig()
-                    //{
-                    //    FilePath = CertFile,
-                    //    Password = CertPassword,
-                    //    ClientCertificateRequired = false
-                    //},
+                    Security = serverConfig.ssl_type == null ? null : Enum.GetName(typeof(ssl_type), serverConfig.ssl_type),
+                    Certificate = serverConfig.ssl_type == null ? null : new CertificateConfig()
+                    {
+                        FilePath = string.IsNullOrEmpty(serverConfig.certfile) ? CertFile : serverConfig.certfile,
+                        Password = string.IsNullOrEmpty(serverConfig.certpwd) ? CertPassword : serverConfig.certpwd,
+                        ClientCertificateRequired = false
+                    },
                     DisableSessionSnapshot = true,
                     SessionSnapshotInterval = 1
                 });
                 if (setup)
                 {
-                    var start = HttpServer.Start();
+                    var start = server.Start();
                     if (start)
                     {
-                        HttpServer.NewSessionConnected += WebServer_NewSessionConnected;
-                        HttpServer.NewRequestReceived += WebServer_NewRequestReceived;
-                        HttpServer.SessionClosed += WebServer_SessionClosed;
-                        HandleLog.WriteLine($"Web服务启动成功，监听端口：{GlobalConfig.WebPort}");
+                        server.NewSessionConnected += WebServer_NewSessionConnected;
+                        server.NewRequestReceived += WebServer_NewRequestReceived;
+                        server.SessionClosed += WebServer_SessionClosed;
+                        HttpServerList.Add(server);
+                        HandleLog.WriteLine($"{serverConfig.protocol}服务启动成功，监听端口：{serverConfig.port}");
                     }
                     else
                     {
-                        HandleLog.WriteLine($"Web服务启动失败，端口：{GlobalConfig.WebPort}");
+                        HandleLog.WriteLine($"{serverConfig.protocol}服务启动失败，端口：{serverConfig.port}");
                     }
                 }
                 else
                 {
-                    HandleLog.WriteLine($"Web服务初始化失败，端口：{GlobalConfig.WebPort}");
+                    HandleLog.WriteLine($"{serverConfig.protocol}服务初始化失败，端口：{serverConfig.port}");
                 }
             }
         }
@@ -428,19 +467,20 @@ namespace SuperNAT.Server
         #endregion
 
         #region Tcp服务
-        private static void StartTcpServer()
+        private static void StartTcpServer(Common.Models.ServerConfig serverConfig)
         {
             try
             {
-                if (GlobalConfig.TcpPortList.Any())
+                if (serverConfig.port_list.Any())
                 {
-                    TcpAppServer = new TcpAppServer();
-                    bool setup = TcpAppServer.Setup(new RootConfig()
+                    var server = new TcpAppServer();
+                    bool setup = server.Setup(new RootConfig()
                     {
                         DisablePerformanceDataCollector = true
                     }, new CSuperSocket.SocketBase.Config.ServerConfig()
                     {
-                        Listeners = from s in GlobalConfig.TcpPortList
+                        Mode = serverConfig.protocol == "tcp" ? SocketMode.Tcp : SocketMode.Udp,
+                        Listeners = from s in serverConfig.port_list
                                     select new ListenerConfig
                                     {
                                         Ip = "Any",
@@ -454,34 +494,35 @@ namespace SuperNAT.Server
                         LogBasicSessionActivity = true,
                         LogAllSocketException = true,
                         SyncSend = false,
-                        //Security = "tls12",
-                        //Certificate = new CertificateConfig()
-                        //{
-                        //    FilePath = CertFile,
-                        //    Password = CertPassword,
-                        //    ClientCertificateRequired = false
-                        //},
+                        Security = serverConfig.ssl_type == null ? null : Enum.GetName(typeof(ssl_type), serverConfig.ssl_type),
+                        Certificate = serverConfig.ssl_type == null ? null : new CertificateConfig()
+                        {
+                            FilePath = string.IsNullOrEmpty(serverConfig.certfile) ? CertFile : serverConfig.certfile,
+                            Password = string.IsNullOrEmpty(serverConfig.certpwd) ? CertPassword : serverConfig.certpwd,
+                            ClientCertificateRequired = false
+                        },
                         DisableSessionSnapshot = true,
                         SessionSnapshotInterval = 1
                     });
                     if (setup)
                     {
-                        var start = TcpAppServer.Start();
+                        var start = server.Start();
                         if (start)
                         {
-                            TcpAppServer.NewSessionConnected += TcpServer_NewSessionConnected;
-                            TcpAppServer.NewRequestReceived += TcpServer_NewRequestReceived;
-                            TcpAppServer.SessionClosed += TcpServer_SessionClosed;
-                            HandleLog.WriteLine($"Tcp服务启动成功，监听端口：{GlobalConfig.TcpPort}");
+                            server.NewSessionConnected += TcpServer_NewSessionConnected;
+                            server.NewRequestReceived += TcpServer_NewRequestReceived;
+                            server.SessionClosed += TcpServer_SessionClosed;
+                            TcpServerList.Add(server);
+                            HandleLog.WriteLine($"{serverConfig.protocol}服务启动成功，监听端口：{serverConfig.port}");
                         }
                         else
                         {
-                            HandleLog.WriteLine($"Tcp服务启动失败，端口：{GlobalConfig.TcpPort}");
+                            HandleLog.WriteLine($"{serverConfig.protocol}服务启动失败，端口：{serverConfig.port}");
                         }
                     }
                     else
                     {
-                        HandleLog.WriteLine($"Tcp服务初始化失败，端口：{GlobalConfig.TcpPort}");
+                        HandleLog.WriteLine($"{serverConfig.protocol}服务初始化失败，端口：{serverConfig.port}");
                     }
                 }
             }

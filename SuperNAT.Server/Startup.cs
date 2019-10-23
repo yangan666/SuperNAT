@@ -22,6 +22,8 @@ using log4net;
 using log4net.Config;
 using SuperNAT.Common;
 using SuperNAT.Common.Bll;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace SuperNAT.Server
 {
@@ -129,8 +131,6 @@ namespace SuperNAT.Server
             //加载配置到全局
             GlobalConfig.ConnetionString = configuration.GetValue<string>("DBConfig:ConnetionString");
             GlobalConfig.NatPort = configuration.GetValue<int>("ServerConfig:NatPort");
-            GlobalConfig.WebPort = configuration.GetValue<string>("ServerConfig:WebPort");
-            GlobalConfig.TcpPort = configuration.GetValue<string>("ServerConfig:TcpPort");
             GlobalConfig.ServerPort = configuration.GetValue<int>("ServerConfig:ServerPort");
             GlobalConfig.DefaultUrl = configuration.GetValue<string>("ServerConfig:DefaultUrl");
             GlobalConfig.RegRoleId = configuration.GetValue<string>("ServerConfig:RegRoleId");
@@ -147,10 +147,17 @@ namespace SuperNAT.Server
                 Log4netUtil.Info(log);
             };
 
-            //更新假在线的主机
-            using var bll = new ClientBll();
-            var res = bll.UpdateOfflineClient();
-            HandleLog.WriteLine(res.Message, false);
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    //更新假在线的主机
+                    using var bll = new ClientBll();
+                    var res = bll.UpdateOfflineClient();
+                    HandleLog.WriteLine(res.Message, false);
+                    Thread.Sleep(60000);
+                }
+            });
 
             var appSettingSetion = configuration.GetSection("AppSettingConfig");
             var appSettingConfig = appSettingSetion.Get<AppSettingConfig>();
