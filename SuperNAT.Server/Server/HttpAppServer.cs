@@ -17,5 +17,7 @@ namespace SuperNAT.Server
         {
 
         }
+
+        public Common.Models.ServerConfig ServerConfig { get; set; }
     }
 }

@@ -45,8 +45,6 @@ namespace SuperNAT.Server
             {
                 CreateHostBuilder(args).Build().Run();
             });
-            //管理后台修改映射通知客户端
-            HandleEvent.MapAction += ChangeMap;
         }
 
         public void Stop()
@@ -91,7 +89,7 @@ namespace SuperNAT.Server
             }
         }
 
-        public void ChangeMap(int type, Map map)
+        public static void ChangeMap(int type, Map map)
         {
             try
             {
@@ -359,7 +357,7 @@ namespace SuperNAT.Server
         {
             if (serverConfig.port_list.Any())
             {
-                var server = new HttpAppServer();
+                var server = new HttpAppServer() { ServerConfig = serverConfig };
                 bool setup = server.Setup(new RootConfig()
                 {
                     DisablePerformanceDataCollector = true
@@ -473,7 +471,7 @@ namespace SuperNAT.Server
             {
                 if (serverConfig.port_list.Any())
                 {
-                    var server = new TcpAppServer();
+                    var server = new TcpAppServer() { ServerConfig = serverConfig };
                     bool setup = server.Setup(new RootConfig()
                     {
                         DisablePerformanceDataCollector = true

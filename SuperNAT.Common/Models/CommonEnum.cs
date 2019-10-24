@@ -12,4 +12,11 @@ namespace SuperNAT.Common.Models
         tls12 = 0xC00,
         tls13 = 0x3000
     }
+
+    public enum ChangeMapType
+    {
+        新增 = 1,
+        修改 = 2,
+        删除 = 3
+    }
 }
