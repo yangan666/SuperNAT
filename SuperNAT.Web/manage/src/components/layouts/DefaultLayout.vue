@@ -10,10 +10,10 @@
       </div>
       <!-- App Footer -->
       <v-footer height="auto" class="white pa-3 app--footer">
-        <span class="caption">SuperNAT内网穿透 &copy; {{ new Date().getFullYear() }}</span>
+        <span class="caption">©{{new Date().getFullYear()}}&nbsp;SuperNAT&nbsp;&nbsp;粤ICP备19095189号-1&nbsp;</span>
         <v-spacer></v-spacer>
-        <span class="caption mr-1">作者：卟再任性</span>
-        <v-icon color="pink" small>favorite</v-icon>
+        <!-- <span class="caption mr-1">by yangan</span>
+        <v-icon color="pink" small>favorite</v-icon> -->
       </v-footer>
     </v-content>
     <!-- Go to top -->
