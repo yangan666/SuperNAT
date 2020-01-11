@@ -1,5 +1,5 @@
 # SuperNAT
-SuperNAT目前属于开发阶段，大家可自行注册免费使用，SuperNAT管理后台：http://www.supernat.cn:8088
+SuperNAT目前属于开发阶段，大家可自行注册免费使用，SuperNAT管理后台：http://www.supernat.cn
 ![Image text](https://github.com/yangan666/SuperNAT/blob/master/Img/manage.png)
 <br/>
 <br/>
