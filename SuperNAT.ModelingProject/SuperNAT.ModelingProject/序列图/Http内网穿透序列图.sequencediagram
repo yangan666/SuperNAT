@@ -794,7 +794,7 @@
               <executionOccurrenceSpecificationMoniker Id="6638de21-cc4e-4a2e-9409-2248b715f618" LastKnownName="ExecutionOccurrenceSpecification24" />
             </topLevelOccurrences>
           </lifeline>
-          <lifeline Id="ae605dac-4192-4673-8667-64bce013775d" name="浏览器" isActor="false" lifelineDisplayName="‎浏览器‎">
+          <lifeline Id="ae605dac-4192-4673-8667-64bce013775d" name="浏览器" isActor="true" lifelineDisplayName="‎浏览器‎">
             <elementDefinition Id="052325ad-6275-42df-bb55-4ebecfc950fc" />
             <topLevelOccurrences>
               <messageOccurrenceSpecificationMoniker Id="e1badeca-574f-4262-a0dc-71684c43fa2a" LastKnownName="MessageOccurrenceSpecification15" />

@@ -1,8 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm9="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner"
+<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm9="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm10="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm11="http://schemas.microsoft.com/dsltools/UseCaseModel"
   dslVersion="1.0.0.0"
   Id="82435ad6-da3b-49a7-a14c-dafee9b0cd06"
   name="SuperNAT.ModelingProject" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <ownedCommentsInternal>
+    <comment
+      Id="6e6c14a7-2b85-4628-8622-9b786fdb3c29">
+      <body>http/https客户端请求</body>
+      <annotatedElements>
+        <useCaseMoniker
+          Id="19614f98-14c7-429b-8120-22bf6dc52ba4"
+          LastKnownName="HttpClient"
+          LastKnownLocation="SuperNAT.ModelingProject.uml" />
+      </annotatedElements>
+    </comment>
+    <comment
+      Id="9b16128c-b78e-4f97-bcc8-bc2e5f39675f">
+      <body>tcp客户端类</body>
+      <annotatedElements>
+        <useCaseMoniker
+          Id="f9006165-75cf-455c-9741-464f37c395ec"
+          LastKnownName="EasyClient"
+          LastKnownLocation="SuperNAT.ModelingProject.uml" />
+      </annotatedElements>
+    </comment>
+    <comment
+      Id="a9104c15-0546-486d-8ad6-c4e6dc64d0ca">
+      <body>udp客户端类</body>
+      <annotatedElements>
+        <useCaseMoniker
+          Id="ff558dbc-a534-4a91-bb2a-d481de7760f0"
+          LastKnownName="UdpClient"
+          LastKnownLocation="SuperNAT.ModelingProject.uml" />
+      </annotatedElements>
+    </comment>
+    <comment
+      Id="07b16d99-4403-46a7-ba1e-ef7242aad2ee">
+      <body>Websocket客户端类</body>
+      <annotatedElements>
+        <useCaseMoniker
+          Id="b840aca5-d487-4728-a324-e1012a9cd580"
+          LastKnownName="Websocket4Net"
+          LastKnownLocation="SuperNAT.ModelingProject.uml" />
+      </annotatedElements>
+    </comment>
+  </ownedCommentsInternal>
   <profileInstances>
     <packageHasProfileInstances
       Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b">
@@ -1465,7 +1507,7 @@
           <lifeline
             Id="052325ad-6275-42df-bb55-4ebecfc950fc"
             name="浏览器"
-            isActor="false"
+            isActor="true"
             lifelineDisplayName="‎浏览器‎">
             <topLevelOccurrences>
               <messageOccurrenceSpecificationMoniker
@@ -1911,6 +1953,332 @@
       <executionEvent
         Id="85d9c87b-1c18-4cab-91e4-1ff31dc72ee5"
         name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="bf605a73-8d3a-44fb-814f-4a63136c9817"
+        name="SuperNAT"
+        isAbstract="false"
+        isLeaf="false">
+        <additions>
+          <include
+            Id="b8b44c16-bc01-44c7-9a3e-b3de318cb97f">
+            <useCaseMoniker
+              Id="43c6d9a3-721c-4877-a359-3c5e3f0d8747"
+              LastKnownName="SuperNAT.Client"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="8604080f-a4b9-4bfb-8c4c-2c8e7099c2c4">
+            <useCaseMoniker
+              Id="5db8e069-e8d7-48d6-97f9-a92cc44d1a39"
+              LastKnownName="SuperNAT.Server"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="f89ff55d-4440-4286-9c98-5387683585bb">
+            <useCaseMoniker
+              Id="0a22fbde-bdf5-4e6d-bd07-3eeeaf5ebb3d"
+              LastKnownName="SuperNAT.Manage"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+        </additions>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <actor
+        Id="7cf42e97-a859-49d7-ad10-6273b044e39a"
+        name="Actor1"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="43c6d9a3-721c-4877-a359-3c5e3f0d8747"
+        name="SuperNAT.Client"
+        isAbstract="false"
+        isLeaf="false">
+        <additions>
+          <include
+            Id="2fba4c9a-8c90-4e82-a2d1-f3cea90a9764">
+            <useCaseMoniker
+              Id="19614f98-14c7-429b-8120-22bf6dc52ba4"
+              LastKnownName="HttpClient"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="abfe4be5-3eca-44fa-9b26-cec0ce3c3b50">
+            <useCaseMoniker
+              Id="f9006165-75cf-455c-9741-464f37c395ec"
+              LastKnownName="EasyClient"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="38a60d94-d978-4673-b90b-c6b91e7a8b3a">
+            <useCaseMoniker
+              Id="ff558dbc-a534-4a91-bb2a-d481de7760f0"
+              LastKnownName="UdpClient"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="fc38b984-b359-479d-81ce-dfb9aef847a3">
+            <useCaseMoniker
+              Id="b840aca5-d487-4728-a324-e1012a9cd580"
+              LastKnownName="Websocket4Net"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+        </additions>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="5db8e069-e8d7-48d6-97f9-a92cc44d1a39"
+        name="SuperNAT.Server"
+        isAbstract="false"
+        isLeaf="false">
+        <additions>
+          <include
+            Id="0112c209-e4ab-4748-99fc-028b84265580">
+            <useCaseMoniker
+              Id="ccc21b4d-de46-44d2-a43b-e1a304495b32"
+              LastKnownName="SuperNAT.WebApi"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="e0d2eef0-cb0d-430c-8cb3-a04323d5f80f">
+            <useCaseMoniker
+              Id="404abb1a-97e1-4261-adc0-804a97e57629"
+              LastKnownName="Http/Https"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="ad5c7bd8-55bd-474c-a6e9-6166707050e5">
+            <useCaseMoniker
+              Id="9a6170e6-e281-4269-980c-b9a01589207d"
+              LastKnownName="TCP"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="2bb53193-cbc2-4d8b-8238-2c36f64e238b">
+            <useCaseMoniker
+              Id="123f87b7-d886-44ac-8de7-caf149469414"
+              LastKnownName="UDP"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="a8e14867-4478-4e3a-b315-955b87d91c3d">
+            <useCaseMoniker
+              Id="b7d52e55-6081-40d0-ba4a-90815412bd9f"
+              LastKnownName="Websocket"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+        </additions>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="0a22fbde-bdf5-4e6d-bd07-3eeeaf5ebb3d"
+        name="SuperNAT.Manage"
+        isAbstract="false"
+        isLeaf="false">
+        <additions>
+          <include
+            Id="95ad71ef-07de-494a-b72a-3b0ede6f9623">
+            <useCaseMoniker
+              Id="e3654ba6-7d78-4263-9467-6b37cb9c2f27"
+              LastKnownName="请求统计"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="0b24d164-320b-426c-baa7-9a7e33d4bddf">
+            <useCaseMoniker
+              Id="27bd4f79-80cb-4dbf-a6a1-ab7d8a61af2d"
+              LastKnownName="系统管理"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="9af2a3bf-0739-4f21-89c9-c326e49fe56c">
+            <useCaseMoniker
+              Id="bbc8e2fe-7f29-4e87-8b45-1ca204d074f3"
+              LastKnownName="内网穿透"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+        </additions>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="ccc21b4d-de46-44d2-a43b-e1a304495b32"
+        name="SuperNAT.WebApi"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="404abb1a-97e1-4261-adc0-804a97e57629"
+        name="Http/Https"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="9a6170e6-e281-4269-980c-b9a01589207d"
+        name="TCP"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="123f87b7-d886-44ac-8de7-caf149469414"
+        name="UDP"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="b7d52e55-6081-40d0-ba4a-90815412bd9f"
+        name="Websocket"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="19614f98-14c7-429b-8120-22bf6dc52ba4"
+        name="HttpClient"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="f9006165-75cf-455c-9741-464f37c395ec"
+        name="EasyClient"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="ff558dbc-a534-4a91-bb2a-d481de7760f0"
+        name="UdpClient"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="b840aca5-d487-4728-a324-e1012a9cd580"
+        name="Websocket4Net"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="e3654ba6-7d78-4263-9467-6b37cb9c2f27"
+        name="请求统计"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="27bd4f79-80cb-4dbf-a6a1-ab7d8a61af2d"
+        name="系统管理"
+        isAbstract="false"
+        isLeaf="false">
+        <additions>
+          <include
+            Id="f41c8ec0-40cb-4f52-9e7c-23bb261452e6">
+            <useCaseMoniker
+              Id="c815f50b-68ee-44a0-8177-73d1ee161827"
+              LastKnownName="服务配置"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="b19f18a7-4bc0-4fe0-bc74-c3c0deed73aa">
+            <useCaseMoniker
+              Id="46f422fd-1466-4f84-847d-bdc43f7c2ee1"
+              LastKnownName="菜单管理"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="b573e479-de2b-4a20-8d54-30c63ff91337">
+            <useCaseMoniker
+              Id="a9642578-a16b-44fe-a5f4-7599c72c554a"
+              LastKnownName="角色管理"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="62b790da-9c3c-4011-873d-59f8149dc8d4">
+            <useCaseMoniker
+              Id="42a7ba10-3cb9-4579-8ae5-5f7f0ab03c9b"
+              LastKnownName="用户管理"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+        </additions>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="c815f50b-68ee-44a0-8177-73d1ee161827"
+        name="服务配置"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="46f422fd-1466-4f84-847d-bdc43f7c2ee1"
+        name="菜单管理"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="a9642578-a16b-44fe-a5f4-7599c72c554a"
+        name="角色管理"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="42a7ba10-3cb9-4579-8ae5-5f7f0ab03c9b"
+        name="用户管理"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="bbc8e2fe-7f29-4e87-8b45-1ca204d074f3"
+        name="内网穿透"
+        isAbstract="false"
+        isLeaf="false">
+        <additions>
+          <include
+            Id="2a1bd6b5-a0e3-4f9e-bd8b-2ac1e556b9e6">
+            <useCaseMoniker
+              Id="048172c5-11c6-4ffe-ab82-b126411d42fe"
+              LastKnownName="主机管理"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+          <include
+            Id="cb50ded3-3a82-41ff-b5dc-ef8380c6db07">
+            <useCaseMoniker
+              Id="df8b3d00-867c-42a1-a6a2-af962f65c8b9"
+              LastKnownName="端口映射"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </include>
+        </additions>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="048172c5-11c6-4ffe-ab82-b126411d42fe"
+        name="主机管理"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="df8b3d00-867c-42a1-a6a2-af962f65c8b9"
+        name="端口映射"
+        isAbstract="false"
+        isLeaf="false" />
     </packageHasNamedElement>
   </packagedElements>
   <primitiveType

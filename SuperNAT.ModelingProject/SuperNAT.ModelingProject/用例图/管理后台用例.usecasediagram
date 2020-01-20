@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="7ce68a2f-7f2a-4fc1-ae6a-3e2755bd9d36" name="管理后台用例" linkedPackageId="8d27d580-0f29-4638-ac21-a35270f956c4" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <profileInstances>
+    <packageHasProfileInstances Id="935ae77c-9ef8-4594-b546-6d5c837cac2b">
+      <profileInstance Id="a3c59524-296c-40e2-8b4b-aa65b00fbd63" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="bca37eb3-edef-4df2-a9f3-ac36d11ebf9e">
+      <profileInstance Id="801867e6-6d3e-455e-a552-ac41b818c99e" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <useCase Id="87d772db-b23d-43d8-a44c-b587cdfd0f95" name="SuperNAT.Manage" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="0a22fbde-bdf5-4e6d-bd07-3eeeaf5ebb3d" />
+        <additions>
+          <include Id="da39e5c4-a256-4865-9a17-0bbb8ca31aba">
+            <useCaseMoniker Id="74f036cb-1cbb-4248-b65f-32836c7b3e9e" LastKnownName="请求统计" />
+            <elementDefinition Id="95ad71ef-07de-494a-b72a-3b0ede6f9623" />
+          </include>
+          <include Id="7c29171c-446d-4616-a3ef-4636e8b99728">
+            <useCaseMoniker Id="a5bbe907-8dfe-405c-aa94-52476b7a30d0" LastKnownName="系统管理" />
+            <elementDefinition Id="0b24d164-320b-426c-baa7-9a7e33d4bddf" />
+          </include>
+          <include Id="dba13eb4-d093-43ff-a589-71dcc11ac97d">
+            <useCaseMoniker Id="9a072b7c-553c-4e9a-8709-0493fbb33953" LastKnownName="内网穿透" />
+            <elementDefinition Id="9af2a3bf-0739-4f21-89c9-c326e49fe56c" />
+          </include>
+        </additions>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="74f036cb-1cbb-4248-b65f-32836c7b3e9e" name="请求统计" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="e3654ba6-7d78-4263-9467-6b37cb9c2f27" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="a5bbe907-8dfe-405c-aa94-52476b7a30d0" name="系统管理" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="27bd4f79-80cb-4dbf-a6a1-ab7d8a61af2d" />
+        <additions>
+          <include Id="c12c423c-2e8f-49a6-9d88-be86b96e335f">
+            <useCaseMoniker Id="38899c45-541a-40a6-ace7-995355e36597" LastKnownName="服务配置" />
+            <elementDefinition Id="f41c8ec0-40cb-4f52-9e7c-23bb261452e6" />
+          </include>
+          <include Id="344860ae-424d-433d-8efa-3ac4669dca6c">
+            <useCaseMoniker Id="93b79886-fa51-47e1-ac86-a486fee923a3" LastKnownName="菜单管理" />
+            <elementDefinition Id="b19f18a7-4bc0-4fe0-bc74-c3c0deed73aa" />
+          </include>
+          <include Id="3339dd7d-3a18-4c4c-8a7a-c5ff12b9d454">
+            <useCaseMoniker Id="09bc694c-bd0e-4be8-b8fa-c5859b6ebbf5" LastKnownName="角色管理" />
+            <elementDefinition Id="b573e479-de2b-4a20-8d54-30c63ff91337" />
+          </include>
+          <include Id="fdedfa23-de2a-48c9-a244-f7061466d3bd">
+            <useCaseMoniker Id="4af5891d-5b9e-42a0-8881-d23518ff21ea" LastKnownName="用户管理" />
+            <elementDefinition Id="62b790da-9c3c-4011-873d-59f8149dc8d4" />
+          </include>
+        </additions>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="38899c45-541a-40a6-ace7-995355e36597" name="服务配置" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="c815f50b-68ee-44a0-8177-73d1ee161827" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="93b79886-fa51-47e1-ac86-a486fee923a3" name="菜单管理" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="46f422fd-1466-4f84-847d-bdc43f7c2ee1" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="09bc694c-bd0e-4be8-b8fa-c5859b6ebbf5" name="角色管理" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="a9642578-a16b-44fe-a5f4-7599c72c554a" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="4af5891d-5b9e-42a0-8881-d23518ff21ea" name="用户管理" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="42a7ba10-3cb9-4579-8ae5-5f7f0ab03c9b" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="9a072b7c-553c-4e9a-8709-0493fbb33953" name="内网穿透" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="bbc8e2fe-7f29-4e87-8b45-1ca204d074f3" />
+        <additions>
+          <include Id="1dd69604-bf08-43e7-a67d-b0dc20f496a1">
+            <useCaseMoniker Id="d3baf531-89f5-4cd6-a06e-d3be600fe2d6" LastKnownName="主机管理" />
+            <elementDefinition Id="2a1bd6b5-a0e3-4f9e-bd8b-2ac1e556b9e6" />
+          </include>
+          <include Id="d4c2a329-a71a-40cd-93af-a62c7eb6266f">
+            <useCaseMoniker Id="091d555a-0477-4213-80c6-5d104da2c020" LastKnownName="端口映射" />
+            <elementDefinition Id="cb50ded3-3a82-41ff-b5dc-ef8380c6db07" />
+          </include>
+        </additions>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="d3baf531-89f5-4cd6-a06e-d3be600fe2d6" name="主机管理" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="048172c5-11c6-4ffe-ab82-b126411d42fe" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="091d555a-0477-4213-80c6-5d104da2c020" name="端口映射" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="df8b3d00-867c-42a1-a6a2-af962f65c8b9" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+  </packagedElements>
+  <package Id="8d27d580-0f29-4638-ac21-a35270f956c4" name="SuperNAT.ModelingProject">
+    <elementDefinition Id="82435ad6-da3b-49a7-a14c-dafee9b0cd06" />
+  </package>
+</useCaseModelRoot>

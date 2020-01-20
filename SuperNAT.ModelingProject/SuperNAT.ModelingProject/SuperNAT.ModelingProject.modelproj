@@ -29,10 +29,39 @@
       <SubType>Content</SubType>
       <DependentUpon>序列图\Http内网穿透序列图.sequencediagram</DependentUpon>
     </Content>
+    <Content Include="总体用例.usecasediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="总体用例.usecasediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>总体用例.usecasediagram</DependentUpon>
+    </Content>
+    <Content Include="用例图\客户端用例.usecasediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="用例图\客户端用例.usecasediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>用例图\客户端用例.usecasediagram</DependentUpon>
+    </Content>
+    <Content Include="用例图\服务端用例.usecasediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="用例图\服务端用例.usecasediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>用例图\服务端用例.usecasediagram</DependentUpon>
+    </Content>
+    <Content Include="用例图\管理后台用例.usecasediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="用例图\管理后台用例.usecasediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>用例图\管理后台用例.usecasediagram</DependentUpon>
+    </Content>
     <Folder Include="ModelDefinition\" />
     <Content Include="ModelDefinition\SuperNAT.ModelingProject.uml">
       <SubType>Content</SubType>
     </Content>
+    <Folder Include="用例图" />
     <Folder Include="序列图" />
   </ItemGroup>
 </Project>

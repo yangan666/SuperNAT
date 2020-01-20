@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="79d7670a-9f58-4ba4-aad1-cd736ffc78ee" name="总体用例" linkedPackageId="eebc7877-387a-46ec-a5b1-884282029784" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <profileInstances>
+    <packageHasProfileInstances Id="dd13e1cb-9a24-4078-8023-1d8c331667bd">
+      <profileInstance Id="4002a226-62f2-4665-840a-79c719f49f7c" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="518aacd3-c4ca-4760-ad0d-e2877495d5ad">
+      <profileInstance Id="cc5b68e7-a64f-4348-8281-2f8fa14fcb7d" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <useCase Id="824de20e-f51d-487f-b863-2c514b650fa4" name="SuperNAT" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="bf605a73-8d3a-44fb-814f-4a63136c9817" />
+        <additions>
+          <include Id="e1de0c35-6566-49dc-86e6-27328e924fa7">
+            <useCaseMoniker Id="104e5838-b9bd-47b7-84bb-ccd77a17e02c" LastKnownName="SuperNAT.Client" />
+            <elementDefinition Id="b8b44c16-bc01-44c7-9a3e-b3de318cb97f" />
+          </include>
+          <include Id="58812b81-ecf3-46a4-9688-84816152b3c9">
+            <useCaseMoniker Id="05b37db2-6884-4d7d-8436-58276fe3832c" LastKnownName="SuperNAT.Server" />
+            <elementDefinition Id="8604080f-a4b9-4bfb-8c4c-2c8e7099c2c4" />
+          </include>
+          <include Id="39e275e2-c568-4049-aa69-c08a1b566749">
+            <useCaseMoniker Id="bda736b5-2fc6-47ee-9732-d524bb2222c6" LastKnownName="SuperNAT.Manage" />
+            <elementDefinition Id="f89ff55d-4440-4286-9c98-5387683585bb" />
+          </include>
+        </additions>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="104e5838-b9bd-47b7-84bb-ccd77a17e02c" name="SuperNAT.Client" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="43c6d9a3-721c-4877-a359-3c5e3f0d8747" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="05b37db2-6884-4d7d-8436-58276fe3832c" name="SuperNAT.Server" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="5db8e069-e8d7-48d6-97f9-a92cc44d1a39" />
+        <additions>
+          <include Id="289cd675-68d8-42ce-8943-648236f2e670">
+            <useCaseMoniker Id="19af2a87-1d62-46bc-a6ef-25624d3d0a2b" LastKnownName="SuperNAT.WebApi" />
+            <elementDefinition Id="0112c209-e4ab-4748-99fc-028b84265580" />
+          </include>
+        </additions>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="bda736b5-2fc6-47ee-9732-d524bb2222c6" name="SuperNAT.Manage" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="0a22fbde-bdf5-4e6d-bd07-3eeeaf5ebb3d" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="19af2a87-1d62-46bc-a6ef-25624d3d0a2b" name="SuperNAT.WebApi" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="ccc21b4d-de46-44d2-a43b-e1a304495b32" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+  </packagedElements>
+  <package Id="eebc7877-387a-46ec-a5b1-884282029784" name="SuperNAT.ModelingProject">
+    <elementDefinition Id="82435ad6-da3b-49a7-a14c-dafee9b0cd06" />
+  </package>
+</useCaseModelRoot>

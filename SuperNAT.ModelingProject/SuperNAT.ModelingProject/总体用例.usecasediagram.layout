@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="总体用例">
+  <useCaseModelRootMoniker Id="79d7670a-9f58-4ba4-aad1-cd736ffc78ee" />
+  <nestedChildShapes>
+    <useCaseShape Id="e89c2d6e-a568-4e81-af2d-e92b79ed16a5" absoluteBounds="1.75, 3, 1.375, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="824de20e-f51d-487f-b863-2c514b650fa4" LastKnownName="SuperNAT" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <useCaseShape Id="dde1c087-d0ca-4f9d-96c2-3305a9140342" absoluteBounds="4.5, 2, 1.625, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="104e5838-b9bd-47b7-84bb-ccd77a17e02c" LastKnownName="SuperNAT.Client" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <includeConnector edgePoints="[(2.93431627678904 : 3.07719433850816); (4.77415872071004 : 2.4372491406226)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black" useCaseStereotype="«包括»">
+      <includeMoniker Id="e1de0c35-6566-49dc-86e6-27328e924fa7" />
+      <relativeChildShapes />
+      <nodes>
+        <useCaseShapeMoniker Id="e89c2d6e-a568-4e81-af2d-e92b79ed16a5" />
+        <useCaseShapeMoniker Id="dde1c087-d0ca-4f9d-96c2-3305a9140342" />
+      </nodes>
+    </includeConnector>
+    <useCaseShape Id="7e4235d5-f41d-473d-9679-85af1be641c0" absoluteBounds="4.625, 3.5, 1.625, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="05b37db2-6884-4d7d-8436-58276fe3832c" LastKnownName="SuperNAT.Server" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <includeConnector edgePoints="[(3.06248206573982 : 3.3541636776233); (4.72307527718887 : 3.63092921286481)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black" useCaseStereotype="«包括»">
+      <includeMoniker Id="58812b81-ecf3-46a4-9688-84816152b3c9" />
+      <relativeChildShapes />
+      <nodes>
+        <useCaseShapeMoniker Id="e89c2d6e-a568-4e81-af2d-e92b79ed16a5" />
+        <useCaseShapeMoniker Id="7e4235d5-f41d-473d-9679-85af1be641c0" />
+      </nodes>
+    </includeConnector>
+    <useCaseShape Id="d907e90e-6c10-4306-bd64-afe2d3718edc" absoluteBounds="4.5, 4.75, 1.625, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="bda736b5-2fc6-47ee-9732-d524bb2222c6" LastKnownName="SuperNAT.Manage" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <includeConnector edgePoints="[(2.79008798583668 : 3.46461877398755); (4.94595510159479 : 4.77688571401422)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black" useCaseStereotype="«包括»">
+      <includeMoniker Id="39e275e2-c568-4049-aa69-c08a1b566749" />
+      <relativeChildShapes />
+      <nodes>
+        <useCaseShapeMoniker Id="e89c2d6e-a568-4e81-af2d-e92b79ed16a5" />
+        <useCaseShapeMoniker Id="d907e90e-6c10-4306-bd64-afe2d3718edc" />
+      </nodes>
+    </includeConnector>
+    <useCaseShape Id="3345e0e9-0bba-4463-bccf-9dcc7597ad7a" absoluteBounds="7.625, 3.5, 1.75, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="19af2a87-1d62-46bc-a6ef-25624d3d0a2b" LastKnownName="SuperNAT.WebApi" />
+      <relativeChildShapes />
+    </useCaseShape>
+    <includeConnector edgePoints="[(6.25 : 3.75); (7.625 : 3.75)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black" useCaseStereotype="«包括»">
+      <includeMoniker Id="289cd675-68d8-42ce-8943-648236f2e670" />
+      <relativeChildShapes />
+      <nodes>
+        <useCaseShapeMoniker Id="7e4235d5-f41d-473d-9679-85af1be641c0" />
+        <useCaseShapeMoniker Id="3345e0e9-0bba-4463-bccf-9dcc7597ad7a" />
+      </nodes>
+    </includeConnector>
+  </nestedChildShapes>
+</useCaseDiagram>
