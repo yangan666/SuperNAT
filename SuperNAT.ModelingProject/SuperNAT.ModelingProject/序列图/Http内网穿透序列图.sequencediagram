@@ -1,0 +1,1089 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SequenceDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" dslVersion="1.0.0.0" Id="d2010a53-6ea4-4263-b4a0-32f56cc93180" name="Http内网穿透序列图" linkedPackageId="9ab34e21-dbac-478a-9066-235b24ab8828" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="a3fd2f53-b2d0-4c61-a14b-e69792f7445f">
+      <profileInstance Id="718acb0e-4a7c-444f-a694-63fbef7551f5" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="71bffacc-5f6e-4fbc-aae2-2f9b26e4c62b">
+      <profileInstance Id="cbb58859-d531-47c6-a8b0-36e7f87889e8" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <packageHasNamedElement>
+      <interaction Id="c3eb99e9-3241-470d-890b-35b197e7b1e0" name="Http内网穿透序列图" collapseFragmentsFlag="false" isActiveClass="false" isAbstract="false" isLeaf="false" isReentrant="false">
+        <ownedCommentsInternal>
+          <comment Id="d18b3a5d-a036-4e77-9cef-6f2a24f27882">
+            <elementDefinition Id="1d79a3bb-b317-4223-a006-b967b9259388" />
+            <body>Supersocket监听10001-10005 TCP端口</body>
+            <annotatedElements>
+              <behaviorExecutionSpecificationMoniker Id="cb8de17f-1e76-4085-b271-cba89ba30cbf" LastKnownName="BehaviorExecutionSpecification3" />
+            </annotatedElements>
+          </comment>
+          <comment Id="4494ffe4-97d6-48c8-8025-81bf553d1ea0">
+            <elementDefinition Id="c81a7d09-7c6c-4858-b090-e10b29900ff6" />
+            <body>根据访问的Host找到对应的主机客户端连接（依据端口映射关系找），封装的Json报文包含浏览器的Session标识UserId</body>
+            <annotatedElements>
+              <behaviorExecutionSpecificationMoniker Id="10ec16f4-6010-4d29-b135-a670bb3b56e8" LastKnownName="BehaviorExecutionSpecification9" />
+            </annotatedElements>
+          </comment>
+          <comment Id="b66aa860-3625-4ed9-a365-b67ecf955b58">
+            <elementDefinition Id="27aa62e5-2c00-4e48-a623-d5b3611079a2" />
+            <body>test.supernat.cn:10001=&gt;localhost:8088
+......</body>
+            <annotatedElements>
+              <behaviorExecutionSpecificationMoniker Id="6dedee7f-4910-44ac-9e53-74019c7d7982" LastKnownName="BehaviorExecutionSpecification8" />
+            </annotatedElements>
+          </comment>
+        </ownedCommentsInternal>
+        <elementDefinition Id="0c548978-969c-4ed1-864b-da0bc07535a1" />
+        <fragments>
+          <messageOccurrenceSpecification Id="85f543ec-c71b-4b21-ac22-ae9677600d48" name="MessageOccurrenceSpecification7">
+            <elementDefinition Id="cb74a4e1-f7b3-4503-9529-9919e9d2cd29" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="f83fcadd-06c5-47f6-8742-a570e1ea6d83" name="MessageOccurrenceSpecification9">
+            <elementDefinition Id="65592db9-c548-4d60-a322-d6d1f597b96e" />
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="1c05bf86-4e8f-444a-a9a5-416f45ae94a9" name="BehaviorExecutionSpecification4">
+            <elementDefinition Id="6ac58733-ccc6-4dee-bcb8-5fea0127b38b" />
+            <coveredLifelines>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="3e0c4d21-a71f-4d4d-83a8-3a063dc0055d" LastKnownName="ExecutionOccurrenceSpecification8" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="3869cfe2-aaf8-4291-a0f8-f7bc3911eab9" LastKnownName="ExecutionOccurrenceSpecification7" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="0ec48bcb-fee0-4aa2-9434-5a7a6f9411ab" LastKnownName="MessageOccurrenceSpecification10" />
+              <messageOccurrenceSpecificationMoniker Id="a396c477-058b-46c0-bcb0-4cba17281d1c" LastKnownName="MessageOccurrenceSpecification11" />
+              <executionOccurrenceSpecificationMoniker Id="834c0eb6-0947-48f6-a0d7-d700caefa4d6" LastKnownName="ExecutionOccurrenceSpecification9" />
+              <executionOccurrenceSpecificationMoniker Id="b80cb603-d339-40c8-9f68-d6265baffc23" LastKnownName="ExecutionOccurrenceSpecification10" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <behaviorExecutionSpecification Id="cb8de17f-1e76-4085-b271-cba89ba30cbf" name="BehaviorExecutionSpecification3">
+            <elementDefinition Id="1115b481-e90b-4e19-bfcc-de664034c2ac" />
+            <coveredLifelines>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="0989c7a2-b0e5-4a73-b9bc-926da3e8be3d" LastKnownName="ExecutionOccurrenceSpecification6" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="66115a31-1f07-44c3-8afb-933101375e3f" LastKnownName="ExecutionOccurrenceSpecification5" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="75765c62-23b5-4f19-bfbb-3253744d5107" LastKnownName="MessageOccurrenceSpecification8" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="3869cfe2-aaf8-4291-a0f8-f7bc3911eab9" name="ExecutionOccurrenceSpecification7">
+            <elementDefinition Id="868bb129-fa8e-4c96-b9cb-26069348f6a5" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="4e56d7b2-c09b-4ce3-b455-4ea44cec2650" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="66115a31-1f07-44c3-8afb-933101375e3f" name="ExecutionOccurrenceSpecification5">
+            <elementDefinition Id="cd52e23c-b793-437f-b6f9-30b2a47db073" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="09575221-e060-4742-9ffd-9f25869ce983" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="75765c62-23b5-4f19-bfbb-3253744d5107" name="MessageOccurrenceSpecification8">
+            <elementDefinition Id="c39b958d-e511-43f4-8bca-9e61608423ad" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="0ec48bcb-fee0-4aa2-9434-5a7a6f9411ab" name="MessageOccurrenceSpecification10">
+            <elementDefinition Id="00b5695b-1c13-4450-a045-c90d2724eb36" />
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="a396c477-058b-46c0-bcb0-4cba17281d1c" name="MessageOccurrenceSpecification11">
+            <elementDefinition Id="1767fdbe-5e5e-420d-b30f-c6e759d8522e" />
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="989177fa-2745-4be4-9f25-56e0d5aead1b" name="BehaviorExecutionSpecification5">
+            <elementDefinition Id="f5ef3227-e20c-4f8f-8e95-da857436e2f3" />
+            <coveredLifelines>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="b80cb603-d339-40c8-9f68-d6265baffc23" LastKnownName="ExecutionOccurrenceSpecification10" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="834c0eb6-0947-48f6-a0d7-d700caefa4d6" LastKnownName="ExecutionOccurrenceSpecification9" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="194e619c-6080-471b-9697-0869daf80036" LastKnownName="MessageOccurrenceSpecification12" />
+              <messageOccurrenceSpecificationMoniker Id="2496b62d-0bcd-4891-a87a-0e39527f5f00" LastKnownName="MessageOccurrenceSpecification3" />
+              <messageOccurrenceSpecificationMoniker Id="a1b98473-595f-442e-8e49-2c8c7947dfbe" LastKnownName="MessageOccurrenceSpecification6" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="0989c7a2-b0e5-4a73-b9bc-926da3e8be3d" name="ExecutionOccurrenceSpecification6">
+            <elementDefinition Id="91ac9533-95b6-4cdd-a8d4-fac12490816b" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="fe425012-7ccd-4f3d-91fa-aecca2729e92" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="834c0eb6-0947-48f6-a0d7-d700caefa4d6" name="ExecutionOccurrenceSpecification9">
+            <elementDefinition Id="3f814497-8636-4ca4-aace-736e6639ea7c" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="1e360a10-e9ef-4afc-a3cb-370b53fbbebe" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="194e619c-6080-471b-9697-0869daf80036" name="MessageOccurrenceSpecification12">
+            <elementDefinition Id="ae1da593-3421-450d-8c35-9998cc19134e" />
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="d8220d52-3ca6-476c-930e-fdc8d771dfa0" name="BehaviorExecutionSpecification2">
+            <elementDefinition Id="2cb88d83-84a1-4e2e-9767-014641ed8fef" />
+            <coveredLifelines>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="566bc27b-adaa-4f6a-8fa6-ea0146099572" LastKnownName="ExecutionOccurrenceSpecification4" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="83fb4c91-3ec3-43c4-a3bc-89c53e75b0ae" LastKnownName="ExecutionOccurrenceSpecification3" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="38bd94f4-6725-4f48-aa6d-659212436b79" LastKnownName="MessageOccurrenceSpecification4" />
+              <messageOccurrenceSpecificationMoniker Id="8d425113-05a5-41e0-9cc7-423a02dca1f4" LastKnownName="MessageOccurrenceSpecification17" />
+              <executionOccurrenceSpecificationMoniker Id="62e97bbc-2e91-4d3b-8bdf-cdf1aec3ea0b" LastKnownName="ExecutionOccurrenceSpecification15" />
+              <executionOccurrenceSpecificationMoniker Id="44aa5a59-d899-46ce-bde8-5c46af884717" LastKnownName="ExecutionOccurrenceSpecification16" />
+              <messageOccurrenceSpecificationMoniker Id="790d4c75-947b-4e8d-bc22-a06fde2df4f6" LastKnownName="MessageOccurrenceSpecification5" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="83fb4c91-3ec3-43c4-a3bc-89c53e75b0ae" name="ExecutionOccurrenceSpecification3">
+            <elementDefinition Id="aeb79943-4036-41b7-8dc1-1624c8a57cc6" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="f4272cb6-8e39-4acd-8c06-eac39ca68c10" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="38bd94f4-6725-4f48-aa6d-659212436b79" name="MessageOccurrenceSpecification4">
+            <elementDefinition Id="5cd8b471-2eb8-4fc3-8254-cec545ad27c4" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="2496b62d-0bcd-4891-a87a-0e39527f5f00" name="MessageOccurrenceSpecification3">
+            <elementDefinition Id="0635af1e-0f4c-4322-9f6e-084e974cd9b1" />
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="8d425113-05a5-41e0-9cc7-423a02dca1f4" name="MessageOccurrenceSpecification17">
+            <elementDefinition Id="84546c32-b24a-408b-9487-bf7052650fdc" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="6dedee7f-4910-44ac-9e53-74019c7d7982" name="BehaviorExecutionSpecification8">
+            <elementDefinition Id="7ee8cebb-b1e8-41fa-af39-5cfd86e49b09" />
+            <coveredLifelines>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="44aa5a59-d899-46ce-bde8-5c46af884717" LastKnownName="ExecutionOccurrenceSpecification16" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="62e97bbc-2e91-4d3b-8bdf-cdf1aec3ea0b" LastKnownName="ExecutionOccurrenceSpecification15" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="ca49176a-315e-4d0f-ad81-58037d88a502" LastKnownName="MessageOccurrenceSpecification18" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="62e97bbc-2e91-4d3b-8bdf-cdf1aec3ea0b" name="ExecutionOccurrenceSpecification15">
+            <elementDefinition Id="fe0f6873-588f-4a6f-a502-bef4a644128b" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="5e287609-e5e7-42ec-a5be-fbd1523ceffc" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="ca49176a-315e-4d0f-ad81-58037d88a502" name="MessageOccurrenceSpecification18">
+            <elementDefinition Id="b5229f6c-ee16-49d5-ac31-be9fe7f7189d" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="44aa5a59-d899-46ce-bde8-5c46af884717" name="ExecutionOccurrenceSpecification16">
+            <elementDefinition Id="90bb2c20-9b55-43a9-8f31-31d0dbb85192" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="70d36cc2-ad78-4690-a877-d1763ce83ced" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="790d4c75-947b-4e8d-bc22-a06fde2df4f6" name="MessageOccurrenceSpecification5">
+            <elementDefinition Id="bf4ef177-e705-4b0d-a10d-541cc66257ec" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="a1b98473-595f-442e-8e49-2c8c7947dfbe" name="MessageOccurrenceSpecification6">
+            <elementDefinition Id="0b35e9a8-12dd-4cfb-8411-1a12923ed4da" />
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="566bc27b-adaa-4f6a-8fa6-ea0146099572" name="ExecutionOccurrenceSpecification4">
+            <elementDefinition Id="9d282045-2341-4e17-b8b1-67e97c8f0f61" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="5ef8ec61-6678-4d23-ac6a-8710caa29111" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="b80cb603-d339-40c8-9f68-d6265baffc23" name="ExecutionOccurrenceSpecification10">
+            <elementDefinition Id="f15c99db-a87c-4420-887d-c63f926de7cd" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="aa5aa03c-0e52-4cff-9562-0660e9709c05" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="3e0c4d21-a71f-4d4d-83a8-3a063dc0055d" name="ExecutionOccurrenceSpecification8">
+            <elementDefinition Id="9aecaf3b-cc18-47cd-856b-50e118ed9429" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="85dba4bf-8d47-4e6f-a8b2-35833e3764d5" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="c6388a12-77be-4a45-be45-8a88a60b8e74" name="BehaviorExecutionSpecification6">
+            <elementDefinition Id="afabff2c-1cd4-4dc6-bbe1-30b18ebc7fe7" />
+            <coveredLifelines>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="14f097d8-d127-4906-8519-824ce171b4e1" LastKnownName="ExecutionOccurrenceSpecification12" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="fb4bf473-c5ca-47f2-9e03-acc9221a99a2" LastKnownName="ExecutionOccurrenceSpecification11" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="ba0e0aa0-76ac-498b-870e-30dbb27f43f7" LastKnownName="MessageOccurrenceSpecification14" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="fb4bf473-c5ca-47f2-9e03-acc9221a99a2" name="ExecutionOccurrenceSpecification11">
+            <elementDefinition Id="95d2633c-c6c3-4dce-9250-c63f0928a539" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="a2ece737-7c05-48bf-82cf-659ffc6a7fc2" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="186547ef-f551-42c6-b9e3-cf049f80cc92" name="MessageOccurrenceSpecification13">
+            <elementDefinition Id="7282b5e1-270d-4ff6-bcc6-7df97b495f6d" />
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="ba0e0aa0-76ac-498b-870e-30dbb27f43f7" name="MessageOccurrenceSpecification14">
+            <elementDefinition Id="10c3c457-0dd9-4508-830b-a37238793ecd" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="14f097d8-d127-4906-8519-824ce171b4e1" name="ExecutionOccurrenceSpecification12">
+            <elementDefinition Id="a64db613-57b6-414a-9b39-1d8f7f9bd1e6" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="eee77a3e-42ff-40bf-ae40-445efbe13748" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="4c78c227-cf11-4225-a8a1-7777dea1bdc4" name="BehaviorExecutionSpecification7">
+            <elementDefinition Id="21871cdc-a001-4f9a-a2d9-02b47bbdc50f" />
+            <coveredLifelines>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="5a172fd8-5858-4ab4-9145-394df7d611be" LastKnownName="ExecutionOccurrenceSpecification14" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="904874ec-e095-45eb-bed8-e09f5938e071" LastKnownName="ExecutionOccurrenceSpecification13" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="38ab1354-bf77-418d-a66e-cb4e0085cb66" LastKnownName="MessageOccurrenceSpecification16" />
+              <messageOccurrenceSpecificationMoniker Id="265c7b69-02d4-4ff7-b719-0e4c700311b9" LastKnownName="MessageOccurrenceSpecification19" />
+              <executionOccurrenceSpecificationMoniker Id="e7c450c3-8d31-4e28-a362-5c73085584b8" LastKnownName="ExecutionOccurrenceSpecification17" />
+              <executionOccurrenceSpecificationMoniker Id="fe8cf5c1-7c04-4b68-a347-20ae66703b31" LastKnownName="ExecutionOccurrenceSpecification18" />
+              <messageOccurrenceSpecificationMoniker Id="c1a0d3c9-32e4-4a93-8522-613761f9c923" LastKnownName="MessageOccurrenceSpecification21" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="904874ec-e095-45eb-bed8-e09f5938e071" name="ExecutionOccurrenceSpecification13">
+            <elementDefinition Id="06f68980-63b2-4d31-ba15-c6d60896641c" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="ae083287-a1f8-4076-9495-031223e500a5" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="e1badeca-574f-4262-a0dc-71684c43fa2a" name="MessageOccurrenceSpecification15">
+            <elementDefinition Id="233871dd-b820-4299-8e7e-c5d3ae7e7f18" />
+            <covered>
+              <lifelineMoniker Id="ae605dac-4192-4673-8667-64bce013775d" LastKnownName="浏览器" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="38ab1354-bf77-418d-a66e-cb4e0085cb66" name="MessageOccurrenceSpecification16">
+            <elementDefinition Id="8850f650-9d5f-4ecc-8a01-1175bc02e1a8" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="265c7b69-02d4-4ff7-b719-0e4c700311b9" name="MessageOccurrenceSpecification19">
+            <elementDefinition Id="d2cc5fbc-f0a9-43c6-9842-10726c63e558" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="10ec16f4-6010-4d29-b135-a670bb3b56e8" name="BehaviorExecutionSpecification9">
+            <elementDefinition Id="7df0056a-aafa-462c-841e-b72e861b7898" />
+            <coveredLifelines>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="fe8cf5c1-7c04-4b68-a347-20ae66703b31" LastKnownName="ExecutionOccurrenceSpecification18" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="e7c450c3-8d31-4e28-a362-5c73085584b8" LastKnownName="ExecutionOccurrenceSpecification17" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="2f88e66c-6c7b-4d2f-825d-6090cb44663d" LastKnownName="MessageOccurrenceSpecification20" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="e7c450c3-8d31-4e28-a362-5c73085584b8" name="ExecutionOccurrenceSpecification17">
+            <elementDefinition Id="22992cde-87cc-477f-b4db-31ba06a2d44b" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="a6d2e44c-bc1c-4fd3-a146-1aa219512dc8" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="2f88e66c-6c7b-4d2f-825d-6090cb44663d" name="MessageOccurrenceSpecification20">
+            <elementDefinition Id="5f3d2053-f71a-4e0b-892b-4dd3b0f29503" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="fe8cf5c1-7c04-4b68-a347-20ae66703b31" name="ExecutionOccurrenceSpecification18">
+            <elementDefinition Id="67da44bc-81f1-4a4a-915c-50fffc0839a1" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="d25612d3-a34e-43b7-bbd9-ffcbd75c8e0f" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="6867a7fc-bf20-42d3-a363-0bb1208271d6" name="BehaviorExecutionSpecification10">
+            <elementDefinition Id="21482c72-476d-4c4d-9209-3e70d66dc97b" />
+            <coveredLifelines>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="8a8ba3ab-ffe5-4d8e-be38-34d8d89d6d3b" LastKnownName="ExecutionOccurrenceSpecification20" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="86f3eb9f-7d02-4d2b-96e4-acc0fa8c22b2" LastKnownName="ExecutionOccurrenceSpecification19" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="5d558165-8657-4eff-9213-0a4e3e18d46d" LastKnownName="MessageOccurrenceSpecification22" />
+              <messageOccurrenceSpecificationMoniker Id="c371744e-1555-4ca2-9c6a-0ad3e17a547a" LastKnownName="MessageOccurrenceSpecification23" />
+              <executionOccurrenceSpecificationMoniker Id="9df5e2d6-ae5a-429b-8e74-dfe9401ad4ca" LastKnownName="ExecutionOccurrenceSpecification21" />
+              <executionOccurrenceSpecificationMoniker Id="d0077ca0-259e-45c1-add3-8148a9475ba9" LastKnownName="ExecutionOccurrenceSpecification22" />
+              <messageOccurrenceSpecificationMoniker Id="c03688e7-b093-4452-99a8-422e1848c4d5" LastKnownName="MessageOccurrenceSpecification25" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="86f3eb9f-7d02-4d2b-96e4-acc0fa8c22b2" name="ExecutionOccurrenceSpecification19">
+            <elementDefinition Id="c4fb93ac-e075-47d9-8f3c-c863617e8c73" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="2af3479b-6f53-4482-a6d3-49592fd9ea57" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="5d558165-8657-4eff-9213-0a4e3e18d46d" name="MessageOccurrenceSpecification22">
+            <elementDefinition Id="ba7a52f2-4f18-419a-af67-c59c5dbf5de0" />
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="c1a0d3c9-32e4-4a93-8522-613761f9c923" name="MessageOccurrenceSpecification21">
+            <elementDefinition Id="4cf53da1-8202-4035-a603-9d0cd655dcb8" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="5a172fd8-5858-4ab4-9145-394df7d611be" name="ExecutionOccurrenceSpecification14">
+            <elementDefinition Id="493f66a1-c927-4c39-9c2c-15d188f204bc" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="e383cd0f-b5fb-4427-95cf-342a9578dd07" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="c371744e-1555-4ca2-9c6a-0ad3e17a547a" name="MessageOccurrenceSpecification23">
+            <elementDefinition Id="d23e714c-6865-4906-922d-8db188a5d772" />
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="16b57323-58a5-4c38-aa6e-1a90ae69d5b9" name="BehaviorExecutionSpecification11">
+            <elementDefinition Id="44d33e1e-d872-4b09-b41e-20f5e1480df8" />
+            <coveredLifelines>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="d0077ca0-259e-45c1-add3-8148a9475ba9" LastKnownName="ExecutionOccurrenceSpecification22" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="9df5e2d6-ae5a-429b-8e74-dfe9401ad4ca" LastKnownName="ExecutionOccurrenceSpecification21" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="fb007202-6d25-4f9b-be84-42aa448ac66e" LastKnownName="MessageOccurrenceSpecification24" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="9df5e2d6-ae5a-429b-8e74-dfe9401ad4ca" name="ExecutionOccurrenceSpecification21">
+            <elementDefinition Id="44c26bdb-6e3a-4464-81ad-db402d015b56" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="4c570e4b-6a88-498b-afad-eb4fbac39118" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="fb007202-6d25-4f9b-be84-42aa448ac66e" name="MessageOccurrenceSpecification24">
+            <elementDefinition Id="66c0fb34-aafd-4158-9f16-54047d6045ab" />
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="d0077ca0-259e-45c1-add3-8148a9475ba9" name="ExecutionOccurrenceSpecification22">
+            <elementDefinition Id="8e6547ad-40c3-4962-9810-3838750dc265" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="f5e0226e-7309-49bd-afd9-0c776df2d3f1" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="d45ada29-8c21-4de5-b4c7-4a90a4af3620" name="BehaviorExecutionSpecification12">
+            <elementDefinition Id="c66ddf2f-759e-451e-b95e-1c4f744b1508" />
+            <coveredLifelines>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="6638de21-cc4e-4a2e-9409-2248b715f618" LastKnownName="ExecutionOccurrenceSpecification24" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="85b34872-b597-41bb-9552-32a2d3bcf510" LastKnownName="ExecutionOccurrenceSpecification23" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="37b26877-c98c-4b3e-9d09-527549f90e11" LastKnownName="MessageOccurrenceSpecification26" />
+              <messageOccurrenceSpecificationMoniker Id="5b06250f-195a-4075-8332-1133afa7f8b1" LastKnownName="MessageOccurrenceSpecification27" />
+              <executionOccurrenceSpecificationMoniker Id="bdb969e3-e290-447b-9a4a-7fe39a8351ed" LastKnownName="ExecutionOccurrenceSpecification25" />
+              <executionOccurrenceSpecificationMoniker Id="34631cda-3b61-4ffd-92fc-1b89e02dc283" LastKnownName="ExecutionOccurrenceSpecification26" />
+              <messageOccurrenceSpecificationMoniker Id="18a2e72f-eb6e-419d-b0ea-d5bdbb41a662" LastKnownName="MessageOccurrenceSpecification29" />
+              <messageOccurrenceSpecificationMoniker Id="5b71ea91-cdc6-40d3-b496-5a6b2d3e6d02" LastKnownName="MessageOccurrenceSpecification31" />
+              <executionOccurrenceSpecificationMoniker Id="32682da8-c27f-47b4-8000-461d68737719" LastKnownName="ExecutionOccurrenceSpecification29" />
+              <executionOccurrenceSpecificationMoniker Id="576451ff-2431-4c9f-a0b1-0791f570f1a3" LastKnownName="ExecutionOccurrenceSpecification30" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="85b34872-b597-41bb-9552-32a2d3bcf510" name="ExecutionOccurrenceSpecification23">
+            <elementDefinition Id="4b44bb03-157f-49ed-83d1-79ab0eed3d0b" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="bb7cde50-9525-4346-b12e-91821bb82b0c" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="37b26877-c98c-4b3e-9d09-527549f90e11" name="MessageOccurrenceSpecification26">
+            <elementDefinition Id="6fffe0ed-a03a-48e9-803d-8f00d8411faa" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="c03688e7-b093-4452-99a8-422e1848c4d5" name="MessageOccurrenceSpecification25">
+            <elementDefinition Id="2be3b3eb-a0df-4fc4-b996-dbec3d191264" />
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="8a8ba3ab-ffe5-4d8e-be38-34d8d89d6d3b" name="ExecutionOccurrenceSpecification20">
+            <elementDefinition Id="b2007b52-94e4-4f88-b1a0-f5eda19e8649" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="edaa1b3f-d59b-406c-8875-609ffb9efdd5" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="e0508835-46df-4837-ba42-8e1d14bb96b0" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="5b06250f-195a-4075-8332-1133afa7f8b1" name="MessageOccurrenceSpecification27">
+            <elementDefinition Id="88127548-747c-4013-813d-26800a553197" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="4ee294f9-4ece-4b00-82ee-cdd5789c67da" name="BehaviorExecutionSpecification13">
+            <elementDefinition Id="a95ba9fc-1289-4a7a-8f72-1b4468dcf25b" />
+            <coveredLifelines>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="34631cda-3b61-4ffd-92fc-1b89e02dc283" LastKnownName="ExecutionOccurrenceSpecification26" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="bdb969e3-e290-447b-9a4a-7fe39a8351ed" LastKnownName="ExecutionOccurrenceSpecification25" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="5d87f0a8-af16-4338-bede-98554394c787" LastKnownName="MessageOccurrenceSpecification28" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="bdb969e3-e290-447b-9a4a-7fe39a8351ed" name="ExecutionOccurrenceSpecification25">
+            <elementDefinition Id="15a065cb-4c74-45c9-8515-42997079aac7" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="20a877af-1581-443f-9e2b-3bb53a7f77b6" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="5d87f0a8-af16-4338-bede-98554394c787" name="MessageOccurrenceSpecification28">
+            <elementDefinition Id="2e0e2443-e41f-4f96-9d7e-f549fb18c9f4" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="34631cda-3b61-4ffd-92fc-1b89e02dc283" name="ExecutionOccurrenceSpecification26">
+            <elementDefinition Id="aa2f1130-f3ba-44d5-a7b7-a05e2a98ecf4" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="dc23ef06-b39e-4275-b03d-e0b9d6123611" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="1d0964f7-7dcd-469e-987c-b2c23e38b6e0" name="BehaviorExecutionSpecification14">
+            <elementDefinition Id="d480f02b-8793-460a-8118-fde2823c09c4" />
+            <coveredLifelines>
+              <lifelineMoniker Id="ae605dac-4192-4673-8667-64bce013775d" LastKnownName="浏览器" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="0de9dbac-7d34-406c-ab03-4374891580ff" LastKnownName="ExecutionOccurrenceSpecification28" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="ebef5193-69fb-40ad-aaa6-fc7277becbe9" LastKnownName="ExecutionOccurrenceSpecification27" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="5e97014d-c455-4391-968c-e289cdbc3bb5" LastKnownName="MessageOccurrenceSpecification30" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="ebef5193-69fb-40ad-aaa6-fc7277becbe9" name="ExecutionOccurrenceSpecification27">
+            <elementDefinition Id="0eb7261b-7796-4054-8bb0-1462fad3661e" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="19b5a3ef-475e-4fca-89bd-21407b84812e" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="ae605dac-4192-4673-8667-64bce013775d" LastKnownName="浏览器" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="18a2e72f-eb6e-419d-b0ea-d5bdbb41a662" name="MessageOccurrenceSpecification29">
+            <elementDefinition Id="f37f46c9-a25c-4236-b045-f71e070c0c24" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="5e97014d-c455-4391-968c-e289cdbc3bb5" name="MessageOccurrenceSpecification30">
+            <elementDefinition Id="7ea1b8ac-fda4-4911-b104-4c4a329e6295" />
+            <covered>
+              <lifelineMoniker Id="ae605dac-4192-4673-8667-64bce013775d" LastKnownName="浏览器" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="5b71ea91-cdc6-40d3-b496-5a6b2d3e6d02" name="MessageOccurrenceSpecification31">
+            <elementDefinition Id="17b5fc8f-28c0-4215-a639-76e1cfa46148" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="1b68c881-20a0-48fb-9a68-e53b71817426" name="BehaviorExecutionSpecification15">
+            <elementDefinition Id="0c6702d3-1cd3-4726-b21c-c376b466cbbe" />
+            <coveredLifelines>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="576451ff-2431-4c9f-a0b1-0791f570f1a3" LastKnownName="ExecutionOccurrenceSpecification30" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="32682da8-c27f-47b4-8000-461d68737719" LastKnownName="ExecutionOccurrenceSpecification29" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="caec19e9-c713-4f11-a217-b6711bca07ab" LastKnownName="MessageOccurrenceSpecification32" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="32682da8-c27f-47b4-8000-461d68737719" name="ExecutionOccurrenceSpecification29">
+            <elementDefinition Id="46eea71f-d526-41f4-bced-902fb3441431" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="4f10765a-b73d-47c2-b39a-05d3ff3012ae" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="0de9dbac-7d34-406c-ab03-4374891580ff" name="ExecutionOccurrenceSpecification28">
+            <elementDefinition Id="cb994112-478b-4155-b0a9-8c8531a9846c" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="26b707cc-d227-4b53-a4f1-3ad68faba924" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="ae605dac-4192-4673-8667-64bce013775d" LastKnownName="浏览器" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="caec19e9-c713-4f11-a217-b6711bca07ab" name="MessageOccurrenceSpecification32">
+            <elementDefinition Id="bb6741a7-f69b-433b-8c44-75eb1a847f57" />
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="576451ff-2431-4c9f-a0b1-0791f570f1a3" name="ExecutionOccurrenceSpecification30">
+            <elementDefinition Id="c4ff3a3e-1ef9-4719-b8c7-21a61d51f061" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="22b77411-f5e2-44b0-9a5b-9492dc8df6e0" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="6638de21-cc4e-4a2e-9409-2248b715f618" name="ExecutionOccurrenceSpecification24">
+            <elementDefinition Id="c2ad9460-538c-4730-b8a3-923b5ea9db11" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="01b3df53-718c-4c5c-8603-1571de33c128" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="a45f02cc-3566-49ac-9eae-7809cbb79620" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+        </fragments>
+        <lifelines>
+          <lifeline Id="e0508835-46df-4837-ba42-8e1d14bb96b0" name="SuperNAT.Client" isActor="false" lifelineDisplayName="SuperNAT.Client">
+            <elementDefinition Id="c0bf6e24-4acd-4eae-90cc-816a6bae748f" />
+            <topLevelOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="f83fcadd-06c5-47f6-8742-a570e1ea6d83" LastKnownName="MessageOccurrenceSpecification9" />
+              <executionOccurrenceSpecificationMoniker Id="3869cfe2-aaf8-4291-a0f8-f7bc3911eab9" LastKnownName="ExecutionOccurrenceSpecification7" />
+              <executionOccurrenceSpecificationMoniker Id="3e0c4d21-a71f-4d4d-83a8-3a063dc0055d" LastKnownName="ExecutionOccurrenceSpecification8" />
+              <messageOccurrenceSpecificationMoniker Id="186547ef-f551-42c6-b9e3-cf049f80cc92" LastKnownName="MessageOccurrenceSpecification13" />
+              <executionOccurrenceSpecificationMoniker Id="86f3eb9f-7d02-4d2b-96e4-acc0fa8c22b2" LastKnownName="ExecutionOccurrenceSpecification19" />
+              <executionOccurrenceSpecificationMoniker Id="8a8ba3ab-ffe5-4d8e-be38-34d8d89d6d3b" LastKnownName="ExecutionOccurrenceSpecification20" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline Id="a45f02cc-3566-49ac-9eae-7809cbb79620" name="SuperNAT.Server" isActor="false" lifelineDisplayName="SuperNAT.Server">
+            <elementDefinition Id="3dfb9adf-1570-4279-8bea-4c2803e33d16" />
+            <topLevelOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="85f543ec-c71b-4b21-ac22-ae9677600d48" LastKnownName="MessageOccurrenceSpecification7" />
+              <executionOccurrenceSpecificationMoniker Id="66115a31-1f07-44c3-8afb-933101375e3f" LastKnownName="ExecutionOccurrenceSpecification5" />
+              <executionOccurrenceSpecificationMoniker Id="0989c7a2-b0e5-4a73-b9bc-926da3e8be3d" LastKnownName="ExecutionOccurrenceSpecification6" />
+              <executionOccurrenceSpecificationMoniker Id="83fb4c91-3ec3-43c4-a3bc-89c53e75b0ae" LastKnownName="ExecutionOccurrenceSpecification3" />
+              <executionOccurrenceSpecificationMoniker Id="566bc27b-adaa-4f6a-8fa6-ea0146099572" LastKnownName="ExecutionOccurrenceSpecification4" />
+              <executionOccurrenceSpecificationMoniker Id="fb4bf473-c5ca-47f2-9e03-acc9221a99a2" LastKnownName="ExecutionOccurrenceSpecification11" />
+              <executionOccurrenceSpecificationMoniker Id="14f097d8-d127-4906-8519-824ce171b4e1" LastKnownName="ExecutionOccurrenceSpecification12" />
+              <executionOccurrenceSpecificationMoniker Id="904874ec-e095-45eb-bed8-e09f5938e071" LastKnownName="ExecutionOccurrenceSpecification13" />
+              <executionOccurrenceSpecificationMoniker Id="5a172fd8-5858-4ab4-9145-394df7d611be" LastKnownName="ExecutionOccurrenceSpecification14" />
+              <executionOccurrenceSpecificationMoniker Id="85b34872-b597-41bb-9552-32a2d3bcf510" LastKnownName="ExecutionOccurrenceSpecification23" />
+              <executionOccurrenceSpecificationMoniker Id="6638de21-cc4e-4a2e-9409-2248b715f618" LastKnownName="ExecutionOccurrenceSpecification24" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline Id="ae605dac-4192-4673-8667-64bce013775d" name="浏览器" isActor="false" lifelineDisplayName="‎浏览器‎">
+            <elementDefinition Id="052325ad-6275-42df-bb55-4ebecfc950fc" />
+            <topLevelOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="e1badeca-574f-4262-a0dc-71684c43fa2a" LastKnownName="MessageOccurrenceSpecification15" />
+              <executionOccurrenceSpecificationMoniker Id="ebef5193-69fb-40ad-aaa6-fc7277becbe9" LastKnownName="ExecutionOccurrenceSpecification27" />
+              <executionOccurrenceSpecificationMoniker Id="0de9dbac-7d34-406c-ab03-4374891580ff" LastKnownName="ExecutionOccurrenceSpecification28" />
+            </topLevelOccurrences>
+          </lifeline>
+        </lifelines>
+        <messages>
+          <message Id="83a84278-0042-4682-848e-3b0f00daa420" name="侦听Http端口" messageKind="Complete" messageSort="SynchCall" createSelfMessage="true">
+            <elementDefinition Id="1e452c85-79fc-43e8-b319-4c04a66179da" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="85f543ec-c71b-4b21-ac22-ae9677600d48" LastKnownName="MessageOccurrenceSpecification7" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="75765c62-23b5-4f19-bfbb-3253744d5107" LastKnownName="MessageOccurrenceSpecification8" />
+            </receiveEvent>
+          </message>
+          <message Id="fa058697-081b-45bd-82cd-5adb99e03d8c" name="宿主到windows服务" messageKind="Complete" messageSort="SynchCall" createSelfMessage="true">
+            <elementDefinition Id="d6359a1a-4c36-433d-8c6d-5fd424fba110" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="f83fcadd-06c5-47f6-8742-a570e1ea6d83" LastKnownName="MessageOccurrenceSpecification9" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="0ec48bcb-fee0-4aa2-9434-5a7a6f9411ab" LastKnownName="MessageOccurrenceSpecification10" />
+            </receiveEvent>
+          </message>
+          <message Id="d51f5eb6-c451-49e7-b556-57054c2f9978" name="打开一个TCP加密连接" messageKind="Complete" messageSort="SynchCall" createSelfMessage="true">
+            <elementDefinition Id="6b644300-c7be-4cb7-b50a-878929cb6108" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="a396c477-058b-46c0-bcb0-4cba17281d1c" LastKnownName="MessageOccurrenceSpecification11" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="194e619c-6080-471b-9697-0869daf80036" LastKnownName="MessageOccurrenceSpecification12" />
+            </receiveEvent>
+          </message>
+          <message Id="92d90e12-4881-4db2-ad7f-a756676f8a23" name="使用主机密钥鉴权登录" messageKind="Complete" messageSort="SynchCall" createSelfMessage="false">
+            <elementDefinition Id="fe5e959c-f0a4-47b1-accd-84ce3a7cf0e9" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="2496b62d-0bcd-4891-a87a-0e39527f5f00" LastKnownName="MessageOccurrenceSpecification3" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="38bd94f4-6725-4f48-aa6d-659212436b79" LastKnownName="MessageOccurrenceSpecification4" />
+            </receiveEvent>
+          </message>
+          <message Id="20fd527a-ce6f-46dd-b9c4-2f7afebf7033" name="加载该主机的端口映射列表" messageKind="Complete" messageSort="SynchCall" createSelfMessage="true">
+            <elementDefinition Id="afbb9160-ea33-4a75-a516-70cca1fde4b8" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="8d425113-05a5-41e0-9cc7-423a02dca1f4" LastKnownName="MessageOccurrenceSpecification17" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="ca49176a-315e-4d0f-ad81-58037d88a502" LastKnownName="MessageOccurrenceSpecification18" />
+            </receiveEvent>
+          </message>
+          <message Id="4b4e4246-1d2c-4110-8e14-e8f633830aaf" name="&lt;&lt;return&gt;&gt;" messageKind="Complete" messageSort="Reply" createSelfMessage="false">
+            <elementDefinition Id="92123f95-4da0-4df4-a1ba-742747942c75" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="790d4c75-947b-4e8d-bc22-a06fde2df4f6" LastKnownName="MessageOccurrenceSpecification5" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="a1b98473-595f-442e-8e49-2c8c7947dfbe" LastKnownName="MessageOccurrenceSpecification6" />
+            </receiveEvent>
+          </message>
+          <message Id="20fb01b7-e0d3-48e8-b6d3-3fd01c842667" name="30s一个心跳包" messageKind="Complete" messageSort="AsynchCall" createSelfMessage="false">
+            <elementDefinition Id="5973cfd8-0846-480f-a35f-fdda2c3f60c6" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="186547ef-f551-42c6-b9e3-cf049f80cc92" LastKnownName="MessageOccurrenceSpecification13" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="ba0e0aa0-76ac-498b-870e-30dbb27f43f7" LastKnownName="MessageOccurrenceSpecification14" />
+            </receiveEvent>
+          </message>
+          <message Id="46b5775e-87e4-406e-98c7-89bbc1cae68b" name="打开http://test.supernat.cn:10001" messageKind="Complete" messageSort="AsynchCall" createSelfMessage="false">
+            <elementDefinition Id="28066601-6bf6-4708-9630-75a4521ae6a6" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="e1badeca-574f-4262-a0dc-71684c43fa2a" LastKnownName="MessageOccurrenceSpecification15" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="38ab1354-bf77-418d-a66e-cb4e0085cb66" LastKnownName="MessageOccurrenceSpecification16" />
+            </receiveEvent>
+          </message>
+          <message Id="71c21bc8-968b-4425-9429-c1e2beee7147" name="Http过滤器解析请求报文" messageKind="Complete" messageSort="SynchCall" createSelfMessage="true">
+            <elementDefinition Id="1ec7ca40-1e6c-4328-baab-c79d80799903" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="265c7b69-02d4-4ff7-b719-0e4c700311b9" LastKnownName="MessageOccurrenceSpecification19" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="2f88e66c-6c7b-4d2f-825d-6090cb44663d" LastKnownName="MessageOccurrenceSpecification20" />
+            </receiveEvent>
+          </message>
+          <message Id="d9d91d61-3810-4cb2-9547-f0004f4c3934" name="转发Http请求报文给对应的主机客户端" messageKind="Complete" messageSort="AsynchCall" createSelfMessage="false">
+            <elementDefinition Id="974a10da-b3f8-4071-8b20-702aa3ae5429" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="c1a0d3c9-32e4-4a93-8522-613761f9c923" LastKnownName="MessageOccurrenceSpecification21" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="5d558165-8657-4eff-9213-0a4e3e18d46d" LastKnownName="MessageOccurrenceSpecification22" />
+            </receiveEvent>
+          </message>
+          <message Id="30685bf9-321b-404d-98a9-dbeebadafa33" name="HttpClient请求映射的内网站点localhost:8088" messageKind="Complete" messageSort="SynchCall" createSelfMessage="true">
+            <elementDefinition Id="1461b93c-7667-4274-9a10-9bee717d0cdc" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="c371744e-1555-4ca2-9c6a-0ad3e17a547a" LastKnownName="MessageOccurrenceSpecification23" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="fb007202-6d25-4f9b-be84-42aa448ac66e" LastKnownName="MessageOccurrenceSpecification24" />
+            </receiveEvent>
+          </message>
+          <message Id="dc00ad6a-829f-4585-bb19-0a9634742c02" name="发送响应内容给服务器" messageKind="Complete" messageSort="AsynchCall" createSelfMessage="false">
+            <elementDefinition Id="ac811225-71e5-486e-a352-b7331f7a3868" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="c03688e7-b093-4452-99a8-422e1848c4d5" LastKnownName="MessageOccurrenceSpecification25" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="37b26877-c98c-4b3e-9d09-527549f90e11" LastKnownName="MessageOccurrenceSpecification26" />
+            </receiveEvent>
+          </message>
+          <message Id="dcc411ba-dfc3-4444-979e-bd291aeaddd9" name="根据UserId找到源Http请求的Session" messageKind="Complete" messageSort="SynchCall" createSelfMessage="true">
+            <elementDefinition Id="e87bd2c0-5cc1-4171-bef6-52efaa8f2d44" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="5b06250f-195a-4075-8332-1133afa7f8b1" LastKnownName="MessageOccurrenceSpecification27" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="5d87f0a8-af16-4338-bede-98554394c787" LastKnownName="MessageOccurrenceSpecification28" />
+            </receiveEvent>
+          </message>
+          <message Id="e13eb531-4bad-46a9-a1fe-1ffa7947cc30" name="发送响应内容给浏览器" messageKind="Complete" messageSort="AsynchCall" createSelfMessage="false">
+            <elementDefinition Id="eb20cf4e-1616-43f9-abac-3fad6657a19e" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="18a2e72f-eb6e-419d-b0ea-d5bdbb41a662" LastKnownName="MessageOccurrenceSpecification29" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="5e97014d-c455-4391-968c-e289cdbc3bb5" LastKnownName="MessageOccurrenceSpecification30" />
+            </receiveEvent>
+          </message>
+          <message Id="cb14a970-b627-48b5-be32-8c8605097781" name="关闭浏览器连接" messageKind="Complete" messageSort="SynchCall" createSelfMessage="true">
+            <elementDefinition Id="e872b116-d834-4f89-9122-1515bdc2809b" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="5b71ea91-cdc6-40d3-b496-5a6b2d3e6d02" LastKnownName="MessageOccurrenceSpecification31" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="caec19e9-c713-4f11-a217-b6711bca07ab" LastKnownName="MessageOccurrenceSpecification32" />
+            </receiveEvent>
+          </message>
+        </messages>
+      </interaction>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="09575221-e060-4742-9ffd-9f25869ce983" name="ExecutionEvent">
+        <elementDefinition Id="c35525b9-7f1d-42d1-bfbe-dc943f2674a5" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="fe425012-7ccd-4f3d-91fa-aecca2729e92" name="ExecutionEvent">
+        <elementDefinition Id="b367361c-ca7e-4024-ad50-5b8dc954c60d" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="4e56d7b2-c09b-4ce3-b455-4ea44cec2650" name="ExecutionEvent">
+        <elementDefinition Id="e9973bbb-3993-40b9-8cce-3e09f1be2732" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="85dba4bf-8d47-4e6f-a8b2-35833e3764d5" name="ExecutionEvent">
+        <elementDefinition Id="0705fc43-aa83-4278-951e-2d1116766ef3" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="1e360a10-e9ef-4afc-a3cb-370b53fbbebe" name="ExecutionEvent">
+        <elementDefinition Id="8217822c-be97-4945-a5bc-8401c18e76cd" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="aa5aa03c-0e52-4cff-9562-0660e9709c05" name="ExecutionEvent">
+        <elementDefinition Id="bc42f647-f3b3-42a0-995c-498e749da133" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="f4272cb6-8e39-4acd-8c06-eac39ca68c10" name="ExecutionEvent">
+        <elementDefinition Id="4f1fd500-2ffe-4d82-8e11-22f19bd18764" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="5ef8ec61-6678-4d23-ac6a-8710caa29111" name="ExecutionEvent">
+        <elementDefinition Id="888f4cff-27da-4ab1-8f4d-982fefdf559e" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="a2ece737-7c05-48bf-82cf-659ffc6a7fc2" name="ExecutionEvent">
+        <elementDefinition Id="b5ba8c3d-81d8-45ce-b742-cfdae8d78622" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="eee77a3e-42ff-40bf-ae40-445efbe13748" name="ExecutionEvent">
+        <elementDefinition Id="97d7488d-203b-45dd-a54b-07ca926da215" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="ae083287-a1f8-4076-9495-031223e500a5" name="ExecutionEvent">
+        <elementDefinition Id="818b6d32-d175-4909-a255-25dd9da74548" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="e383cd0f-b5fb-4427-95cf-342a9578dd07" name="ExecutionEvent">
+        <elementDefinition Id="f5a2a4de-b8ef-46eb-8352-6784e577cc60" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="5e287609-e5e7-42ec-a5be-fbd1523ceffc" name="ExecutionEvent">
+        <elementDefinition Id="cac3069d-8221-4c23-9388-5e3a309c810e" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="70d36cc2-ad78-4690-a877-d1763ce83ced" name="ExecutionEvent">
+        <elementDefinition Id="782959c5-bcee-44f4-ba6f-318f3c22b7e7" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="a6d2e44c-bc1c-4fd3-a146-1aa219512dc8" name="ExecutionEvent">
+        <elementDefinition Id="5d26ce8a-4ef7-4d44-bd85-4abcd1cd0785" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="d25612d3-a34e-43b7-bbd9-ffcbd75c8e0f" name="ExecutionEvent">
+        <elementDefinition Id="be8abf1e-13b0-4387-b9a1-8026a5049a7c" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="2af3479b-6f53-4482-a6d3-49592fd9ea57" name="ExecutionEvent">
+        <elementDefinition Id="396758e9-1783-4dfe-871e-d79311d81236" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="edaa1b3f-d59b-406c-8875-609ffb9efdd5" name="ExecutionEvent">
+        <elementDefinition Id="fa7ccbc5-d404-4d33-81bc-68620fead7c8" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="4c570e4b-6a88-498b-afad-eb4fbac39118" name="ExecutionEvent">
+        <elementDefinition Id="79e5fd7a-2144-4c63-a6ab-4a12fb954fca" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="f5e0226e-7309-49bd-afd9-0c776df2d3f1" name="ExecutionEvent">
+        <elementDefinition Id="631a53c0-a361-41ca-b65b-1270f858a8e5" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="bb7cde50-9525-4346-b12e-91821bb82b0c" name="ExecutionEvent">
+        <elementDefinition Id="14c0df4d-1f15-4bd9-bd96-6ea4c31e1345" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="01b3df53-718c-4c5c-8603-1571de33c128" name="ExecutionEvent">
+        <elementDefinition Id="d20b8e5c-4088-4871-93fe-fa7069e8c5d3" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="20a877af-1581-443f-9e2b-3bb53a7f77b6" name="ExecutionEvent">
+        <elementDefinition Id="89c5d0b3-0460-4202-8618-0115b28f3415" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="dc23ef06-b39e-4275-b03d-e0b9d6123611" name="ExecutionEvent">
+        <elementDefinition Id="4b653b9e-5c7c-448e-822b-a4969716efba" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="19b5a3ef-475e-4fca-89bd-21407b84812e" name="ExecutionEvent">
+        <elementDefinition Id="78321414-0b26-47f5-8055-0c116081eaf5" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="26b707cc-d227-4b53-a4f1-3ad68faba924" name="ExecutionEvent">
+        <elementDefinition Id="cf4f248e-68b6-4e55-be0a-738b65497af7" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="4f10765a-b73d-47c2-b39a-05d3ff3012ae" name="ExecutionEvent">
+        <elementDefinition Id="ff1b3b45-b45c-4d0e-bd58-cd4ffef06b1c" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="22b77411-f5e2-44b0-9a5b-9492dc8df6e0" name="ExecutionEvent">
+        <elementDefinition Id="85d9c87b-1c18-4cab-91e4-1ff31dc72ee5" />
+      </executionEvent>
+    </packageHasNamedElement>
+  </packagedElements>
+  <package Id="9ab34e21-dbac-478a-9066-235b24ab8828" name="SuperNAT.ModelingProject">
+    <elementDefinition Id="82435ad6-da3b-49a7-a14c-dafee9b0cd06" />
+  </package>
+</SequenceDesignerModel>
