@@ -29,6 +29,13 @@
       <SubType>Content</SubType>
       <DependentUpon>序列图\Http内网穿透序列图.sequencediagram</DependentUpon>
     </Content>
+    <Content Include="序列图\TCP内网穿透序列图.sequencediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="序列图\TCP内网穿透序列图.sequencediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>序列图\TCP内网穿透序列图.sequencediagram</DependentUpon>
+    </Content>
     <Content Include="总体用例.usecasediagram">
       <SubType>Content</SubType>
     </Content>
