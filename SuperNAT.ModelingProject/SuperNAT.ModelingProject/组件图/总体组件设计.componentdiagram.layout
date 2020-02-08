@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<componentDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="总体组件设计">
+  <componentModelMoniker Id="dd05c00d-1ec3-4382-9ce4-5548156479f2" />
+  <nestedChildShapes>
+    <componentShape Id="e33b588d-7db1-49ea-9258-f200f69890e9" absoluteBounds="6.25, 1, 2.1145833333333321, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+      <componentMoniker Id="fd0eef2e-cd96-45ce-83ae-a4aa43936601" LastKnownName="SuperNAT.Server" />
+    </componentShape>
+  </nestedChildShapes>
+</componentDiagram>

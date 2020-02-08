@@ -1,19 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <SequenceDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm11="http://schemas.microsoft.com/dsltools/UseCaseModel" dslVersion="1.0.0.0" Id="55d760e4-a921-4c8d-8c89-d9eb6367d0da" name="TCP内网穿透序列图" linkedPackageId="d818a151-8339-4a48-9828-43b9fc04c72f" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner">
-  <profileInstances>
-    <packageHasProfileInstances Id="9091d7d0-3fbd-4e9f-b3b4-4738662bc43c">
-      <profileInstance Id="f32f1af4-a1de-4ac0-9250-d3ed3195509d" name="StandardProfileL2">
-        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
-      </profileInstance>
-      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
-    </packageHasProfileInstances>
-    <packageHasProfileInstances Id="7449fd60-87b5-4b8f-ba54-9c9a979b1c86">
-      <profileInstance Id="d9dc4eb7-0d28-4f67-a4e0-04d581092577" name="StandardProfileL3">
-        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
-      </profileInstance>
-      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
-    </packageHasProfileInstances>
-  </profileInstances>
   <packagedElements>
     <packageHasNamedElement>
       <interaction Id="413200f8-97c3-4c55-a982-a7d9a1c2bb3a" name="TCP内网穿透序列图" collapseFragmentsFlag="false" isActiveClass="false" isAbstract="false" isLeaf="false" isReentrant="false">
@@ -43,6 +29,16 @@
           <comment Id="a6fecd0c-2695-405e-8e5f-547a9168cb2a">
             <elementDefinition Id="675e274b-c9e7-470b-b5b5-ee03bfe3641c" />
             <body>EasyClient记录UserId</body>
+            <annotatedElements>
+              <behaviorExecutionSpecificationMoniker Id="e89d2911-21a6-414a-8f4c-4a2965922391" LastKnownName="BehaviorExecutionSpecification9" />
+            </annotatedElements>
+          </comment>
+          <comment Id="f5ff9440-b7b7-49dc-b530-1511978a8bf1">
+            <elementDefinition Id="08215eab-a0ca-4ff0-a890-08a2abada0e6" />
+            <body>这里只描述单向报文的传输，反向同理</body>
+            <annotatedElements>
+              <behaviorExecutionSpecificationMoniker Id="415aea96-9f19-4169-aaef-f7c82af37961" LastKnownName="BehaviorExecutionSpecification14" />
+            </annotatedElements>
           </comment>
         </ownedCommentsInternal>
         <elementDefinition Id="5c14e054-cc62-4cc8-85cc-0a1e4c9a5dba" />
@@ -149,17 +145,6 @@
               <messageOccurrenceSpecificationMoniker Id="3a6fc274-66ca-4fc5-82da-033ed6285a83" LastKnownName="MessageOccurrenceSpecification8" />
             </nestedOccurrences>
           </behaviorExecutionSpecification>
-          <executionOccurrenceSpecification Id="c3b22fb0-1c5a-443a-9075-f82461afde34" name="ExecutionOccurrenceSpecification3">
-            <elementDefinition Id="d3130857-851f-48ff-b632-7e4ee90ff612" />
-            <event>
-              <executionOccurrenceSpecificationReferencesEvent>
-                <executionEventMoniker Id="6509ca3b-e795-4a09-9603-17303c2ae134" LastKnownName="ExecutionEvent" />
-              </executionOccurrenceSpecificationReferencesEvent>
-            </event>
-            <covered>
-              <lifelineMoniker Id="cc6e8f45-4d55-4951-970d-224bef820fdb" LastKnownName="SuperNAT.Client" />
-            </covered>
-          </executionOccurrenceSpecification>
           <executionOccurrenceSpecification Id="f52a8a6f-025e-431f-8e58-9ec836a498ba" name="ExecutionOccurrenceSpecification8">
             <elementDefinition Id="88a110bb-5dd6-47d1-b6b4-22024453d01f" />
             <event>
@@ -169,6 +154,17 @@
             </event>
             <covered>
               <lifelineMoniker Id="274f5956-fe8c-42b2-99ff-1c9cf593b8a4" LastKnownName="SuperNAT.Server" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="c3b22fb0-1c5a-443a-9075-f82461afde34" name="ExecutionOccurrenceSpecification3">
+            <elementDefinition Id="d3130857-851f-48ff-b632-7e4ee90ff612" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="6509ca3b-e795-4a09-9603-17303c2ae134" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="cc6e8f45-4d55-4951-970d-224bef820fdb" LastKnownName="SuperNAT.Client" />
             </covered>
           </executionOccurrenceSpecification>
           <messageOccurrenceSpecification Id="6ea7ee31-f190-4332-b420-7c4380ef1576" name="MessageOccurrenceSpecification4">
@@ -268,16 +264,16 @@
               <lifelineMoniker Id="274f5956-fe8c-42b2-99ff-1c9cf593b8a4" LastKnownName="SuperNAT.Server" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="a4a1ebec-0310-4951-8ae1-eaac67f2a6e4" name="MessageOccurrenceSpecification7">
-            <elementDefinition Id="020075cd-e2ae-47c2-8d74-9a0161122983" />
-            <covered>
-              <lifelineMoniker Id="274f5956-fe8c-42b2-99ff-1c9cf593b8a4" LastKnownName="SuperNAT.Server" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="3a6fc274-66ca-4fc5-82da-033ed6285a83" name="MessageOccurrenceSpecification8">
             <elementDefinition Id="2a092554-ecbd-4f8e-a570-f61514bb07ed" />
             <covered>
               <lifelineMoniker Id="cc6e8f45-4d55-4951-970d-224bef820fdb" LastKnownName="SuperNAT.Client" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="a4a1ebec-0310-4951-8ae1-eaac67f2a6e4" name="MessageOccurrenceSpecification7">
+            <elementDefinition Id="020075cd-e2ae-47c2-8d74-9a0161122983" />
+            <covered>
+              <lifelineMoniker Id="274f5956-fe8c-42b2-99ff-1c9cf593b8a4" LastKnownName="SuperNAT.Server" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="cd033975-ea50-4693-b1c7-3bf9a4330e46" name="ExecutionOccurrenceSpecification6">
@@ -391,16 +387,16 @@
               <lifelineMoniker Id="274f5956-fe8c-42b2-99ff-1c9cf593b8a4" LastKnownName="SuperNAT.Server" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="d80210d7-3f7a-4634-885d-289235d3a08a" name="MessageOccurrenceSpecification16">
-            <elementDefinition Id="e9878169-f5d3-4b37-9515-73865571a786" />
-            <covered>
-              <lifelineMoniker Id="274f5956-fe8c-42b2-99ff-1c9cf593b8a4" LastKnownName="SuperNAT.Server" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="72666377-dea0-412f-8753-f43239c09288" name="MessageOccurrenceSpecification15">
             <elementDefinition Id="f6981e0c-ef33-457b-a0f2-8279cff3e2fd" />
             <covered>
               <lifelineMoniker Id="cfd7df0b-24a4-439d-b4ce-fa4cd5a90e8e" LastKnownName="TCP客户端" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="d80210d7-3f7a-4634-885d-289235d3a08a" name="MessageOccurrenceSpecification16">
+            <elementDefinition Id="e9878169-f5d3-4b37-9515-73865571a786" />
+            <covered>
+              <lifelineMoniker Id="274f5956-fe8c-42b2-99ff-1c9cf593b8a4" LastKnownName="SuperNAT.Server" />
             </covered>
           </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="505455d3-7c72-428b-a10b-b99cbec0a78b" name="MessageOccurrenceSpecification21">
@@ -1421,5 +1417,19 @@
   </packagedElements>
   <package Id="d818a151-8339-4a48-9828-43b9fc04c72f" name="SuperNAT.ModelingProject">
     <elementDefinition Id="82435ad6-da3b-49a7-a14c-dafee9b0cd06" />
+    <profileInstances>
+      <packageHasProfileInstances Id="9091d7d0-3fbd-4e9f-b3b4-4738662bc43c">
+        <profileInstance Id="f32f1af4-a1de-4ac0-9250-d3ed3195509d" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="7449fd60-87b5-4b8f-ba54-9c9a979b1c86">
+        <profileInstance Id="d9dc4eb7-0d28-4f67-a4e0-04d581092577" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
   </package>
 </SequenceDesignerModel>

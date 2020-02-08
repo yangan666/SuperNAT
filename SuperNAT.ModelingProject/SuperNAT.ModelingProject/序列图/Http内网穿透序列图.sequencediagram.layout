@@ -101,7 +101,7 @@
       <commentMoniker Id="d18b3a5d-a036-4e77-9cef-6f2a24f27882" />
       <relativeChildShapes />
     </commentShape>
-    <commentConnector edgePoints="[(6.5 : 1.52522738949056); (6.11875031789144 : 1.825)]" fixedFrom="Caller" fixedTo="NotFixed" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
+    <commentConnector edgePoints="[(6.5 : 1.52522738949056); (6.11875031789144 : 1.825)]" fixedFrom="Caller" fixedTo="Caller" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
       <relativeChildShapes />
       <nodes>
         <commentShapeMoniker Id="2e998a0f-1581-423c-afaf-16ef6a914f8d" />
@@ -165,7 +165,7 @@
       <commentMoniker Id="b66aa860-3625-4ed9-a365-b67ecf955b58" />
       <relativeChildShapes />
     </commentShape>
-    <commentConnector edgePoints="[(6.875 : 3.375); (6.19375031789144 : 3.375)]" fixedFrom="Algorithm" fixedTo="Algorithm" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
+    <commentConnector edgePoints="[(6.875 : 3.375); (6.19375031789144 : 3.375)]" fixedFrom="Caller" fixedTo="Caller" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
       <relativeChildShapes />
       <nodes>
         <commentShapeMoniker Id="082f0455-d109-4210-b270-eaea0305a1dc" />
@@ -179,7 +179,7 @@
         <umlExecutionSpecificationShapeMoniker Id="258171c0-6720-4470-b88b-42f4408cdd27" />
       </nodes>
     </syncSelfMessageConnector>
-    <commentConnector edgePoints="[(6.875 : 6.5375025); (6.19375031789144 : 6.5375025)]" fixedFrom="Algorithm" fixedTo="Algorithm" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
+    <commentConnector edgePoints="[(6.875 : 6.5375025); (6.19375031789144 : 6.5375025)]" fixedFrom="Caller" fixedTo="Caller" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
       <relativeChildShapes />
       <nodes>
         <commentShapeMoniker Id="69fefa94-21a4-4d85-85dd-f738a9a4696d" />

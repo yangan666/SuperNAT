@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<componentModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm12="http://schemas.microsoft.com/dsltools/UseCaseModel" dslVersion="1.0.0.0" Id="dd05c00d-1ec3-4382-9ce4-5548156479f2" name="总体组件设计" linkedPackageId="e5a7257f-836c-434f-9ebe-9727ec324979" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="62f26248-15ec-4712-9bf8-f893659b9932">
+      <profileInstance Id="679129e7-ea97-48e0-bab5-d647f07ef6d8" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="7f6159ba-7dc7-4d5a-94f7-b3bb6903a0b0">
+      <profileInstance Id="cae3c902-51ba-401a-bfac-093aa9af7f7c" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <componentModelHasComponents>
+      <component Id="fd0eef2e-cd96-45ce-83ae-a4aa43936601" name="SuperNAT.Server" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="ce214aa5-5c8a-4fa4-a5fc-cdeabf39eff7" />
+      </component>
+    </componentModelHasComponents>
+  </packagedElements>
+  <package Id="e5a7257f-836c-434f-9ebe-9727ec324979" name="SuperNAT.ModelingProject">
+    <elementDefinition Id="82435ad6-da3b-49a7-a14c-dafee9b0cd06" />
+  </package>
+</componentModel>

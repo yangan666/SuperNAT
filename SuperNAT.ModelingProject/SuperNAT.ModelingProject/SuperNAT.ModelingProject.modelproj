@@ -36,6 +36,20 @@
       <SubType>Content</SubType>
       <DependentUpon>序列图\TCP内网穿透序列图.sequencediagram</DependentUpon>
     </Content>
+    <Content Include="序列图\UDP内网穿透序列图.sequencediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="序列图\UDP内网穿透序列图.sequencediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>序列图\UDP内网穿透序列图.sequencediagram</DependentUpon>
+    </Content>
+    <Content Include="序列图\Websocket内网穿透序列图.sequencediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="序列图\Websocket内网穿透序列图.sequencediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>序列图\Websocket内网穿透序列图.sequencediagram</DependentUpon>
+    </Content>
     <Content Include="总体用例.usecasediagram">
       <SubType>Content</SubType>
     </Content>
@@ -64,10 +78,18 @@
       <SubType>Content</SubType>
       <DependentUpon>用例图\管理后台用例.usecasediagram</DependentUpon>
     </Content>
+    <Content Include="组件图\总体组件设计.componentdiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="组件图\总体组件设计.componentdiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>组件图\总体组件设计.componentdiagram</DependentUpon>
+    </Content>
     <Folder Include="ModelDefinition\" />
     <Content Include="ModelDefinition\SuperNAT.ModelingProject.uml">
       <SubType>Content</SubType>
     </Content>
+    <Folder Include="组件图" />
     <Folder Include="用例图" />
     <Folder Include="序列图" />
   </ItemGroup>
