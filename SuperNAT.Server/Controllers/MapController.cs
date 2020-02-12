@@ -4,8 +4,8 @@ using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using SuperNAT.Common;
-using SuperNAT.Common.Bll;
-using SuperNAT.Common.Models;
+using SuperNAT.Bll;
+using SuperNAT.Model;
 
 namespace SuperNAT.Server.Controllers
 {
@@ -19,13 +19,13 @@ namespace SuperNAT.Server.Controllers
         {
             var rst = new ReturnResult<bool>();
 
-            using var bll = new MapBll();
+            var bll = new MapBll();
             if (model.id == 0)
             {
                 rst = bll.Add(model);
                 if (rst.Result)
                 {
-                    ServerHanlder.ChangeMap((int)ChangeMapType.新增, model);
+                    //ServerHanlder.ChangeMap((int)ChangeMapType.新增, model);
                 }
             }
             else
@@ -33,7 +33,7 @@ namespace SuperNAT.Server.Controllers
                 rst = bll.Update(model);
                 if (rst.Result)
                 {
-                    ServerHanlder.ChangeMap((int)ChangeMapType.修改, model);
+                    //ServerHanlder.ChangeMap((int)ChangeMapType.修改, model);
                 }
             }
 
@@ -44,11 +44,11 @@ namespace SuperNAT.Server.Controllers
         [Route("Delete")]
         public IActionResult Delete(Map model)
         {
-            using var bll = new MapBll();
+            var bll = new MapBll();
             var rst = bll.Delete(model);
             if (rst.Result)
             {
-                ServerHanlder.ChangeMap((int)ChangeMapType.删除, model);
+               //ServerHanlder.ChangeMap((int)ChangeMapType.删除, model);
             }
 
             return Json(rst);
@@ -67,7 +67,7 @@ namespace SuperNAT.Server.Controllers
                 };
                 return Json(defalut);
             }
-            using var bll = new MapBll();
+            var bll = new MapBll();
             var rst = bll.GetOne(model);
             return Json(rst);
         }
@@ -76,7 +76,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetList")]
         public IActionResult GetList(Map model)
         {
-            using var bll = new MapBll();
+            var bll = new MapBll();
             var rst = bll.GetList(model);
             return Json(rst);
         }
@@ -85,7 +85,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetMapList")]
         public IActionResult GetMapList(string secret)
         {
-            using var bll = new MapBll();
+            var bll = new MapBll();
             var rst = bll.GetMapList(secret);
             return Json(rst);
         }

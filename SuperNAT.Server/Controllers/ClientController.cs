@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using SuperNAT.Common.Bll;
-using SuperNAT.Common.Models;
+using SuperNAT.Bll;
+using SuperNAT.Model;
 
 namespace SuperNAT.Server.Controllers
 {
@@ -18,7 +18,7 @@ namespace SuperNAT.Server.Controllers
         {
             var rst = new ReturnResult<bool>();
 
-            using var bll = new ClientBll();
+            var bll = new ClientBll();
             if (model.id == 0)
             {
                 model.secret = Guid.NewGuid().ToString("N");
@@ -38,7 +38,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Delete")]
         public IActionResult Delete(Client model)
         {
-            using var bll = new ClientBll();
+            var bll = new ClientBll();
             var rst = bll.Delete(model);
 
             return Json(rst);
@@ -57,7 +57,7 @@ namespace SuperNAT.Server.Controllers
                 };
                 return Json(defalut);
             }
-            using var bll = new ClientBll();
+            var bll = new ClientBll();
             var rst = bll.GetOne(model);
             return Json(rst);
         }
@@ -66,7 +66,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetList")]
         public IActionResult GetList(Client model)
         {
-            using var bll = new ClientBll();
+            var bll = new ClientBll();
             var rst = bll.GetList(model);
             return Json(rst);
         }

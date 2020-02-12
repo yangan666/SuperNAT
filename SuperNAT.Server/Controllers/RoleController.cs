@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SuperNAT.Common;
-using SuperNAT.Common.Bll;
-using SuperNAT.Common.Models;
+using SuperNAT.Bll;
+using SuperNAT.Model;
 using SuperNAT.Server.Models;
 
 namespace SuperNAT.Server.Controllers
@@ -22,7 +22,7 @@ namespace SuperNAT.Server.Controllers
         {
             var rst = new ReturnResult<bool>();
 
-            using var bll = new RoleBll();
+            var bll = new RoleBll();
             if (model.id == 0)
             {
                 model.role_id = EncryptHelper.CreateGuid();
@@ -40,7 +40,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Delete")]
         public IActionResult Delete(Role model)
         {
-            using var bll = new RoleBll();
+            var bll = new RoleBll();
             var rst = bll.Delete(model);
 
             return Json(rst);
@@ -59,7 +59,7 @@ namespace SuperNAT.Server.Controllers
                 };
                 return Json(defalut);
             }
-            using var bll = new RoleBll();
+            var bll = new RoleBll();
             var rst = bll.GetRole(model);
             return Json(rst);
         }
@@ -68,7 +68,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetList")]
         public IActionResult GetList(Role model)
         {
-            using var bll = new RoleBll();
+            var bll = new RoleBll();
             var rst = bll.GetList(model);
             return Json(rst);
         }

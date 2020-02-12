@@ -2,7 +2,7 @@
 using log4net.Config;
 using log4net.Repository;
 using SuperNAT.Common;
-using SuperNAT.Common.Models;
+using SuperNAT.Model;
 using SuperSocket.ClientEngine;
 using System;
 using System.Collections.Generic;

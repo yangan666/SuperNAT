@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <Version>1.0.1</Version>
     <FileVersion>1.0.0.1</FileVersion>
@@ -14,21 +14,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dynamic.Core" Version="2.1.6.9" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
-    <PackageReference Include="SocketSecretPool" Version="1.0.0.3" />
+    <PackageReference Include="SuperSocket.Server" Version="2.0.0-preview2-04" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
     <PackageReference Include="Topshelf" Version="4.2.1" />
-    <PackageReference Include="YangAn.CSuperSocket.All" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SuperNAT.AsyncSocket\SuperNAT.AsyncSocket.csproj" />
+    <ProjectReference Include="..\SuperNAT.Bll\SuperNAT.Bll.csproj" />
     <ProjectReference Include="..\SuperNAT.Common\SuperNAT.Common.csproj" />
+    <ProjectReference Include="..\SuperNAT.Model\SuperNAT.Model.csproj" />
   </ItemGroup>
 
   <ItemGroup>

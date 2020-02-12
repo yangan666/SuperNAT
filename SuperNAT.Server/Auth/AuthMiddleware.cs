@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
-using SuperNAT.Common.Models;
+using SuperNAT.Model;
 using SuperNAT.Common;
 using SuperNAT.Server.Models;
 using System;
 using System.Net;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using SuperNAT.Common.Bll;
+using SuperNAT.Bll;
 
 namespace SuperNAT.Server.Auth
 {
@@ -83,7 +83,7 @@ namespace SuperNAT.Server.Auth
                 //前端F5刷新 重新获取用户信息
                 if (httpContext.Request.Path.ToString() == "/Api/User/GetUserInfo")
                 {
-                    using var bll = new UserBll();
+                    var bll = new UserBll();
                     var user = bll.GetUserInfo(payLoad["user_id"].ToString());
                     if (user.Result)
                     {

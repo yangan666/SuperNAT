@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SuperNAT.Common;
-using SuperNAT.Common.Bll;
-using SuperNAT.Common.Models;
+using SuperNAT.Bll;
+using SuperNAT.Model;
 using SuperNAT.Server.Models;
 
 namespace SuperNAT.Server.Controllers
@@ -26,7 +26,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Login")]
         public IActionResult Login(User model)
         {
-            using var bll = new UserBll();
+            var bll = new UserBll();
             var rst = bll.Login(model);
             if (rst.Result)
             {
@@ -50,7 +50,7 @@ namespace SuperNAT.Server.Controllers
         {
             var rst = new ReturnResult<bool>();
 
-            using var bll = new UserBll();
+            var bll = new UserBll();
             if (model.id == 0)
             {
                 model.user_id = EncryptHelper.CreateGuid();
@@ -79,7 +79,7 @@ namespace SuperNAT.Server.Controllers
         {
             var rst = new ReturnResult<bool>();
 
-            using var bll = new UserBll();
+            var bll = new UserBll();
             model.user_id = EncryptHelper.CreateGuid();
             model.role_id = GlobalConfig.RegRoleId;
             if (string.IsNullOrEmpty(model.password))
@@ -96,7 +96,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Delete")]
         public IActionResult Delete(User model)
         {
-            using var bll = new UserBll();
+            var bll = new UserBll();
             var rst = bll.Delete(model);
 
             return Json(rst);
@@ -106,7 +106,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Disable")]
         public IActionResult Disable(User model)
         {
-            using var bll = new UserBll();
+            var bll = new UserBll();
             model.is_disabled = !model.is_disabled;
             var rst = bll.DisableUser(model);
             var text = model.is_disabled ? "禁用" : "启用";
@@ -128,7 +128,7 @@ namespace SuperNAT.Server.Controllers
                 };
                 return Json(defalut);
             }
-            using var bll = new UserBll();
+            var bll = new UserBll();
             var rst = bll.GetOne(model);
             if (rst.Result)
             {
@@ -142,7 +142,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetList")]
         public IActionResult GetList(User model)
         {
-            using var bll = new UserBll();
+            var bll = new UserBll();
             var rst = bll.GetList(model);
             return Json(rst);
         }

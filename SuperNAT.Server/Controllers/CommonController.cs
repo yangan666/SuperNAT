@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SuperNAT.Common;
-using SuperNAT.Common.Bll;
-using SuperNAT.Common.Models;
+using SuperNAT.Bll;
+using SuperNAT.Model;
 
 namespace SuperNAT.Server.Controllers
 {
@@ -25,7 +25,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetEnumList")]
         public IActionResult GetEnumList(string type)
         {
-            ReflectionLesson reflectionLesson = new ReflectionLesson(AppDomain.CurrentDomain.BaseDirectory + "SuperNAT.Common.dll", "SuperNAT.Common.Models", type);
+            ReflectionLesson reflectionLesson = new ReflectionLesson(AppDomain.CurrentDomain.BaseDirectory + "SuperNAT.Common.dll", "SuperNAT.Model", type);
             Type t = reflectionLesson.ReflectionType();
             var rst = new ReturnResult<List<KeyValue>>
             {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using SuperNAT.Common.Models;
+using SuperNAT.Model;
 using SuperNAT.Server.Models;
 using System;
 using System.Collections.Generic;

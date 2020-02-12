@@ -8601,6 +8601,213 @@
         isLeaf="false"
         isActiveClass="false" />
     </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="59f5f018-2a7d-46b7-a9fc-6467038d9125"
+        name="SuperNAT.Client"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="f40b2088-944c-4318-ae3f-a3374a0e6907"
+        name="SuperNAT.Common"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="3ef1c82b-7c2c-4c68-92a8-abb2f3edea6a"
+        name="SuperNAT.Dal"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="b35d8958-25e5-4aaf-b875-646534c73234"
+        name="IServer"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="6b192893-8158-4c47-ba45-0499c0eb1def">
+            <componentMoniker
+              Id="84811b1a-e193-4126-b40d-64d5ee7f5672"
+              LastKnownName="HttpServer"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </dependency>
+          <dependency
+            Id="62f7b25f-a2e8-49d0-86e9-b5c4a22aa92f">
+            <componentMoniker
+              Id="71a32469-7d1e-4b2b-ba6d-5ffdbe6cc460"
+              LastKnownName="WebSocketServer"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </dependency>
+          <dependency
+            Id="19db97ec-a289-4b91-b016-99516dcef6e9">
+            <componentMoniker
+              Id="2e82d479-9db7-466e-b7ec-62ba18704ef3"
+              LastKnownName="TcpServer"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </dependency>
+          <dependency
+            Id="48ee4716-6487-4e19-9510-0bde991eac9e">
+            <componentMoniker
+              Id="c0b926b5-442b-40b2-980e-1d54d83ea27a"
+              LastKnownName="UdpServer"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="84811b1a-e193-4126-b40d-64d5ee7f5672"
+        name="HttpServer"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="511e8e18-bc4c-4fbe-8680-28fe62f8a0a6">
+            <componentMoniker
+              Id="cf2ddf28-533d-48e9-907f-818c77aaa509"
+              LastKnownName="HttpListener"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="2e82d479-9db7-466e-b7ec-62ba18704ef3"
+        name="TcpServer"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="83988724-dd27-4a92-a35f-b38254d1cb92">
+            <componentMoniker
+              Id="d88224f2-cef9-429b-ad81-42fbe99c8300"
+              LastKnownName="SocketServer"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="c0b926b5-442b-40b2-980e-1d54d83ea27a"
+        name="UdpServer"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="b388a3bf-e495-4dd8-8e0a-8da3f6cc9b1d">
+            <componentMoniker
+              Id="d88224f2-cef9-429b-ad81-42fbe99c8300"
+              LastKnownName="SocketServer"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="71a32469-7d1e-4b2b-ba6d-5ffdbe6cc460"
+        name="WebSocketServer"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="8b051c0e-9471-4c02-b107-eec7fcc2ea35">
+            <componentMoniker
+              Id="cf2ddf28-533d-48e9-907f-818c77aaa509"
+              LastKnownName="HttpListener"
+              LastKnownLocation="SuperNAT.ModelingProject.uml" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="fa188789-756d-45ef-acad-17227441ba18"
+        name="Component1"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="cf2ddf28-533d-48e9-907f-818c77aaa509"
+        name="HttpListener"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="d88224f2-cef9-429b-ad81-42fbe99c8300"
+        name="SocketServer"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="4ef4d89f-55b0-43a4-9446-458d328de569"
+        name="SuperNAT.Dal"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="687219f4-7338-4323-a0a6-d2686b7727be"
+        name="SuperNAT.Bll"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="396f7bc5-62f1-4800-9716-b2931be65d92"
+        name="SuperNAT.Socket"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="29f3a449-1282-468c-9ea6-ef1608b7bedd"
+        name="SuperNAT.Http"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="4fdaaae3-3cfb-463d-a898-cdbc136bba0d"
+        name="SuperNAT.WebSocket"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <component
+        Id="98361b09-f8e8-4444-8ccb-af7d4f07107b"
+        name="SuperNAT.Model"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
   </packagedElements>
   <primitiveType
     Id="220a3521-e091-4221-bae9-3ef9018e845c"

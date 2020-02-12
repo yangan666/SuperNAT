@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using SuperNAT.Common.Bll;
-using SuperNAT.Common.Models;
+using SuperNAT.Bll;
+using SuperNAT.Model;
 
 namespace SuperNAT.Server.Controllers
 {
@@ -18,7 +18,7 @@ namespace SuperNAT.Server.Controllers
         {
             var rst = new ReturnResult<bool>();
 
-            using var bll = new ServerConfigBll();
+            var bll = new ServerConfigBll();
             if (model.id == 0)
             {
                 rst = bll.Add(model);
@@ -35,7 +35,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Delete")]
         public IActionResult Delete(ServerConfig model)
         {
-            using var bll = new ServerConfigBll();
+            var bll = new ServerConfigBll();
             var rst = bll.Delete(model);
 
             return Json(rst);
@@ -54,7 +54,7 @@ namespace SuperNAT.Server.Controllers
                 };
                 return Json(defalut);
             }
-            using var bll = new ServerConfigBll();
+            var bll = new ServerConfigBll();
             var rst = bll.GetOne(model);
             return Json(rst);
         }
@@ -63,7 +63,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetList")]
         public IActionResult GetList(ServerConfig model)
         {
-            using var bll = new ServerConfigBll();
+            var bll = new ServerConfigBll();
             var rst = bll.GetList(model);
             return Json(rst);
         }

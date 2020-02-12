@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SuperNAT.Common\SuperNAT.Common.csproj" />
+    <ProjectReference Include="..\SuperNAT.Dal\SuperNAT.Dal.csproj" />
+    <ProjectReference Include="..\SuperNAT.Model\SuperNAT.Model.csproj" />
+  </ItemGroup>
+
+</Project>

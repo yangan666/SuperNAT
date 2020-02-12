@@ -1,27 +1,144 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <componentModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm12="http://schemas.microsoft.com/dsltools/UseCaseModel" dslVersion="1.0.0.0" Id="dd05c00d-1ec3-4382-9ce4-5548156479f2" name="总体组件设计" linkedPackageId="e5a7257f-836c-434f-9ebe-9727ec324979" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner">
-  <profileInstances>
-    <packageHasProfileInstances Id="62f26248-15ec-4712-9bf8-f893659b9932">
-      <profileInstance Id="679129e7-ea97-48e0-bab5-d647f07ef6d8" name="StandardProfileL2">
-        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
-      </profileInstance>
-      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
-    </packageHasProfileInstances>
-    <packageHasProfileInstances Id="7f6159ba-7dc7-4d5a-94f7-b3bb6903a0b0">
-      <profileInstance Id="cae3c902-51ba-401a-bfac-093aa9af7f7c" name="StandardProfileL3">
-        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
-      </profileInstance>
-      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
-    </packageHasProfileInstances>
-  </profileInstances>
   <packagedElements>
     <componentModelHasComponents>
       <component Id="fd0eef2e-cd96-45ce-83ae-a4aa43936601" name="SuperNAT.Server" isAbstract="false" isLeaf="false" isActiveClass="false">
         <elementDefinition Id="ce214aa5-5c8a-4fa4-a5fc-cdeabf39eff7" />
       </component>
     </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="af50e260-acc2-48c7-91c2-360d7dae91f6" name="SuperNAT.Client" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="59f5f018-2a7d-46b7-a9fc-6467038d9125" />
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="823a1170-1205-4774-af9e-37c3b178444d" name="SuperNAT.Common" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="f40b2088-944c-4318-ae3f-a3374a0e6907" />
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="f4b982d2-05cd-44a7-b474-b06a40c0bd2b" name="IServer" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="b35d8958-25e5-4aaf-b875-646534c73234" />
+        <suppliersInternal>
+          <dependency Id="0917014b-e3eb-49f9-ae54-89272cc8d106">
+            <componentMoniker Id="e07838d0-a821-4dba-9bcb-d053b96ecb33" LastKnownName="HttpServer" />
+            <elementDefinition Id="6b192893-8158-4c47-ba45-0499c0eb1def" />
+          </dependency>
+          <dependency Id="d0af15d3-2f11-4f40-abd7-ec66b14bf927">
+            <componentMoniker Id="820d0cc4-9c07-46ff-ad52-bf89680d1cf0" LastKnownName="WebSocketServer" />
+            <elementDefinition Id="62f7b25f-a2e8-49d0-86e9-b5c4a22aa92f" />
+          </dependency>
+          <dependency Id="f2e0a606-6988-4235-af56-3dd7172f6026">
+            <componentMoniker Id="aedd2274-3f99-4ff2-aa34-db4d4bb7397c" LastKnownName="TcpServer" />
+            <elementDefinition Id="19db97ec-a289-4b91-b016-99516dcef6e9" />
+          </dependency>
+          <dependency Id="dafabc1e-1b2e-4cfb-903e-eaae28f42705">
+            <componentMoniker Id="0e52929c-7ac9-4ed8-9b52-71304a0ef404" LastKnownName="UdpServer" />
+            <elementDefinition Id="48ee4716-6487-4e19-9510-0bde991eac9e" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="e07838d0-a821-4dba-9bcb-d053b96ecb33" name="HttpServer" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="84811b1a-e193-4126-b40d-64d5ee7f5672" />
+        <suppliersInternal>
+          <dependency Id="ce2cfffc-121f-4004-9e93-9960bb8570a9">
+            <componentMoniker Id="6d6b0b2b-d8cb-4654-872d-a3a15d4fd974" LastKnownName="HttpListener" />
+            <elementDefinition Id="511e8e18-bc4c-4fbe-8680-28fe62f8a0a6" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="aedd2274-3f99-4ff2-aa34-db4d4bb7397c" name="TcpServer" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="2e82d479-9db7-466e-b7ec-62ba18704ef3" />
+        <suppliersInternal>
+          <dependency Id="938c6a76-9a39-4742-9a4f-96ddc37f9f21">
+            <componentMoniker Id="c4e58d8c-ca18-4adb-bada-636d723df7d5" LastKnownName="SocketServer" />
+            <elementDefinition Id="83988724-dd27-4a92-a35f-b38254d1cb92" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="0e52929c-7ac9-4ed8-9b52-71304a0ef404" name="UdpServer" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="c0b926b5-442b-40b2-980e-1d54d83ea27a" />
+        <suppliersInternal>
+          <dependency Id="d6088a4a-8bf7-4dd3-ac6c-4429847b93c4">
+            <componentMoniker Id="c4e58d8c-ca18-4adb-bada-636d723df7d5" LastKnownName="SocketServer" />
+            <elementDefinition Id="b388a3bf-e495-4dd8-8e0a-8da3f6cc9b1d" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="820d0cc4-9c07-46ff-ad52-bf89680d1cf0" name="WebSocketServer" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="71a32469-7d1e-4b2b-ba6d-5ffdbe6cc460" />
+        <suppliersInternal>
+          <dependency Id="2b823f5b-9845-4eb7-8741-2849ecfa803c">
+            <componentMoniker Id="6d6b0b2b-d8cb-4654-872d-a3a15d4fd974" LastKnownName="HttpListener" />
+            <elementDefinition Id="8b051c0e-9471-4c02-b107-eec7fcc2ea35" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="6d6b0b2b-d8cb-4654-872d-a3a15d4fd974" name="HttpListener" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="cf2ddf28-533d-48e9-907f-818c77aaa509" />
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="c4e58d8c-ca18-4adb-bada-636d723df7d5" name="SocketServer" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="d88224f2-cef9-429b-ad81-42fbe99c8300" />
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="5f340060-de62-46f4-9406-cf1c5f17a407" name="SuperNAT.Dal" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="4ef4d89f-55b0-43a4-9446-458d328de569" />
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="31374e34-20ce-4007-aef3-12df1532d59c" name="SuperNAT.Bll" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="687219f4-7338-4323-a0a6-d2686b7727be" />
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="e828c909-4742-4935-bdf9-036aefe115fb" name="SuperNAT.Socket" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="396f7bc5-62f1-4800-9716-b2931be65d92" />
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="751faa82-c6b4-479b-8e34-03e0b4db52df" name="SuperNAT.Http" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="29f3a449-1282-468c-9ea6-ef1608b7bedd" />
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="bf48c230-f3a2-4117-abe2-4cf7f89300da" name="SuperNAT.WebSocket" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="4fdaaae3-3cfb-463d-a898-cdbc136bba0d" />
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="4953a173-7719-4488-b7bf-186e8e6f1d5d" name="SuperNAT.Model" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="98361b09-f8e8-4444-8ccb-af7d4f07107b" />
+      </component>
+    </componentModelHasComponents>
   </packagedElements>
   <package Id="e5a7257f-836c-434f-9ebe-9727ec324979" name="SuperNAT.ModelingProject">
     <elementDefinition Id="82435ad6-da3b-49a7-a14c-dafee9b0cd06" />
+    <profileInstances>
+      <packageHasProfileInstances Id="62f26248-15ec-4712-9bf8-f893659b9932">
+        <profileInstance Id="679129e7-ea97-48e0-bab5-d647f07ef6d8" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="7f6159ba-7dc7-4d5a-94f7-b3bb6903a0b0">
+        <profileInstance Id="cae3c902-51ba-401a-bfac-093aa9af7f7c" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
   </package>
 </componentModel>

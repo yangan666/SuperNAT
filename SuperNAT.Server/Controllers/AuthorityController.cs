@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SuperNAT.Common;
-using SuperNAT.Common.Bll;
-using SuperNAT.Common.Models;
+using SuperNAT.Bll;
+using SuperNAT.Model;
 using SuperNAT.Server.Models;
 
 namespace SuperNAT.Server.Controllers
@@ -22,7 +22,7 @@ namespace SuperNAT.Server.Controllers
         {
             var rst = new ReturnResult<bool>();
 
-            using var bll = new AuthorityBll();
+            var bll = new AuthorityBll();
             if (model.id == 0)
             {
                 rst = bll.Add(model);
@@ -39,7 +39,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Delete")]
         public IActionResult Delete(Authority model)
         {
-            using var bll = new AuthorityBll();
+            var bll = new AuthorityBll();
             var rst = bll.Delete(model);
 
             return Json(rst);
@@ -58,7 +58,7 @@ namespace SuperNAT.Server.Controllers
                 };
                 return Json(defalut);
             }
-            using var bll = new AuthorityBll();
+            var bll = new AuthorityBll();
             var rst = bll.GetOne(model);
             return Json(rst);
         }
@@ -67,7 +67,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetList")]
         public IActionResult GetList(Authority model)
         {
-            using var bll = new AuthorityBll();
+            var bll = new AuthorityBll();
             var rst = bll.GetList("");
             return Json(rst);
         }

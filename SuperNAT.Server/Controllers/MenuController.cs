@@ -4,8 +4,8 @@ using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using SuperNAT.Common;
-using SuperNAT.Common.Bll;
-using SuperNAT.Common.Models;
+using SuperNAT.Bll;
+using SuperNAT.Model;
 
 namespace SuperNAT.Server.Controllers
 {
@@ -19,7 +19,7 @@ namespace SuperNAT.Server.Controllers
         {
             var rst = new ReturnResult<bool>();
 
-            using var bll = new MenuBll();
+            var bll = new MenuBll();
             if (model.id == 0)
             {
                 model.menu_id = EncryptHelper.CreateGuid();
@@ -37,7 +37,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Delete")]
         public IActionResult Delete(Menu model)
         {
-            using var bll = new MenuBll();
+            var bll = new MenuBll();
             var rst = bll.Delete(model);
 
             return Json(rst);
@@ -56,7 +56,7 @@ namespace SuperNAT.Server.Controllers
                 };
                 return Json(defalut);
             }
-            using var bll = new MenuBll();
+            var bll = new MenuBll();
             var rst = bll.GetOne(model);
             return Json(rst);
         }
@@ -65,7 +65,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetList")]
         public IActionResult GetList(Menu model)
         {
-            using var bll = new MenuBll();
+            var bll = new MenuBll();
             var rst = bll.GetList(model);
             return Json(rst);
         }
@@ -74,7 +74,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetParentList")]
         public IActionResult GetParentList()
         {
-            using var bll = new MenuBll();
+            var bll = new MenuBll();
             var rst = bll.GetList("where pid is null or pid = '' order by sort_no");
             return Json(rst);
         }
@@ -83,7 +83,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetAll")]
         public IActionResult GetAll()
         {
-            using var bll = new MenuBll();
+            var bll = new MenuBll();
             var rst = bll.GetList("order by sort_no");
             return Json(rst);
         }
