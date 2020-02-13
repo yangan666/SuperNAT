@@ -32,6 +32,7 @@ namespace SuperNAT.AsyncSocket
         private bool _foundHeader;
         private readonly int _headerSize;
         private int _totalSize;
+        private int _offset;
 
         public FixHeaderReceiveFilter(int headerSize)
         {
@@ -48,38 +49,38 @@ namespace SuperNAT.AsyncSocket
 
         public JsonData ResolveRequestInfo(byte[] header, byte[] bodyBuffer, int offset, int length)
         {
-            //if (!_foundHeader)
-            //{
-            //    if (header.Length < _headerSize)
-            //        return null;
+            if (!_foundHeader)
+            {
+                if (header.Length < _headerSize)
+                    return null;
 
-            //    var bodyLength = GetBodyLengthFromHeader(header);
+                var bodyLength = GetBodyLengthFromHeader(header);
 
-            //    if (bodyLength < 0)
-            //        throw new Exception("Failed to get body length from the package header.");
+                if (bodyLength < 0)
+                    throw new Exception("Failed to get body length from the package header.");
 
-            //    if (bodyLength == 0)
-            //        return null;
+                if (bodyLength == 0)
+                    return null;
 
-            //    _foundHeader = true;
-            //    _totalSize = _headerSize + bodyLength;
-            //}
+                _foundHeader = true;
+                _totalSize = _headerSize + bodyLength;
+            }
 
-            //var totalSize = _totalSize;
+            var totalSize = _totalSize;
 
-            //if (reader.Length < totalSize)
-            //    return null;
+            if (reader.Length < totalSize)
+                return null;
 
-            //var pack = reader.Sequence.Slice(0, totalSize);
+            var pack = reader.Sequence.Slice(0, totalSize);
 
-            //try
-            //{
-            //    return DecodePackage(pack);
-            //}
-            //finally
-            //{
-            //    reader.Advance(totalSize);
-            //}
+            try
+            {
+                return DecodePackage(pack);
+            }
+            finally
+            {
+                reader.Advance(totalSize);
+            }
 
             return null;
         }
