@@ -25,7 +25,7 @@ namespace SuperNAT.Dal
 	                                                            `map` t1
                                                             INNER JOIN client t2 ON t1.client_id = t2.id
                                                             INNER JOIN `user` t3 ON t2.user_id = t3.user_id
-                                                            WHERE t1.id=@id", new { model.id }, t.DbTrans);
+                                                            WHERE t1.id=@id", new { model.id }, t?.DbTrans);
                 if (rst.Data != null)
                 {
                     rst.Result = true;
@@ -74,7 +74,7 @@ namespace SuperNAT.Dal
                     {
                         sql.Append(is_admin ? "where t3.user_id = @user_id " : "");
                     }
-                    rst.Data = conn.GetListPaged<Map>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "user_id, client_id, remote asc", model, t.DbTrans).ToList();
+                    rst.Data = conn.GetListPaged<Map>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "user_id, client_id, remote asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,
@@ -85,7 +85,7 @@ namespace SuperNAT.Dal
                 else
                 {
                     sql.Append("order by t2.user_id,t1.client_id,t1.remote asc");
-                    rst.Data = conn.Query<Map>(sql.ToString(), null, t.DbTrans).ToList();
+                    rst.Data = conn.Query<Map>(sql.ToString(), null, t?.DbTrans).ToList();
                 }
                 if (rst.Data != null)
                 {
@@ -118,7 +118,7 @@ namespace SuperNAT.Dal
                                             INNER JOIN client t2 ON t1.client_id = t2.id
                                             INNER JOIN `user` t3 ON t2.user_id = t3.user_id
                                             WHERE t2.secret = @secret
-                                            ORDER BY t2.user_id,t1.client_id,t1.remote", new { secret }, t.DbTrans).ToList();
+                                            ORDER BY t2.user_id,t1.client_id,t1.remote", new { secret }, t?.DbTrans).ToList();
                 if (rst.Data != null)
                 {
                     rst.Result = true;

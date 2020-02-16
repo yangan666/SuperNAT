@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using MySql.Data.MySqlClient;
+using SuperNAT.Common;
 using SuperNAT.Model;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace SuperNAT.Dal
         {
             if (t == null)
             {
-                conn = new MySqlConnection("");
+                conn = new MySqlConnection(GlobalConfig.ConnetionString);
                 conn.Open();
             }
             else
@@ -39,7 +40,7 @@ namespace SuperNAT.Dal
             try
             {
                 conn = CreateMySqlConnection(t);
-                if (conn.Insert(model, t.DbTrans) > 0)
+                if (conn.Insert(model, t?.DbTrans) > 0)
                 {
                     rst.Result = true;
                     rst.Message = "添加成功";
@@ -61,7 +62,7 @@ namespace SuperNAT.Dal
             try
             {
                 conn = CreateMySqlConnection(t);
-                if (conn.Update(model, t.DbTrans) > 0)
+                if (conn.Update(model, t?.DbTrans) > 0)
                 {
                     rst.Result = true;
                     rst.Message = "更新成功";
@@ -83,7 +84,7 @@ namespace SuperNAT.Dal
             try
             {
                 conn = CreateMySqlConnection(t);
-                if (conn.Delete(model, t.DbTrans) > 0)
+                if (conn.Delete(model, t?.DbTrans) > 0)
                 {
                     rst.Result = true;
                     rst.Message = "删除成功";
@@ -105,7 +106,7 @@ namespace SuperNAT.Dal
             try
             {
                 conn = CreateMySqlConnection(t);
-                if (conn.DeleteList<T>(where, param, t.DbTrans) > 0)
+                if (conn.DeleteList<T>(where, param, t?.DbTrans) > 0)
                 {
                     rst.Result = true;
                     rst.Message = "批量删除成功";
@@ -127,7 +128,7 @@ namespace SuperNAT.Dal
             try
             {
                 conn = CreateMySqlConnection(t);
-                rst.Data = conn.Get<T>(model.id, t.DbTrans);
+                rst.Data = conn.Get<T>(model.id, t?.DbTrans);
                 if (rst.Data != null)
                 {
                     rst.Result = true;
@@ -150,7 +151,7 @@ namespace SuperNAT.Dal
             try
             {
                 conn = CreateMySqlConnection(t);
-                rst.Data = conn.GetList<T>(where, null, t.DbTrans).ToList();
+                rst.Data = conn.GetList<T>(where, null, t?.DbTrans).ToList();
                 if (rst.Data != null)
                 {
                     rst.Result = true;

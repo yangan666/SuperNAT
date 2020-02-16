@@ -13,6 +13,11 @@ namespace SuperNAT.Common
             return data;
         }
 
+        public static byte[] CloneRange(this List<byte> source, int offset, int len)
+        {
+            return CloneRange(source.ToArray(), offset, len);
+        }
+
         public static string ToHex(this byte[] source)
         {
             return ToHexWithSpace(source).Replace(" ", "");

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SuperNAT.Common
 {
-    public class GlobalConfig
+    public static class GlobalConfig
     {
         public static string ConnetionString { get; set; }
         public static int NatPort { get; set; }

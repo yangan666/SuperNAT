@@ -29,7 +29,7 @@ namespace SuperNAT.Dal
                         sql.Append("or certfile like @search ");
                         sql.Append("or certpwd like @search ");
                     }
-                    rst.Data = conn.GetListPaged<ServerConfig>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t.DbTrans).ToList();
+                    rst.Data = conn.GetListPaged<ServerConfig>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,
@@ -42,7 +42,7 @@ namespace SuperNAT.Dal
                 else
                 {
                     sql.Append("order by id ");
-                    rst.Data = conn.Query<ServerConfig>(sql.ToString(), null, t.DbTrans).ToList();
+                    rst.Data = conn.Query<ServerConfig>(sql.ToString(), null, t?.DbTrans).ToList();
                 }
                 if (rst.Data != null)
                 {

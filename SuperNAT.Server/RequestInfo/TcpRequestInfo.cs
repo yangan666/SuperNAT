@@ -1,14 +1,12 @@
-﻿//using CSuperSocket.SocketBase.Protocol;
+﻿using SuperNAT.AsyncSocket;
 
-//namespace SuperNAT.Server
-//{
-//    public class TcpRequestInfo : IRequestInfo
-//    {
-//        public TcpRequestInfo(byte[] data)
-//        {
-//            Data = data;
-//        }
-//        public string Key { get; set; }
-//        public byte[] Data { get; set; }
-//    }
-//}
+namespace SuperNAT.Server
+{
+    public class TcpRequestInfo : RequestInfo
+    {
+        public TcpRequestInfo(byte[] data)
+        {
+            Raw = data;
+        }
+    }
+}

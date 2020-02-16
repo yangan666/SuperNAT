@@ -21,7 +21,7 @@ namespace SuperNAT.Dal
                 if (rst.Data != null)
                 {
                     //获取角色列表
-                    rst.Data.menu_ids = conn.GetList<Authority>("where role_id=@role_id", new { model.role_id }, t.DbTrans).Select(c => c.menu_id).ToList();
+                    rst.Data.menu_ids = conn.GetList<Authority>("where role_id=@role_id", new { model.role_id }, t?.DbTrans).Select(c => c.menu_id).ToList();
                     rst.Result = true;
                     rst.Message = "获取成功";
                 }
@@ -51,7 +51,7 @@ namespace SuperNAT.Dal
                         sql.Append("where name like @search ");
                         sql.Append("or remark like @search ");
                     }
-                    rst.Data = conn.GetListPaged<Role>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t.DbTrans).ToList();
+                    rst.Data = conn.GetListPaged<Role>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,
@@ -64,7 +64,7 @@ namespace SuperNAT.Dal
                 else
                 {
                     sql.Append("order by id ");
-                    rst.Data = conn.Query<Role>(sql.ToString(), null, t.DbTrans).ToList();
+                    rst.Data = conn.Query<Role>(sql.ToString(), null, t?.DbTrans).ToList();
                 }
                 if (rst.Data != null)
                 {

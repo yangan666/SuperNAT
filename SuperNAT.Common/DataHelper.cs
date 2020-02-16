@@ -108,6 +108,7 @@ namespace SuperNAT.Common
             }
             return returnStr.ToString();
         }
+        
         /// <summary>
         /// 16进制string转byte
         /// </summary>

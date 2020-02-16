@@ -25,7 +25,7 @@ namespace SuperNAT.Server.Controllers
                 rst = bll.Add(model);
                 if (rst.Result)
                 {
-                    //ServerHanlder.ChangeMap((int)ChangeMapType.新增, model);
+                    ServerHanlder.ChangeMap((int)ChangeMapType.新增, model);
                 }
             }
             else
@@ -33,7 +33,7 @@ namespace SuperNAT.Server.Controllers
                 rst = bll.Update(model);
                 if (rst.Result)
                 {
-                    //ServerHanlder.ChangeMap((int)ChangeMapType.修改, model);
+                    ServerHanlder.ChangeMap((int)ChangeMapType.修改, model);
                 }
             }
 
@@ -48,7 +48,7 @@ namespace SuperNAT.Server.Controllers
             var rst = bll.Delete(model);
             if (rst.Result)
             {
-               //ServerHanlder.ChangeMap((int)ChangeMapType.删除, model);
+               ServerHanlder.ChangeMap((int)ChangeMapType.删除, model);
             }
 
             return Json(rst);

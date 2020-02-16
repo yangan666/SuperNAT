@@ -33,7 +33,7 @@ namespace SuperNAT.Dal
                         sql.Append("or t1.component like @search ");
                         sql.Append("or t2.title like @search ");
                     }
-                    rst.Data = conn.GetListPaged<Menu>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "sort_no asc", model, t.DbTrans).ToList();
+                    rst.Data = conn.GetListPaged<Menu>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "sort_no asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,
@@ -46,7 +46,7 @@ namespace SuperNAT.Dal
                 else
                 {
                     sql.Append("order by t1.id ");
-                    rst.Data = conn.Query<Menu>(sql.ToString(), null, t.DbTrans).ToList();
+                    rst.Data = conn.Query<Menu>(sql.ToString(), null, t?.DbTrans).ToList();
                 }
                 if (rst.Data != null)
                 {

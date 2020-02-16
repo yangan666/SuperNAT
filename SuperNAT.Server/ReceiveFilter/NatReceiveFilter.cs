@@ -1,58 +1,53 @@
-﻿//using CSuperSocket.Common;
-//using CSuperSocket.Facility.Protocol;
-//using CSuperSocket.SocketBase.Protocol;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using SuperNAT.AsyncSocket;
+using SuperNAT.Common;
+using System;
+using System.Buffers;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace SuperNAT.Server
-//{
-//    /// <summary>
-//    /// Nat穿透过滤器
-//    /// </summary>
-//    public class NatReceiveFilter : FixedHeaderReceiveFilter<NatRequestInfo>
-//    {
-//        public NatReceiveFilter()
-//        : base(6)
-//        {
-//            //协议 01:nat 02:http 03:tcp 04:udp
-//            //协议(1) 功能码(1) 数据长度(4) 正文数据(n)
+namespace SuperNAT.Server
+{
+    /// <summary>
+    /// Nat穿透过滤器
+    /// </summary>
+    public class NatReceiveFilter : FixHeaderReceiveFilter<NatRequestInfo>
+    {
+        public NatReceiveFilter()
+        : base(8)
+        {
 
-//            //nat
-//            //01 01 数据长度(4) 正文数据(n)   ---注册包
-//            //01 02 数据长度(4) 正文数据(n)   ---心跳包
-//            //01 03 数据长度(4) 正文数据(n)   ---Map变动
-//            //01 04 数据长度(4) 正文数据(n)   ---服务器推送消息（成功/失败信息）
+        }
 
-//            //http
-//            //02 01 数据长度(4) 正文数据(n)   ---http响应包
+        public override long GetBodyLengthFromHeader(ReadOnlySequence<byte> header)
+        {
+            var headerStr = header.ToArray().CloneRange(1, HeaderSize - 1).ToASCII();
+            var bodyLen = Convert.ToInt32(headerStr) + 1;
 
-//            //tcp
-//            //03 01 数据长度(4) 正文数据(n)   ---tcp连接注册包
-//            //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
-//            //03 03 数据长度(4) 正文数据(n)   ---tcp连接关闭包
-//        }
-//        protected override int GetBodyLengthFromHeader(byte[] header, int offset, int length)
-//        {
-//            //正文数据长度
-//            var bytes = new byte[length];
-//            Array.Copy(header, offset + 2, bytes, 0, 4);
-//            var len = bytes[0] * 256 * 256 * 256 + bytes[1] * 256 * 256 + bytes[2] * 256 + bytes[3];
-//            return len;
-//        }
+            return bodyLen;
+        }
 
-//        protected override NatRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
-//        {
-//            int len = header.Count + length;
-//            //预先分配大小，分配多少就是多少个。预先分配的大小一定要大于等于加进去的元素数量。否则，说不定比不分配更加糟糕。
-//            List<byte> listData = new List<byte>() { Capacity = len };
-//            listData.AddRange(header.ToArray());
-//            var bodyBytes = new byte[length];
-//            Array.Copy(bodyBuffer, offset, bodyBytes, 0, length);
-//            listData.AddRange(bodyBytes.ToList());
-//            return new NatRequestInfo(header.ToArray(), bodyBytes, listData.ToArray());
-//        }
-//    }
-//}
+        public override NatRequestInfo DecodePackage(ReadOnlySequence<byte> data)
+        {
+            try
+            {
+                var pack = data.ToArray();
+                long pos = 0;
+                byte head = pack[pos];
+                pos += HeaderSize;
+                long totalLen = pack.Length;
+                string bodyStr = Encoding.UTF8.GetString(data.Slice(pos, BodySize - 1).ToArray());
+                JsonData jsonData = bodyStr.FromJson<JsonData>();
+                pos += BodySize;
+                byte end = pack[pos - 1];
+
+                return NatRequestInfo.OK(pack, head, totalLen, BodySize, jsonData, end);
+            }
+            catch (Exception ex)
+            {
+                return NatRequestInfo.Fail(ex.Message);
+            }
+        }
+    }
+}

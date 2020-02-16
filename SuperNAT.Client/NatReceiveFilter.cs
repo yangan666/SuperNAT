@@ -1,5 +1,7 @@
-﻿using SuperSocket.ProtoBase;
+﻿using SuperNAT.AsyncSocket;
+using SuperNAT.Common;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,50 +9,42 @@ using System.Threading.Tasks;
 
 namespace SuperNAT.Client
 {
-    public class NatReceiveFilter : FixedHeaderReceiveFilter<NatPackageInfo>
+    public class NatReceiveFilter : FixHeaderReceiveFilter<NatPackageInfo>
     {
         public NatReceiveFilter()
-        : base(6)
+       : base(8)
         {
-            //协议 01:nat 02:http 03:tcp 04:udp
-            //协议(1) 功能码(1) 数据长度(4) 正文数据(n)
 
-            //nat
-            //01 01 数据长度(4) 正文数据(n)   ---注册包
-            //01 02 数据长度(4) 正文数据(n)   ---心跳包
-            //01 03 数据长度(4) 正文数据(n)   ---Map变动
-            //01 04 数据长度(4) 正文数据(n)   ---服务器推送消息（成功/失败信息）
-
-            //http
-            //02 01 数据长度(4) 正文数据(n)   ---http响应包
-
-            //tcp
-            //03 01 数据长度(4) 正文数据(n)   ---tcp连接注册包
-            //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
-            //03 03 数据长度(4) 正文数据(n)   ---tcp连接关闭包
         }
 
-        protected override int GetBodyLengthFromHeader(IBufferStream bufferStream, int length)
+        public override long GetBodyLengthFromHeader(ReadOnlySequence<byte> header)
         {
-            List<byte> bytes = new List<byte>();
-            foreach (var item in bufferStream.Buffers)
-            {
-                bytes.AddRange(item.ToList());
-            }
-            byte[] header = bytes.ToArray().CloneRange(2, 4);
-            //正文数据长度
-            var len = header[0] * 256 * 256 * 256 + header[1] * 256 * 256 + header[2] * 256 + header[3];
-            return len;
+            var headerStr = header.ToArray().CloneRange(1, HeaderSize - 1).ToASCII();
+            var bodyLen = Convert.ToInt32(headerStr) + 1;
+
+            return bodyLen;
         }
 
-        public override NatPackageInfo ResolvePackage(IBufferStream bufferStream)
+        public override NatPackageInfo DecodePackage(ReadOnlySequence<byte> data)
         {
-            List<byte> bytes = new List<byte>();
-            foreach (var item in bufferStream.Buffers)
+            try
             {
-                bytes.AddRange(item.ToList());
+                var pack = data.ToArray();
+                long pos = 0;
+                byte head = pack[pos];
+                pos += HeaderSize;
+                long totalLen = pack.Length;
+                string bodyStr = Encoding.UTF8.GetString(data.Slice(pos, BodySize - 1).ToArray());
+                JsonData jsonData = bodyStr.FromJson<JsonData>();
+                pos += BodySize;
+                byte end = pack[pos - 1];
+
+                return NatPackageInfo.OK(pack, head, totalLen, BodySize, jsonData, end);
             }
-            return new NatPackageInfo(bytes.ToArray());
+            catch (Exception ex)
+            {
+                return NatPackageInfo.Fail(ex.Message);
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+using SuperNAT.Common;
 
 namespace SuperNAT.Dal
 {
@@ -40,7 +41,7 @@ namespace SuperNAT.Dal
         /// </summary>
         public Trans()
         {
-            conn = new MySqlConnection("");
+            conn = new MySqlConnection(GlobalConfig.ConnetionString);
             conn.Open();
             dbTrans = conn.BeginTransaction();
         }

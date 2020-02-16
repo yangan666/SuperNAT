@@ -19,7 +19,7 @@ namespace SuperNAT.Dal
             try
             {
                 conn = CreateMySqlConnection(t);
-                rst.Data = conn.QueryFirstOrDefault<Client>("select * from client where secret=@secret", new { secret }, t.DbTrans);
+                rst.Data = conn.QueryFirstOrDefault<Client>("select * from client where secret=@secret", new { secret }, t?.DbTrans);
                 if (rst.Data != null)
                 {
                     rst.Result = true;
@@ -62,7 +62,7 @@ namespace SuperNAT.Dal
                     {
                         sql.Append(is_admin ? "where t2.user_id = @user_id " : "");
                     }
-                    rst.Data = conn.GetListPaged<Client>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t.DbTrans).ToList();
+                    rst.Data = conn.GetListPaged<Client>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,
@@ -75,7 +75,7 @@ namespace SuperNAT.Dal
                 else
                 {
                     sql.Append("order by t1.id ");
-                    rst.Data = conn.Query<Client>(sql.ToString(), null, t.DbTrans).ToList();
+                    rst.Data = conn.Query<Client>(sql.ToString(), null, t?.DbTrans).ToList();
                 }
                 if (rst.Data != null)
                 {
@@ -99,7 +99,7 @@ namespace SuperNAT.Dal
             try
             {
                 conn = CreateMySqlConnection(t);
-                if (conn.Execute($"update client set is_online=@is_online{(model.is_online ? ",last_heart_time=@last_heart_time" : "")} where secret=@secret", model, t.DbTrans) > 0)
+                if (conn.Execute($"update client set is_online=@is_online{(model.is_online ? ",last_heart_time=@last_heart_time" : "")} where secret=@secret", model, t?.DbTrans) > 0)
                 {
                     rst.Result = true;
                     rst.Message = "更新成功";
@@ -121,7 +121,7 @@ namespace SuperNAT.Dal
             try
             {
                 conn = CreateMySqlConnection(t);
-                var clients = conn.GetList<Client>("where (is_online=@is_online && last_heart_time<@last_heart_time) or last_heart_time is null", new { is_online = true, last_heart_time = DateTime.Now.AddMinutes(-1) }, t.DbTrans).Select(c => c.id).ToList();
+                var clients = conn.GetList<Client>("where (is_online=@is_online && last_heart_time<@last_heart_time) or last_heart_time is null", new { is_online = true, last_heart_time = DateTime.Now.AddMinutes(-1) }, t?.DbTrans).Select(c => c.id).ToList();
                 if (clients.Any())
                 {
                     int count = conn.Execute($"update client set is_online=0 where id in({string.Join(',', clients)})");

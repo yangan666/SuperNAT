@@ -34,7 +34,7 @@ namespace SuperNAT.Dal
                     rst.Message = "信息已失效请刷新界面重新登录！";
                     return rst;
                 }
-                rst.Data = conn.QueryFirstOrDefault<User>(sql.ToString(), model, t.DbTrans);
+                rst.Data = conn.QueryFirstOrDefault<User>(sql.ToString(), model, t?.DbTrans);
                 if (rst.Data != null)
                 {
                     rst.Result = true;
@@ -69,7 +69,7 @@ namespace SuperNAT.Dal
                 sql.Append("email=@email,");
                 sql.Append("tel=@tel ");
                 sql.Append("where user_id=@user_id ");
-                if (conn.Execute(sql.ToString(), model, t.DbTrans) > 0)
+                if (conn.Execute(sql.ToString(), model, t?.DbTrans) > 0)
                 {
                     rst.Result = true;
                     rst.Message = "更新成功";
@@ -117,7 +117,7 @@ namespace SuperNAT.Dal
             try
             {
                 conn = CreateMySqlConnection(t);
-                rst.Data = conn.QueryFirstOrDefault<User>("select * from user where user_id=@user_id ", new { user_id }, t.DbTrans);
+                rst.Data = conn.QueryFirstOrDefault<User>("select * from user where user_id=@user_id ", new { user_id }, t?.DbTrans);
                 if (rst.Data != null)
                 {
                     //获取权限菜单
@@ -130,7 +130,7 @@ namespace SuperNAT.Dal
                                                     WHERE
 	                                                    t1.role_id = @role_id
                                                     ORDER BY
-	                                                    t2.sort_no ASC", new { rst.Data.role_id }, t.DbTrans).ToList();
+	                                                    t2.sort_no ASC", new { rst.Data.role_id }, t?.DbTrans).ToList();
                     var children = auths.FindAll(c => !string.IsNullOrWhiteSpace(c.pid));
                     foreach (var item in children)
                     {
@@ -181,7 +181,7 @@ namespace SuperNAT.Dal
                         sql.Append("or t1.email like @search ");
                         sql.Append("or t1.tel like @search ");
                     }
-                    rst.Data = conn.GetListPaged<User>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t.DbTrans).ToList();
+                    rst.Data = conn.GetListPaged<User>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,
@@ -191,7 +191,7 @@ namespace SuperNAT.Dal
                 }
                 else
                 {
-                    rst.Data = conn.GetList<User>("", model, t.DbTrans).ToList();
+                    rst.Data = conn.GetList<User>("", model, t?.DbTrans).ToList();
                 }
                 if (rst.Data != null)
                 {

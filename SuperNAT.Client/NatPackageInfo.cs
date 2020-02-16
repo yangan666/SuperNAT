@@ -1,5 +1,5 @@
-﻿using SuperNAT.Common;
-using SuperSocket.ProtoBase;
+﻿using SuperNAT.AsyncSocket;
+using SuperNAT.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,37 +8,35 @@ using System.Threading.Tasks;
 
 namespace SuperNAT.Client
 {
-    public class NatPackageInfo : IPackageInfo
+    public class NatPackageInfo : RequestInfo
     {
-        public NatPackageInfo(byte[] data)
+        public NatPackageInfo()
         {
-            Header = data.CloneRange(0, 6);
-            Body = data.CloneRange(6, data.Length - 6);
-            Data = data;
-            BodyRaw = Body == null ? string.Empty : Encoding.UTF8.GetString(Body);
-            Raw = data == null ? string.Empty : Encoding.UTF8.GetString(data);
-            Hex = data == null ? string.Empty : DataHelper.ByteToHex(data);
-            Mode = Header == null ? (byte)0x0 : Header[0];
-            FunCode = Header == null ? (byte)0x0 : Header[1];
+
         }
 
-        public byte[] Header { get; set; }
+        public NatPackageInfo(bool isSuccess, string message = "")
+        {
+            Success = isSuccess;
+            Message = message;
+        }
 
-        /// <summary>
-        /// 服务器返回的字节数据
-        /// </summary>
-        public byte[] Data { get; set; }
+        public static NatPackageInfo OK(byte[] raw, byte head, long total, long bodyLen, JsonData body, byte end)
+        {
+            return new NatPackageInfo(true)
+            {
+                Raw = raw,
+                Head = head,
+                TotalLength = total,
+                BodyLength = bodyLen,
+                Body = body,
+                End = end
+            };
+        }
 
-        /// <summary>
-        /// 服务器返回的数据长度
-        /// </summary>
-        public int Length => Data?.Length ?? 0;
-
-        public byte[] Body { get; set; }
-        public string BodyRaw { get; set; }
-        public string Raw { get; set; }
-        public string Hex { get; set; }
-        public byte Mode { get; set; }
-        public byte FunCode { get; set; }
+        public static NatPackageInfo Fail(string error)
+        {
+            return new NatPackageInfo(false, error);
+        }
     }
 }

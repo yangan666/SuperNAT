@@ -5,32 +5,27 @@ using System.Text;
 
 namespace SuperNAT.AsyncSocket
 {
-    public class SessionManager
+    public class SessionManager<TSession> where TSession : ISession, new()
     {
         private static object lockObj = new object();
-        public List<AsyncUserToken> SessionList { get; set; } = new List<AsyncUserToken>();
+        public List<TSession> SessionList { get; set; } = new List<TSession>();
 
         public long SessionCount => SessionList.Count;
 
-        public void Add(AsyncUserToken token)
+        public void Add(TSession session)
         {
             lock (lockObj)
             {
-                SessionList.Add(token);
+                SessionList.Add(session);
             }
         }
 
-        public void Remove(AsyncUserToken token)
+        public void Remove(TSession session)
         {
             lock (lockObj)
             {
-                SessionList.Remove(token);
+                SessionList.RemoveAll(c => c.SessionId == session.SessionId);
             }
-        }
-
-        public AsyncUserToken GetSingle(Func<AsyncUserToken, bool> predicate)
-        {
-            return SessionList.FirstOrDefault(predicate);
         }
     }
 }

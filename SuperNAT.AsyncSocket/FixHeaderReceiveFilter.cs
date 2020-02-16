@@ -1,11 +1,13 @@
 ﻿using SuperNAT.Common;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SuperNAT.AsyncSocket
 {
-    public class FixHeaderReceiveFilter
+    public abstract class FixHeaderReceiveFilter<TRequestInfo> : IReceiveFilter<TRequestInfo>
+        where TRequestInfo : IRequestInfo, new()
     {
         //协议 01:nat 02:http 03:tcp 04:udp
         //协议(1) 功能码(1) 数据长度(4) 正文数据(n)
@@ -26,50 +28,45 @@ namespace SuperNAT.AsyncSocket
 
         //new:
         //协议 01:nat 02:http 03:tcp 04:udp
-        //帧头(01H)  数据长度(7) 正文数据(n) 校验和(4) 帧尾(04H)
+        //帧头(01H)  数据长度(7) 正文数据(n) 帧尾(04H)
 
 
-        private bool _foundHeader;
-        private readonly int _headerSize;
-        private int _totalSize;
-        private int _offset;
+        public bool FoundHeader { get; private set; }
+        public int HeaderSize { get; private set; }
+        public long BodySize { get; private set; }
+        private long TotalSize { get; set; }
 
         public FixHeaderReceiveFilter(int headerSize)
         {
-            _headerSize = headerSize;
+            HeaderSize = headerSize;
         }
 
-        public int GetBodyLengthFromHeader(byte[] header)
-        {
-            var headerStr = header.ToHex();
-            var bodyLen = Convert.ToInt32(headerStr);
+        public abstract long GetBodyLengthFromHeader(ReadOnlySequence<byte> header);
 
-            return bodyLen;
-        }
-
-        public JsonData ResolveRequestInfo(byte[] header, byte[] bodyBuffer, int offset, int length)
+        public TRequestInfo Filter(ref SequenceReader<byte> reader)
         {
-            if (!_foundHeader)
+            if (!FoundHeader)
             {
-                if (header.Length < _headerSize)
-                    return null;
+                if (reader.Length < HeaderSize)
+                    return default;
 
-                var bodyLength = GetBodyLengthFromHeader(header);
+                var header = reader.Sequence.Slice(0, HeaderSize);
+                BodySize = GetBodyLengthFromHeader(header);
 
-                if (bodyLength < 0)
+                if (BodySize < 0)
                     throw new Exception("Failed to get body length from the package header.");
 
-                if (bodyLength == 0)
-                    return null;
+                if (BodySize == 0)
+                    return DecodePackage(header);
 
-                _foundHeader = true;
-                _totalSize = _headerSize + bodyLength;
+                FoundHeader = true;
+                TotalSize = HeaderSize + BodySize;
             }
 
-            var totalSize = _totalSize;
+            var totalSize = TotalSize;
 
             if (reader.Length < totalSize)
-                return null;
+                return default;
 
             var pack = reader.Sequence.Slice(0, totalSize);
 
@@ -80,9 +77,17 @@ namespace SuperNAT.AsyncSocket
             finally
             {
                 reader.Advance(totalSize);
+                Reset();
             }
+        }
 
-            return null;
+        public abstract TRequestInfo DecodePackage(ReadOnlySequence<byte> data);
+
+        public void Reset()
+        {
+            FoundHeader = false;
+            BodySize = 0;
+            TotalSize = 0;
         }
     }
 }
