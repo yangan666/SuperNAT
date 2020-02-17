@@ -138,13 +138,13 @@ namespace SuperNAT.AsyncSocket
             var bytesConsumedTotal = 0L;
 
             var maxPackageLength = ServerOption.MaxRequestLength;
+            var seqReader = new SequenceReader<byte>(buffer);
 
             while (true)
             {
                 //过滤解析
                 if (ReceiveFilter != null)
                 {
-                    var seqReader = new SequenceReader<byte>(buffer);
                     var packageInfo = ReceiveFilter.Filter(ref seqReader);
                     var bytesConsumed = seqReader.Consumed;
                     bytesConsumedTotal += bytesConsumed;

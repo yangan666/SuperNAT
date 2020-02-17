@@ -20,8 +20,8 @@ namespace SuperNAT.AsyncSocket
         public IReceiveFilter<TRequestInfo> ReceiveFilter { get; set; }
         public ClientOptions ClientOptions { get; set; }
         public bool IsConnected { get; set; } = false;
-        public EndPoint Remote => Socket?.RemoteEndPoint;
-        public EndPoint Local => Socket?.LocalEndPoint;
+        public string Remote { get; set; }
+        public string Local { get; set; }
 
         public Action<Socket> OnConnected;
         public Action<Socket, TRequestInfo> OnReceived;
@@ -47,13 +47,19 @@ namespace SuperNAT.AsyncSocket
             {
                 await Socket.ConnectAsync(new IPEndPoint(IPAddress.Parse(ClientOptions.Ip), ClientOptions.Port));
                 IsConnected = true;
+                Remote = Socket.RemoteEndPoint.ToString();
+                Local = Socket.LocalEndPoint.ToString();
                 HandleLog.WriteLine($"连接服务器[{ClientOptions.Ip}:{ClientOptions.Port}]成功");
                 OnConnected?.Invoke(Socket);
                 await ProcessReadAsync();
             }
             catch (Exception ex)
             {
-                HandleLog.WriteLine($"连接服务器失败，{ex}");
+                if (IsConnected)
+                {
+                    HandleLog.WriteLine($"{ex}");
+                    Close();
+                }
                 IsConnected = false;
             }
         }
@@ -74,7 +80,7 @@ namespace SuperNAT.AsyncSocket
             }
             var reader = PipeReader.Create(stream);
 
-            while (true)
+            while (IsConnected)
             {
                 ReadResult result = await reader.ReadAsync();
                 ReadOnlySequence<byte> buffer = result.Buffer;
@@ -131,7 +137,6 @@ namespace SuperNAT.AsyncSocket
             var bytesConsumedTotal = 0L;
 
             var maxPackageLength = ClientOptions.MaxRequestLength;
-
             var seqReader = new SequenceReader<byte>(buffer);
 
             while (true)

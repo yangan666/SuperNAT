@@ -32,15 +32,12 @@ namespace SuperNAT.Client
                 OnReceived += OnPackageReceived;
                 OnClosed += OnClientClosed;
                 await ConnectAsync();
-                if (IsConnected)
-                {
-                    ClientHandler.TcpClientProxyList.Add(this);
-                }
             });
         }
 
         private void OnClientConnected(Socket socket)
         {
+            ClientHandler.TcpClientProxyList.Add(this);
             HandleLog.WriteLine($"【{RemoteSession.SessionId},{Local}】已连接到服务器【{Remote}】");
         }
 
@@ -105,8 +102,8 @@ namespace SuperNAT.Client
                         {
                             //tcp连接关闭包
                             ClientHandler.TcpClientProxyList.Remove(this);
-                            Close();
                             HandleLog.WriteLine($"本地连接【{RemoteSession.SessionId},{Local}】关闭成功");
+                            Close();
                         }
                         break;
                 }

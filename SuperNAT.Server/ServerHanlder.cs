@@ -264,12 +264,12 @@ namespace SuperNAT.Server
                         ProtocolType = ProtocolType.Tcp,
                         BackLog = 100,
                         NoDelay = true,
-                        Security = SslProtocols.Tls12,
-                        SslServerAuthenticationOptions = new SslServerAuthenticationOptions
+                        Security = serverConfig.is_ssl ? SslProtocols.Tls12 : SslProtocols.None,
+                        SslServerAuthenticationOptions = serverConfig.is_ssl ? new SslServerAuthenticationOptions
                         {
                             EnabledSslProtocols = SslProtocols.Tls12,
                             ServerCertificate = new X509Certificate2(string.IsNullOrEmpty(serverConfig.certfile) ? CertFile : serverConfig.certfile, string.IsNullOrEmpty(serverConfig.certpwd) ? CertPassword : serverConfig.certpwd)
-                        }
+                        } : null
                     })
                     {
                         NATServer = NATServer

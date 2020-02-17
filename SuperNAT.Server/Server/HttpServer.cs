@@ -59,11 +59,13 @@ namespace SuperNAT.Server
 
                     var httpModel = new HttpModel()
                     {
+                        RequestTime = DateTime.Now,
                         ServerId = ServerId,
+                        HttpVersion = context.Request.ProtocolVersion.ToString(),
                         Host = context.Request.Url.Authority,
                         SessionId = sessionId,
                         Method = context.Request.HttpMethod,
-                        Route = context.Request.RawUrl,
+                        Path = context.Request.RawUrl,
                         Headers = context.Request.Headers.ToDictionary(),
                         ContentType = context.Request.ContentType
                     };
@@ -126,20 +128,21 @@ namespace SuperNAT.Server
                                 //解压
                                 var byteData = DataHelper.Decompress(httpModel.Content);
                                 var res = byteData.ToASCII();
-                                //foreach (var item in httpModel.Headers)
-                                //{
-                                //    context.Response.Headers.Add(item.Key, item.Value);
-                                //}
+                                foreach (var item in httpModel.Headers)
+                                {
+                                    context.Response.AppendHeader(item.Key, item.Value);
+                                }
                                 foreach (var item in httpModel.ContentHeaders)
                                 {
                                     context.Response.AppendHeader(item.Key, item.Value);
                                 }
+                                context.Response.StatusCode = httpModel.StatusCode;
                                 context.Response.ContentType = httpModel.ContentType;
                                 context.Response.ContentLength64 = byteData.Length;
                                 //把处理信息返回到客户端
                                 stream.WriteAsync(byteData, 0, byteData.Length).ContinueWith(s =>
                                 {
-                                    HandleLog.WriteLine($"请求：{context.Request.Url.AbsoluteUri}，响应成功！");
+                                    HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {context.Request.HttpMethod} {context.Request.Url.AbsoluteUri} {httpModel.StatusCode} {httpModel.StatusMessage} {(DateTime.Now - httpModel.RequestTime).TotalMilliseconds}ms");
                                     ContextDict.Remove(httpModel.SessionId);
                                 });
                             }

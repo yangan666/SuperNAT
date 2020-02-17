@@ -16,7 +16,7 @@ namespace SuperNAT.Server
         public NatServer NATServer { get; set; }
         public TcpServer(ServerOption serverOption) : base(serverOption)
         {
-            ReceiveFilter = new NatReceiveFilter();
+
         }
 
         public override async Task StartAsync()
@@ -183,7 +183,7 @@ namespace SuperNAT.Server
                         break;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 HandleLog.WriteLine($"TcpServer穿透处理异常，{ex}");
             }

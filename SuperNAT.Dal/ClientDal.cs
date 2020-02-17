@@ -19,7 +19,13 @@ namespace SuperNAT.Dal
             try
             {
                 conn = CreateMySqlConnection(t);
-                rst.Data = conn.QueryFirstOrDefault<Client>("select * from client where secret=@secret", new { secret }, t?.DbTrans);
+                rst.Data = conn.QueryFirstOrDefault<Client>(@"SELECT
+	                                                                t1.*, t2.user_name
+                                                                FROM
+	                                                                client t1
+                                                                LEFT JOIN `user` t2 ON t1.user_id = t2.user_id
+                                                                WHERE
+	                                                                t1.secret =@secret", new { secret }, t?.DbTrans);
                 if (rst.Data != null)
                 {
                     rst.Result = true;

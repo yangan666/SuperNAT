@@ -33,22 +33,32 @@ namespace SuperNAT.Client
                                 using HttpRequestMessage httpRequest = new HttpRequestMessage()
                                 {
                                     Method = new HttpMethod(httpModel.Method),
-                                    RequestUri = new Uri($"{map.protocol}://{map.local_endpoint}{httpModel.Route}")
+                                    RequestUri = new Uri($"{map.protocol}://{map.local_endpoint}{httpModel.Path}")
                                 };
-                                //foreach (var item in httpModel.Headers)
-                                //{
-                                //    httpRequest.Headers.Add(item.Key, item.Value);
-                                //}
                                 if (httpRequest.Method != HttpMethod.Get && httpModel.Content?.Length > 0)
                                 {
                                     var body = DataHelper.Decompress(httpModel.Content);//解压
                                     httpRequest.Content = new StringContent(body.ToASCII(), Encoding.UTF8, httpModel.ContentType.Split(";")[0]);
                                 }
+                                _httpClient.DefaultRequestHeaders.Clear();
+                                foreach (var item in httpModel.Headers)
+                                {
+                                    if (item.Key != "Content-Type")
+                                    {
+                                        if (!httpRequest.Content?.Headers.TryAddWithoutValidation(item.Key, item.Value) ?? true)
+                                        {
+                                            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation(item.Key, item.Value);
+                                        }
+                                    }
+                                }
                                 var response = await _httpClient.SendAsync(httpRequest);
-                                HandleLog.WriteLine($"请求：{httpRequest.RequestUri}，收到返回结果！");
                                 //回传给服务器
+                                httpModel.HttpVersion = response.Version.ToString();
+                                httpModel.StatusCode = (int)response.StatusCode;
+                                httpModel.StatusMessage = response.StatusCode.ToString();
                                 httpModel.Local = map.local_endpoint;
                                 httpModel.Headers = response.Headers.ToDictionary();
+                                httpModel.ResponseTime = DateTime.Now;
                                 foreach (var item in response.Content.Headers)
                                 {
                                     httpModel.ContentHeaders.Add(item.Key, string.Join(";", item.Value));
@@ -66,6 +76,7 @@ namespace SuperNAT.Client
                                     Data = httpModel.ToJson()
                                 });
                                 natClient?.Send(pack);
+                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {httpModel.StatusCode} {httpModel.StatusMessage}");
                                 break;
                             }
                     }
