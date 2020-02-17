@@ -9,28 +9,6 @@ namespace SuperNAT.AsyncSocket
     public abstract class FixHeaderReceiveFilter<TRequestInfo> : IReceiveFilter<TRequestInfo>
         where TRequestInfo : IRequestInfo, new()
     {
-        //协议 01:nat 02:http 03:tcp 04:udp
-        //协议(1) 功能码(1) 数据长度(4) 正文数据(n)
-
-        //nat
-        //01 01 数据长度(4) 正文数据(n)   ---注册包
-        //01 02 数据长度(4) 正文数据(n)   ---心跳包
-        //01 03 数据长度(4) 正文数据(n)   ---Map变动
-        //01 04 数据长度(4) 正文数据(n)   ---服务器推送消息（成功/失败信息）
-
-        //http
-        //02 01 数据长度(4) 正文数据(n)   ---http响应包
-
-        //tcp
-        //03 01 数据长度(4) 正文数据(n)   ---tcp连接注册包
-        //03 02 数据长度(4) 正文数据(n)   ---tcp响应包
-        //03 03 数据长度(4) 正文数据(n)   ---tcp连接关闭包
-
-        //new:
-        //协议 01:nat 02:http 03:tcp 04:udp
-        //帧头(01H)  数据长度(7) 正文数据(n) 帧尾(04H)
-
-
         public bool FoundHeader { get; private set; }
         public int HeaderSize { get; private set; }
         public long BodySize { get; private set; }

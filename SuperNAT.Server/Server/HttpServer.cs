@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SuperNAT.Server
 {
@@ -49,7 +50,7 @@ namespace SuperNAT.Server
                     var returnByteArr = Encoding.UTF8.GetBytes("nat client not found");
                     using var stream = context.Response.OutputStream;
                     //把处理信息返回到客户端
-                    stream.Write(returnByteArr, 0, returnByteArr.Length);
+                    stream.WriteAsync(returnByteArr, 0, returnByteArr.Length);
                 }
                 else
                 {
@@ -63,7 +64,8 @@ namespace SuperNAT.Server
                         SessionId = sessionId,
                         Method = context.Request.HttpMethod,
                         Route = context.Request.RawUrl,
-                        Headers = context.Request.Headers
+                        Headers = context.Request.Headers.ToDictionary(),
+                        ContentType = context.Request.ContentType
                     };
 
                     var byteList = new List<byte>();
@@ -114,10 +116,33 @@ namespace SuperNAT.Server
                         {
                             var context = ContextDict.FirstOrDefault(c => c.Key == httpModel.SessionId).Value;
                             if (context == null)
+                            {
+                                HandleLog.WriteLine($"未找到上下文context，SessionId={httpModel.SessionId}");
                                 return;
-                            var byteData = DataHelper.Decompress(httpModel.Content);
-                            context.Response.OutputStream.WriteAsync(byteData, 0, byteData.Length);
-                            context.Response.OutputStream.FlushAsync();
+                            }
+                            using var stream = context.Response.OutputStream;
+                            if (httpModel.Content?.Length > 0)
+                            {
+                                //解压
+                                var byteData = DataHelper.Decompress(httpModel.Content);
+                                var res = byteData.ToASCII();
+                                //foreach (var item in httpModel.Headers)
+                                //{
+                                //    context.Response.Headers.Add(item.Key, item.Value);
+                                //}
+                                foreach (var item in httpModel.ContentHeaders)
+                                {
+                                    context.Response.AppendHeader(item.Key, item.Value);
+                                }
+                                context.Response.ContentType = httpModel.ContentType;
+                                context.Response.ContentLength64 = byteData.Length;
+                                //把处理信息返回到客户端
+                                stream.WriteAsync(byteData, 0, byteData.Length).ContinueWith(s =>
+                                {
+                                    HandleLog.WriteLine($"请求：{context.Request.Url.AbsoluteUri}，响应成功！");
+                                    ContextDict.Remove(httpModel.SessionId);
+                                });
+                            }
                         }
                         break;
                 }

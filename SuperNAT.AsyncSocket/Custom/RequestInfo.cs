@@ -81,8 +81,9 @@ namespace SuperNAT.AsyncSocket
     {
         public string Method { get; set; }
         public string Route { get; set; }
-        public NameValueCollection Headers { get; set; }
-        public string ResponseInfo { get; set; }
+        public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> ContentHeaders { get; set; } = new Dictionary<string, string>();
+        public string ContentType { get; set; }
     }
 
     public class ServerMessage
