@@ -57,7 +57,7 @@ namespace SuperNAT.Server
                             {
                                 checkSessions.ForEach(c =>
                                 {
-                                    SendServerMessage(session, new ServerMessage() { Message = "该主机密钥已被其它主机使用，您已被迫下线！" });
+                                    SendServerMessage(c, new ServerMessage() { Message = "该主机密钥已被其它主机使用，您已被迫下线！" });
                                     Thread.Sleep(500);
                                     c.Close();
                                 });
