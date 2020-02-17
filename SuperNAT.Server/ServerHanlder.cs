@@ -88,13 +88,15 @@ namespace SuperNAT.Server
             {
                 map.ChangeType = type;
                 ChangeMap(map);
-                //请求头 01 04 长度(4)
-                var sendBytes = new List<byte>() { 0x1, 0x4 };
-                var jsonBytes = Encoding.UTF8.GetBytes(JsonHelper.Instance.Serialize(map));
-                sendBytes.AddRange(BitConverter.GetBytes(jsonBytes.Length).Reverse());
-                sendBytes.AddRange(jsonBytes);
+
+                var pack = PackHelper.CreatePack(new JsonData()
+                {
+                    Type = (int)JsonType.NAT,
+                    Action = (int)NatAction.MapChange,
+                    Data = map.ToJson()
+                });
                 var natClient = NATServer.GetSingle(c => c.Client?.id == map.client_id);
-                natClient?.Send(sendBytes.ToArray());
+                natClient?.Send(pack);
             }
             catch (Exception ex)
             {

@@ -131,7 +131,7 @@ namespace SuperNAT.Client
                 var serverIp = ipInfo.AddressList.Any() ? ipInfo.AddressList[0].ToString() : throw new Exception($"域名【{ServerUrl}】无法解析");
                 NatClient = new NatClient(new ClientOptions()
                 {
-                    Ip = "127.0.0.1",
+                    Ip = serverIp,
                     Port = NatPort,
                     NoDelay = true,
                     ProtocolType = ProtocolType.Tcp,

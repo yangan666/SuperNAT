@@ -19,7 +19,7 @@ namespace SuperNAT.Server
 
         public HttpServer(int port)
         {
-            Url = $"http://localhost:{port}/";
+            Url = $"http://+:{port}/";
         }
 
         public void Start()

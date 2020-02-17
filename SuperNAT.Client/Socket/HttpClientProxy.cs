@@ -12,7 +12,7 @@ namespace SuperNAT.Client
 {
     public class HttpClientProxy
     {
-        private static readonly HttpClient _httpClient = new HttpClient();
+        //private static readonly HttpClient _httpClient = new HttpClient();
         public static void ProcessData(NatClient natClient, NatPackageInfo packageInfo)
         {
             Task.Run(async () =>
@@ -40,7 +40,8 @@ namespace SuperNAT.Client
                                     var body = DataHelper.Decompress(httpModel.Content);//解压
                                     httpRequest.Content = new StringContent(body.ToASCII(), Encoding.UTF8, httpModel.ContentType.Split(";")[0]);
                                 }
-                                _httpClient.DefaultRequestHeaders.Clear();
+                                using HttpClient _httpClient = new HttpClient();
+                                //_httpClient.DefaultRequestHeaders.Clear();
                                 foreach (var item in httpModel.Headers)
                                 {
                                     if (item.Key != "Content-Type")
