@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 127.0.0.1
+Source Server         : 139.155.104.69
 Source Server Version : 50505
-Source Host           : 127.0.0.1:3306
+Source Host           : 139.155.104.69:3306
 Source Database       : supernat
 
 Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2019-10-13 22:47:50
+Date: 2020-02-18 14:23:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -24,7 +24,7 @@ CREATE TABLE `authority` (
   `role_id` varchar(50) DEFAULT '',
   `menu_id` varchar(50) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Table structure for client
@@ -42,7 +42,7 @@ CREATE TABLE `client` (
   `user_id` varchar(50) DEFAULT '',
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for map
@@ -52,15 +52,18 @@ CREATE TABLE `map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL DEFAULT '',
   `local` varchar(150) NOT NULL DEFAULT '',
+  `local_port` int(11) DEFAULT NULL,
   `remote` varchar(150) NOT NULL DEFAULT '',
+  `remote_port` int(11) DEFAULT NULL,
   `protocol` varchar(50) NOT NULL DEFAULT '',
   `certfile` varchar(150) DEFAULT '',
   `certpwd` varchar(150) DEFAULT NULL,
+  `is_ssl` bit(1) NOT NULL DEFAULT b'0',
   `ssl_type` int(11) DEFAULT NULL,
   `client_id` int(11) NOT NULL,
   `is_disabled` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for menu
@@ -79,7 +82,7 @@ CREATE TABLE `menu` (
   `always_show` bit(1) NOT NULL DEFAULT b'0',
   `menu_id` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Table structure for request
@@ -110,6 +113,22 @@ CREATE TABLE `role` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
+-- Table structure for server_config
+-- ----------------------------
+DROP TABLE IF EXISTS `server_config`;
+CREATE TABLE `server_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `protocol` varchar(50) NOT NULL,
+  `port` varchar(255) NOT NULL DEFAULT '',
+  `is_ssl` bit(1) NOT NULL,
+  `ssl_type` int(11) DEFAULT NULL,
+  `certfile` varchar(150) DEFAULT NULL,
+  `certpwd` varchar(150) DEFAULT NULL,
+  `is_disabled` bit(1) NOT NULL DEFAULT b'0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
@@ -125,4 +144,4 @@ CREATE TABLE `user` (
   `is_admin` bit(1) NOT NULL DEFAULT b'0',
   `role_id` varchar(50) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;

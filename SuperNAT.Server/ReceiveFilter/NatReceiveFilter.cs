@@ -22,7 +22,7 @@ namespace SuperNAT.Server
 
         public override long GetBodyLengthFromHeader(ReadOnlySequence<byte> header)
         {
-            var headerStr = header.ToArray().CloneRange(1, HeaderSize - 1).ToASCII();
+            var headerStr = header.ToArray().CloneRange(1, HeaderSize - 1).ToUTF8String();
             var bodyLen = Convert.ToInt32(headerStr) + 1;
 
             return bodyLen;

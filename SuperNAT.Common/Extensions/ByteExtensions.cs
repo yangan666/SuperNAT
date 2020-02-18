@@ -30,7 +30,7 @@ namespace SuperNAT.Common
             return DataHelper.ByteToHex(source);
         }
 
-        public static string ToASCII(this byte[] source)
+        public static string ToUTF8String(this byte[] source)
         {
             if (source == null)
                 return string.Empty;

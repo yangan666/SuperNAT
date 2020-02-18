@@ -84,7 +84,7 @@ namespace SuperNAT.Server
                         } while (readLen != 0);
 
                         var byteData = byteList.CloneRange(0, len);
-                        var req = byteData.ToASCII();
+                        var req = byteData.ToUTF8String();
 
                         if (byteData.Length > 0)
                         {
@@ -127,7 +127,7 @@ namespace SuperNAT.Server
                             {
                                 //解压
                                 var byteData = DataHelper.Decompress(httpModel.Content);
-                                var res = byteData.ToASCII();
+                                var res = byteData.ToUTF8String();
                                 foreach (var item in httpModel.Headers)
                                 {
                                     context.Response.AppendHeader(item.Key, item.Value);

@@ -66,68 +66,77 @@ namespace SuperNAT.AsyncSocket
 
         private async Task ProcessReadAsync(TSession session)
         {
-            // Create a PipeReader over the network stream
-            Stream stream = null;
-            if (ServerOption.Security == SslProtocols.None)
+            try
             {
-                stream = new NetworkStream(session.Socket);
-            }
-            else
-            {
-                var sslStream = new SslStream(new NetworkStream(session.Socket, true), false);
-                await sslStream.AuthenticateAsServerAsync(ServerOption.SslServerAuthenticationOptions, CancellationToken.None);
-
-                stream = sslStream;
-            }
-            var reader = PipeReader.Create(stream);
-
-            while (true)
-            {
-                ReadResult result = await reader.ReadAsync();
-                ReadOnlySequence<byte> buffer = result.Buffer;
-
-                SequencePosition consumed = buffer.Start;
-                SequencePosition examined = buffer.End;
-
-                try
+                // Create a PipeReader over the network stream
+                Stream stream = null;
+                if (ServerOption.Security == SslProtocols.None)
                 {
-                    if (result.IsCanceled)
-                    {
-                        break;
-                    }
+                    stream = new NetworkStream(session.Socket);
+                }
+                else
+                {
+                    var sslStream = new SslStream(new NetworkStream(session.Socket, true), false);
+                    await sslStream.AuthenticateAsServerAsync(ServerOption.SslServerAuthenticationOptions, CancellationToken.None);
 
-                    var completed = result.IsCompleted;
+                    stream = sslStream;
+                }
+                var reader = PipeReader.Create(stream);
 
-                    if (buffer.Length > 0)
+                while (true)
+                {
+                    ReadResult result = await reader.ReadAsync();
+                    ReadOnlySequence<byte> buffer = result.Buffer;
+
+                    SequencePosition consumed = buffer.Start;
+                    SequencePosition examined = buffer.End;
+
+                    try
                     {
-                        if (!ReaderBuffer(session, ref buffer, out consumed, out examined))
+                        if (result.IsCanceled)
                         {
-                            completed = true;
+                            break;
+                        }
+
+                        var completed = result.IsCompleted;
+
+                        if (buffer.Length > 0)
+                        {
+                            if (!ReaderBuffer(session, ref buffer, out consumed, out examined))
+                            {
+                                completed = true;
+                                break;
+                            }
+                        }
+
+                        if (completed)
+                        {
                             break;
                         }
                     }
-
-                    if (completed)
+                    catch (Exception e)
                     {
+                        HandleLog.WriteLine($"ProcessReadAsync error,{e.Message}");
                         break;
                     }
+                    finally
+                    {
+                        reader.AdvanceTo(consumed, examined);
+                    }
                 }
-                catch (Exception e)
-                {
-                    HandleLog.WriteLine($"ProcessReadAsync error,{e}");
-                    break;
-                }
-                finally
-                {
-                    reader.AdvanceTo(consumed, examined);
-                }
+
+                // Mark the PipeReader as complete.
+                await reader.CompleteAsync();
             }
-
-            // Mark the PipeReader as complete.
-            await reader.CompleteAsync();
-
-            // close the connection if get a protocol error
-            Close(session);
+            catch(Exception ex)
+            {
+                HandleLog.WriteLine($"ProcessReadAsync error,{ex.Message}");
+            }
+            finally
+            {
+                // close the connection if get a protocol error
+                Close(session);
+            }
         }
 
         private bool ReaderBuffer(TSession session, ref ReadOnlySequence<byte> buffer, out SequencePosition consumed, out SequencePosition examined)
