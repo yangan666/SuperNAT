@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -76,6 +77,7 @@ namespace SuperNAT.AsyncSocket
                 }
                 else
                 {
+                    ServerOption.SslServerAuthenticationOptions.RemoteCertificateValidationCallback = SSLValidationCallback;
                     var sslStream = new SslStream(new NetworkStream(session.Socket, true), false);
                     await sslStream.AuthenticateAsServerAsync(ServerOption.SslServerAuthenticationOptions, CancellationToken.None);
 
@@ -128,7 +130,7 @@ namespace SuperNAT.AsyncSocket
                 // Mark the PipeReader as complete.
                 await reader.CompleteAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 HandleLog.WriteLine($"ProcessReadAsync error,{ex.Message}");
             }
@@ -207,6 +209,11 @@ namespace SuperNAT.AsyncSocket
                     return true;
                 }
             }
+        }
+
+        private bool SSLValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
         }
 
         public void Close(TSession session)

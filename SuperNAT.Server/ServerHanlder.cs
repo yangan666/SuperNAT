@@ -155,6 +155,7 @@ namespace SuperNAT.Server
                     //SslServerAuthenticationOptions = new SslServerAuthenticationOptions
                     //{
                     //    EnabledSslProtocols = SslProtocols.Tls12,
+                    //    ClientCertificateRequired = false,
                     //    ServerCertificate = new X509Certificate2(CertFile, CertPassword)
                     //}
                 });

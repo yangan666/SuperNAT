@@ -48,7 +48,7 @@ namespace SuperNAT.Server.Controllers
             var rst = bll.Delete(model);
             if (rst.Result)
             {
-               ServerHanlder.ChangeMap((int)ChangeMapType.删除, model);
+                ServerHanlder.ChangeMap((int)ChangeMapType.删除, model);
             }
 
             return Json(rst);
@@ -63,7 +63,7 @@ namespace SuperNAT.Server.Controllers
                 var defalut = new ReturnResult<Map>()
                 {
                     Result = true,
-                    Data = new Map()
+                    Data = new Map() { remote = GlobalConfig.DefaultUrl }
                 };
                 return Json(defalut);
             }

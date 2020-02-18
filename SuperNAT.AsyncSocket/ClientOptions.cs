@@ -23,7 +23,7 @@ namespace SuperNAT.AsyncSocket
 
         public SslProtocols Security { get; set; }
 
-        public SslServerAuthenticationOptions SslServerAuthenticationOptions { get; set; }
+        public SslClientAuthenticationOptions SslClientAuthenticationOptions { get; set; }
 
         public int MaxRequestLength { get; set; } = 1024 * 1024 * 4;
 

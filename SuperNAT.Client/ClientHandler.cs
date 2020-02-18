@@ -136,10 +136,11 @@ namespace SuperNAT.Client
                     NoDelay = true,
                     ProtocolType = ProtocolType.Tcp,
                     //Security = SslProtocols.Tls12,
-                    //SslServerAuthenticationOptions = new SslServerAuthenticationOptions
+                    //SslClientAuthenticationOptions = new SslClientAuthenticationOptions
                     //{
                     //    EnabledSslProtocols = SslProtocols.Tls12,
-                    //    ServerCertificate = new X509Certificate2(CertFile, CertPassword)
+                    //    TargetHost = serverIp,
+                    //    ClientCertificates = new X509CertificateCollection() { new X509Certificate(CertFile, CertPassword) }
                     //}
                 });
                 NatClient.Initialize(new NatReceiveFilter());

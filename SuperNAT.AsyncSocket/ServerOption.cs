@@ -10,5 +10,6 @@ namespace SuperNAT.AsyncSocket
     public class ServerOption : ClientOptions
     {
         public int MaxConnectionsCount { get; set; } = 1000;
+        public SslServerAuthenticationOptions SslServerAuthenticationOptions { get; set; }
     }
 }
