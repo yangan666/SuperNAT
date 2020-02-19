@@ -27,6 +27,7 @@ SuperNAT.Client客户端部署：<br/>
   "ServerPort": "8088",<br/>
   "NatPort": "10006"//报文传输监听端口<br/>
 }<br/>
-服务器开放的端口有http 10001-10005,tcp 10007-10010
-QQ交流群：854594944
+服务器开放的端口有http 10001-10005,tcp 10007-10010<br/>
+QQ交流群：854594944<br/>
+<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=03308d9451e18cbbefa36a03df83487ec5b2a8a723dafd4aab54394aa732e2b8"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="SuperNAT" title="SuperNAT"></a>
 
