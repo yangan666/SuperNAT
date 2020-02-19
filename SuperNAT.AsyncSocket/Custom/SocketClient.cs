@@ -76,7 +76,7 @@ namespace SuperNAT.AsyncSocket
             {
                 if (IsConnected)
                 {
-                    HandleLog.WriteLine($"{ex}");
+                    HandleLog.WriteLine($"客户端处理异常：{ex}");
                     Close();
                 }
                 IsConnected = false;
@@ -220,17 +220,21 @@ namespace SuperNAT.AsyncSocket
             return true;
         }
 
+        private static object lockSend = new object();
         public void Send(byte[] data)
         {
             try
             {
-                Stream.Write(data);
-                Stream.Flush();
+                lock (lockSend)
+                {
+                    Stream.Write(data);
+                    Stream.Flush();
+                }
             }
             catch (Exception ex)
             {
                 Close();
-                HandleLog.WriteLine(ex.Message);
+                HandleLog.WriteLine($"Send Error,Socket Close,{ex}");
             }
         }
 
@@ -244,7 +248,7 @@ namespace SuperNAT.AsyncSocket
             }
             catch (Exception ex)
             {
-                HandleLog.WriteLine(ex.Message);
+                HandleLog.WriteLine($"Socket Close Error,{ex}");
             }
         }
     }

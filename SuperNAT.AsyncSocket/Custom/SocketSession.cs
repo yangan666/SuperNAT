@@ -25,10 +25,14 @@ namespace SuperNAT.AsyncSocket
             Socket?.Close();
         }
 
+        private static object lockSend = new object();
         public void Send(byte[] data)
         {
-            Stream.Write(data);
-            Stream.Flush();
+            lock (lockSend)
+            {
+                Stream.Write(data);
+                Stream.Flush();
+            }
         }
     }
 }

@@ -74,7 +74,7 @@ namespace SuperNAT.Client
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.WriteLine($"{ex}");
+                    HandleLog.WriteLine($"Start Error:{ex}");
                 }
             });
         }
