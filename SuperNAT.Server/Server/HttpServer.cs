@@ -50,7 +50,7 @@ namespace SuperNAT.Server
                     var returnByteArr = Encoding.UTF8.GetBytes("nat client not found");
                     using var stream = context.Response.OutputStream;
                     //把处理信息返回到客户端
-                    stream.WriteAsync(returnByteArr, 0, returnByteArr.Length);
+                    stream.Write(returnByteArr, 0, returnByteArr.Length);
                 }
                 else
                 {
@@ -140,11 +140,9 @@ namespace SuperNAT.Server
                                 context.Response.ContentType = httpModel.ContentType;
                                 context.Response.ContentLength64 = byteData.Length;
                                 //把处理信息返回到客户端
-                                stream.WriteAsync(byteData, 0, byteData.Length).ContinueWith(s =>
-                                {
-                                    HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {context.Request.HttpMethod} {context.Request.Url.AbsoluteUri} {httpModel.StatusCode} {httpModel.StatusMessage} {(DateTime.Now - httpModel.RequestTime).TotalMilliseconds}ms");
-                                    ContextDict.Remove(httpModel.SessionId);
-                                });
+                                stream.Write(byteData, 0, byteData.Length);
+                                HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {context.Request.HttpMethod} {context.Request.Url.AbsoluteUri} {httpModel.StatusCode} {httpModel.StatusMessage} {(DateTime.Now - httpModel.RequestTime).TotalMilliseconds}ms");
+                                ContextDict.Remove(httpModel.SessionId);
                             }
                         }
                         break;

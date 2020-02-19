@@ -38,7 +38,11 @@ namespace SuperNAT.Client
                                 {
                                     var body = DataHelper.Decompress(httpModel.Content);//解压
                                     var bodyStr = body.ToUTF8String();
-                                    HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {bodyStr}");
+                                    //记录请求小于1kb的参数
+                                    if (httpModel.Content.Length < 1024)
+                                    {
+                                        HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {bodyStr}");
+                                    }
                                     httpRequest.Content = new StringContent(bodyStr, Encoding.UTF8, httpModel.ContentType.Split(";")[0]);
                                 }
                                 using HttpClient _httpClient = new HttpClient();

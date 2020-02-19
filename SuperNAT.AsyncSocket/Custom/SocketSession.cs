@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Pipelines;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SuperNAT.AsyncSocket
 {
@@ -14,6 +17,8 @@ namespace SuperNAT.AsyncSocket
         public string Local { get; set; }
         public string SessionId { get; set; } = Guid.NewGuid().ToString();
         public DateTime ConnectTime { get; set; } = DateTime.Now;
+        public PipeReader Reader { get; set; }
+        public Stream Stream { get; set; }
 
         public virtual void Close()
         {
@@ -22,7 +27,8 @@ namespace SuperNAT.AsyncSocket
 
         public void Send(byte[] data)
         {
-            Socket?.Send(data);
+            Stream.Write(data);
+            Stream.Flush();
         }
     }
 }

@@ -56,6 +56,23 @@ namespace SuperNAT.AsyncSocket
                 };
                 m_sessionManager.Add(session);
                 OnConnected?.Invoke(session);
+
+                // Create a PipeReader over the network stream
+                if (ServerOption.Security == SslProtocols.None)
+                {
+                    session.Stream = new NetworkStream(session.Socket, true);
+                }
+                else
+                {
+                    ServerOption.SslServerAuthenticationOptions.RemoteCertificateValidationCallback = SSLValidationCallback;
+                    var sslStream = new SslStream(new NetworkStream(session.Socket, true), false);
+                    await sslStream.AuthenticateAsServerAsync(ServerOption.SslServerAuthenticationOptions, CancellationToken.None);
+
+                    session.Stream = sslStream;
+                }
+
+                session.Reader = PipeReader.Create(session.Stream);
+
                 _ = ProcessReadAsync(session);
             }
         }
@@ -69,25 +86,9 @@ namespace SuperNAT.AsyncSocket
         {
             try
             {
-                // Create a PipeReader over the network stream
-                Stream stream = null;
-                if (ServerOption.Security == SslProtocols.None)
-                {
-                    stream = new NetworkStream(session.Socket);
-                }
-                else
-                {
-                    ServerOption.SslServerAuthenticationOptions.RemoteCertificateValidationCallback = SSLValidationCallback;
-                    var sslStream = new SslStream(new NetworkStream(session.Socket, true), false);
-                    await sslStream.AuthenticateAsServerAsync(ServerOption.SslServerAuthenticationOptions, CancellationToken.None);
-
-                    stream = sslStream;
-                }
-                var reader = PipeReader.Create(stream);
-
                 while (true)
                 {
-                    ReadResult result = await reader.ReadAsync();
+                    ReadResult result = await session.Reader.ReadAsync();
                     ReadOnlySequence<byte> buffer = result.Buffer;
 
                     SequencePosition consumed = buffer.Start;
@@ -123,12 +124,12 @@ namespace SuperNAT.AsyncSocket
                     }
                     finally
                     {
-                        reader.AdvanceTo(consumed, examined);
+                        session.Reader.AdvanceTo(consumed, examined);
                     }
                 }
 
                 // Mark the PipeReader as complete.
-                await reader.CompleteAsync();
+                await session.Reader.CompleteAsync();
             }
             catch (Exception ex)
             {

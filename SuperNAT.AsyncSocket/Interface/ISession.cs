@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.IO.Pipelines;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace SuperNAT.AsyncSocket
 {
@@ -16,14 +19,24 @@ namespace SuperNAT.AsyncSocket
         Socket Socket { get; set; }
 
         /// <summary>
+        /// 读取数据PipeReader对象
+        /// </summary>
+        PipeReader Reader { get; set; }
+
+        /// <summary>
+        /// Stream对象
+        /// </summary>
+        Stream Stream { get; set; }
+
+        /// <summary>
         /// 远程连接
         /// </summary>
-        public string Remote { get; set; }
+        string Remote { get; set; }
 
         /// <summary>
         /// 本地连接
         /// </summary>
-        public string Local { get; set; }
+        string Local { get; set; }
 
         /// <summary>
         /// 连接ID

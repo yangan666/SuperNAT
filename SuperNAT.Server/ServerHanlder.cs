@@ -151,13 +151,13 @@ namespace SuperNAT.Server
                     ProtocolType = ProtocolType.Tcp,
                     BackLog = 100,
                     NoDelay = true,
-                    //Security = SslProtocols.Tls12,
-                    //SslServerAuthenticationOptions = new SslServerAuthenticationOptions
-                    //{
-                    //    EnabledSslProtocols = SslProtocols.Tls12,
-                    //    ClientCertificateRequired = false,
-                    //    ServerCertificate = new X509Certificate2(CertFile, CertPassword)
-                    //}
+                    Security = SslProtocols.Tls12,
+                    SslServerAuthenticationOptions = new SslServerAuthenticationOptions
+                    {
+                        EnabledSslProtocols = SslProtocols.Tls12,
+                        ClientCertificateRequired = false,
+                        ServerCertificate = new X509Certificate2(CertFile, CertPassword)
+                    }
                 });
                 NATServer.OnConnected += Connected;
                 NATServer.OnReceived += Received;

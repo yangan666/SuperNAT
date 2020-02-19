@@ -18,6 +18,8 @@ namespace SuperNAT.AsyncSocket
     public class SocketClient<TRequestInfo> where TRequestInfo : IRequestInfo, new()
     {
         public Socket Socket { get; set; }
+        public PipeReader Reader { get; set; }
+        public Stream Stream { get; set; }
         public IReceiveFilter<TRequestInfo> ReceiveFilter { get; set; }
         public ClientOptions ClientOptions { get; set; }
         public bool IsConnected { get; set; } = false;
@@ -47,11 +49,27 @@ namespace SuperNAT.AsyncSocket
             try
             {
                 await Socket.ConnectAsync(new IPEndPoint(IPAddress.Parse(ClientOptions.Ip), ClientOptions.Port));
-                IsConnected = true;
                 Remote = Socket.RemoteEndPoint.ToString();
                 Local = Socket.LocalEndPoint.ToString();
                 HandleLog.WriteLine($"连接服务器[{ClientOptions.Ip}:{ClientOptions.Port}]成功");
+
+                if (ClientOptions.Security == SslProtocols.None)
+                {
+                    Stream = new NetworkStream(Socket, true);
+                }
+                else
+                {
+                    ClientOptions.SslClientAuthenticationOptions.RemoteCertificateValidationCallback = SSLValidationCallback;
+                    var sslStream = new SslStream(new NetworkStream(Socket, true), false);
+                    await sslStream.AuthenticateAsClientAsync(ClientOptions.SslClientAuthenticationOptions, CancellationToken.None);
+
+                    Stream = sslStream;
+                }
+
+                IsConnected = true;
                 OnConnected?.Invoke(Socket);
+
+                Reader = PipeReader.Create(Stream);
                 await ProcessReadAsync();
             }
             catch (Exception ex)
@@ -69,24 +87,10 @@ namespace SuperNAT.AsyncSocket
         {
             try
             {
-                Stream stream = null;
-                if (ClientOptions.Security == SslProtocols.None)
-                {
-                    stream = new NetworkStream(Socket);
-                }
-                else
-                {
-                    ClientOptions.SslClientAuthenticationOptions.RemoteCertificateValidationCallback = SSLValidationCallback;
-                    var sslStream = new SslStream(new NetworkStream(Socket, true), false);
-                    await sslStream.AuthenticateAsClientAsync(ClientOptions.SslClientAuthenticationOptions, CancellationToken.None);
-
-                    stream = sslStream;
-                }
-                var reader = PipeReader.Create(stream);
 
                 while (IsConnected)
                 {
-                    ReadResult result = await reader.ReadAsync();
+                    ReadResult result = await Reader.ReadAsync();
                     ReadOnlySequence<byte> buffer = result.Buffer;
 
                     SequencePosition consumed = buffer.Start;
@@ -122,12 +126,12 @@ namespace SuperNAT.AsyncSocket
                     }
                     finally
                     {
-                        reader.AdvanceTo(consumed, examined);
+                        Reader.AdvanceTo(consumed, examined);
                     }
                 }
 
                 // Mark the PipeReader as complete.
-                await reader.CompleteAsync();
+                await Reader.CompleteAsync();
 
                 // close the connection if get a protocol error
                 Close();
@@ -220,20 +224,8 @@ namespace SuperNAT.AsyncSocket
         {
             try
             {
-                Socket?.Send(data);
-            }
-            catch (Exception ex)
-            {
-                Close();
-                HandleLog.WriteLine(ex.Message);
-            }
-        }
-
-        public async Task SendAsync(ArraySegment<byte> buffer)
-        {
-            try
-            {
-                await Socket?.SendAsync(buffer, SocketFlags.None);
+                Stream.Write(data);
+                Stream.Flush();
             }
             catch (Exception ex)
             {
