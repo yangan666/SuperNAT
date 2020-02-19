@@ -37,7 +37,9 @@ namespace SuperNAT.Client
                                 if (httpRequest.Method != HttpMethod.Get && httpModel.Content?.Length > 0)
                                 {
                                     var body = DataHelper.Decompress(httpModel.Content);//解压
-                                    httpRequest.Content = new StringContent(body.ToUTF8String(), Encoding.UTF8, httpModel.ContentType.Split(";")[0]);
+                                    var bodyStr = body.ToUTF8String();
+                                    HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {bodyStr}");
+                                    httpRequest.Content = new StringContent(bodyStr, Encoding.UTF8, httpModel.ContentType.Split(";")[0]);
                                 }
                                 using HttpClient _httpClient = new HttpClient();
                                 foreach (var item in httpModel.Headers)
