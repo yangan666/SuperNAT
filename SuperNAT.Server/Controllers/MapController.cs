@@ -30,10 +30,19 @@ namespace SuperNAT.Server.Controllers
             }
             else
             {
+                var map = bll.GetOne(model);
                 rst = bll.Update(model);
                 if (rst.Result)
                 {
-                    ServerHanlder.ChangeMap((int)ChangeMapType.修改, model);
+                    if (model.client_id != map.Data.client_id)
+                    {
+                        ServerHanlder.ChangeMap((int)ChangeMapType.新增, model);
+                        ServerHanlder.ChangeMap((int)ChangeMapType.删除, map.Data);
+                    }
+                    else
+                    {
+                        ServerHanlder.ChangeMap((int)ChangeMapType.修改, model);
+                    }
                 }
             }
 

@@ -1,5 +1,6 @@
 ﻿using SuperNAT.Common;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipelines;
@@ -22,24 +23,22 @@ namespace SuperNAT.AsyncSocket
         public PipeReader Reader { get; set; }
         public PipeWriter Writer { get; set; }
 
-        public virtual void Close()
-        {
-            Socket?.Close();
-        }
-
-        private static object lockSend = new object();
         public async void Send(byte[] data)
         {
             try
             {
                 await Writer.WriteAsync(data);
-                await Writer.FlushAsync();
             }
             catch (Exception ex)
             {
                 Close();
                 HandleLog.WriteLine($"Send Error,Socket Close,{ex}");
             }
+        }
+
+        public virtual void Close()
+        {
+            Socket?.Close();
         }
     }
 }

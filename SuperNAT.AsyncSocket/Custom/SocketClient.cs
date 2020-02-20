@@ -228,7 +228,6 @@ namespace SuperNAT.AsyncSocket
             try
             {
                 await Writer.WriteAsync(data);
-                await Writer.FlushAsync();
             }
             catch (Exception ex)
             {
