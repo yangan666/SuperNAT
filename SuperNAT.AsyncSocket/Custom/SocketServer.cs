@@ -72,6 +72,7 @@ namespace SuperNAT.AsyncSocket
                 }
 
                 session.Reader = PipeReader.Create(session.Stream);
+                session.Writer = PipeWriter.Create(session.Stream);
 
                 _ = ProcessReadAsync(session);
             }

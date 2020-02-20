@@ -18,8 +18,9 @@ namespace SuperNAT.AsyncSocket
     public class SocketClient<TRequestInfo> where TRequestInfo : IRequestInfo, new()
     {
         public Socket Socket { get; set; }
-        public PipeReader Reader { get; set; }
         public Stream Stream { get; set; }
+        public PipeReader Reader { get; set; }
+        public PipeWriter Writer { get; set; }
         public IReceiveFilter<TRequestInfo> ReceiveFilter { get; set; }
         public ClientOptions ClientOptions { get; set; }
         public bool IsConnected { get; set; } = false;
@@ -66,10 +67,12 @@ namespace SuperNAT.AsyncSocket
                     Stream = sslStream;
                 }
 
+                Reader = PipeReader.Create(Stream);
+                Writer = PipeWriter.Create(Stream);
+
                 IsConnected = true;
                 OnConnected?.Invoke(Socket);
 
-                Reader = PipeReader.Create(Stream);
                 await ProcessReadAsync();
             }
             catch (Exception ex)
@@ -220,16 +223,12 @@ namespace SuperNAT.AsyncSocket
             return true;
         }
 
-        private static object lockSend = new object();
-        public void Send(byte[] data)
+        public async void Send(byte[] data)
         {
             try
             {
-                lock (lockSend)
-                {
-                    Stream.Write(data);
-                    Stream.Flush();
-                }
+                await Writer.WriteAsync(data);
+                await Writer.FlushAsync();
             }
             catch (Exception ex)
             {

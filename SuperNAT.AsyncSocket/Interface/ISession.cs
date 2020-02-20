@@ -19,14 +19,19 @@ namespace SuperNAT.AsyncSocket
         Socket Socket { get; set; }
 
         /// <summary>
+        /// Stream对象
+        /// </summary>
+        Stream Stream { get; set; }
+
+        /// <summary>
         /// 读取数据PipeReader对象
         /// </summary>
         PipeReader Reader { get; set; }
 
         /// <summary>
-        /// Stream对象
+        /// 发送数据PipeWriter对象
         /// </summary>
-        Stream Stream { get; set; }
+        PipeWriter Writer { get; set; }
 
         /// <summary>
         /// 远程连接
