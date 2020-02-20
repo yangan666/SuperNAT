@@ -90,7 +90,6 @@ namespace SuperNAT.AsyncSocket
         {
             try
             {
-
                 while (IsConnected)
                 {
                     ReadResult result = await Reader.ReadAsync();
@@ -207,6 +206,7 @@ namespace SuperNAT.AsyncSocket
                 }
                 else
                 {
+                    examined = consumed = buffer.End;
                     var packageInfo = new TRequestInfo()
                     {
                         Success = true,
@@ -223,11 +223,14 @@ namespace SuperNAT.AsyncSocket
             return true;
         }
 
-        public async void Send(byte[] data)
+        public void Send(byte[] data)
         {
             try
             {
-                await Writer.WriteAsync(data);
+                lock (Stream)
+                {
+                    Stream.Write(data);
+                }
             }
             catch (Exception ex)
             {

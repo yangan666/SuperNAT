@@ -142,7 +142,7 @@ namespace SuperNAT.Server
                                 //把处理信息返回到客户端
                                 stream.WriteAsync(byteData, 0, byteData.Length).ContinueWith((t) =>
                                 {
-                                    HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {context.Request.HttpMethod} {context.Request.Url.AbsoluteUri} {httpModel.StatusCode} {httpModel.StatusMessage} {(DateTime.Now - httpModel.RequestTime).TotalMilliseconds}ms");
+                                    HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {context.Request.HttpMethod} {context.Request.Url.AbsoluteUri} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(byteData.Length * 1.00 / 1024, 1)}KB {(DateTime.Now - httpModel.RequestTime).TotalMilliseconds}ms");
                                     ContextDict.Remove(httpModel.SessionId);
                                 });
                             }

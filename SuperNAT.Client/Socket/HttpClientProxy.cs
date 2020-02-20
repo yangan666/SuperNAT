@@ -74,7 +74,8 @@ namespace SuperNAT.Client
                                     }
                                 }
                                 var returnContent = DataHelper.StreamToBytes(response.Content.ReadAsStreamAsync().Result);
-                                httpModel.Content = DataHelper.Compress(returnContent);
+                                if (returnContent.Length > 0)
+                                    httpModel.Content = DataHelper.Compress(returnContent);
                                 var pack = PackHelper.CreatePack(new JsonData()
                                 {
                                     Type = (int)JsonType.HTTP,
@@ -82,7 +83,7 @@ namespace SuperNAT.Client
                                     Data = httpModel.ToJson()
                                 });
                                 natClient?.Send(pack);
-                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {httpModel.StatusCode} {httpModel.StatusMessage}");
+                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(returnContent.Length * 1.00 / 1024, 1)}KB");
                                 break;
                             }
                     }

@@ -23,11 +23,14 @@ namespace SuperNAT.AsyncSocket
         public PipeReader Reader { get; set; }
         public PipeWriter Writer { get; set; }
 
-        public async void Send(byte[] data)
+        public void Send(byte[] data)
         {
             try
             {
-                await Writer.WriteAsync(data);
+                lock (Stream)
+                {
+                    Stream.Write(data);
+                }
             }
             catch (Exception ex)
             {
