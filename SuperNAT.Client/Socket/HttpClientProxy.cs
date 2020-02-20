@@ -63,6 +63,7 @@ namespace SuperNAT.Client
                                 httpModel.StatusMessage = response.StatusCode.ToString();
                                 httpModel.Local = map.local_endpoint;
                                 httpModel.Headers = response.Headers.ToDictionary();
+                                httpModel.Headers.Remove("Transfer-Encoding");//response收到的是完整的 这个响应头要去掉 不然浏览器解析出错
                                 httpModel.ResponseTime = DateTime.Now;
                                 foreach (var item in response.Content.Headers)
                                 {
