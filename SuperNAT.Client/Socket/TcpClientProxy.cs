@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SuperNAT.Client
@@ -90,12 +91,20 @@ namespace SuperNAT.Client
                         {
                             //先讲16进制字符串转为byte数组  再gzip解压
                             var request = DataHelper.Decompress(tcpModel.Content);
-                            //发送原始包
-                            if (IsConnected)
+                            int waitTimes = 5;
+                            while (!IsConnected && waitTimes > 0)
                             {
-                                Send(request);
-                                HandleLog.WriteLine($"----> {RemoteSession.SessionId} 发送报文{request.Length}字节");
+                                Thread.Sleep(500);
+                                waitTimes--;
                             }
+                            //发送原始包
+                            if (!IsConnected)
+                            {
+                                HandleLog.WriteLine($"----> {RemoteSession.SessionId} 未连接");
+                                return;
+                            }
+                            Send(request);
+                            HandleLog.WriteLine($"----> {RemoteSession.SessionId} 发送报文{request.Length}字节");
                         }
                         break;
                     case (int)TcpAction.Close:

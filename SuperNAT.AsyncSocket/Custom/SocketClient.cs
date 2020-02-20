@@ -79,10 +79,10 @@ namespace SuperNAT.AsyncSocket
             {
                 if (IsConnected)
                 {
-                    HandleLog.WriteLine($"客户端处理异常：{ex}");
                     Close();
                 }
                 IsConnected = false;
+                HandleLog.WriteLine($"客户端处理异常：{ex}");
             }
         }
 
