@@ -117,7 +117,7 @@ namespace SuperNAT.AsyncSocket
         public Dictionary<string, string> Headers = new Dictionary<string, string>();
 
 
-        public byte[] Write404()
+        public byte[] Write()
         {
             var sb = new StringBuilder();
 

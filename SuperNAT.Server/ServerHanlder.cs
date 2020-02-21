@@ -66,8 +66,10 @@ namespace SuperNAT.Server
                         switch (item.protocol)
                         {
                             case "http":
+                                StartHttpServer(item);
+                                break;
                             case "https":
-                                StartWebServer(item);
+                                StartHttpsServer(item);
                                 break;
                             case "tcp":
                             case "udp":
@@ -234,7 +236,7 @@ namespace SuperNAT.Server
         #endregion
 
         #region Web服务
-        private static void StartWebServer(ServerConfig serverConfig)
+        private static void StartHttpServer(ServerConfig serverConfig)
         {
             try
             {
@@ -243,6 +245,41 @@ namespace SuperNAT.Server
                     var server = new HttpServer(port) { NATServer = NATServer };
                     server.Start();
                     HttpServerList.Add(server);
+                }
+
+                HandleLog.WriteLine($"{serverConfig.protocol}服务启动成功，监听端口：{serverConfig.port}");
+            }
+            catch (Exception ex)
+            {
+                HandleLog.WriteLine($"{serverConfig.protocol}服务初始化失败，端口：{serverConfig.port}，{ex}");
+            }
+        }
+
+        private static void StartHttpsServer(ServerConfig serverConfig)
+        {
+            try
+            {
+                foreach (var port in serverConfig.port_list)
+                {
+                    var server = new HttpsServer(new ServerOption()
+                    {
+                        Ip = "Any",
+                        Port = port,
+                        ProtocolType = ProtocolType.Tcp,
+                        BackLog = 100,
+                        NoDelay = true,
+                        Security = serverConfig.is_ssl ? SslProtocols.Tls12 : SslProtocols.None,
+                        SslServerAuthenticationOptions = serverConfig.is_ssl ? new SslServerAuthenticationOptions
+                        {
+                            EnabledSslProtocols = SslProtocols.Tls12,
+                            ServerCertificate = new X509Certificate2(string.IsNullOrEmpty(serverConfig.certfile) ? CertFile : serverConfig.certfile, string.IsNullOrEmpty(serverConfig.certpwd) ? CertPassword : serverConfig.certpwd)
+                        } : null
+                    })
+                    {
+                        NATServer = NATServer
+                    };
+                    _ = server.StartAsync();
+                    HttpsServerList.Add(server);
                 }
 
                 HandleLog.WriteLine($"{serverConfig.protocol}服务启动成功，监听端口：{serverConfig.port}");

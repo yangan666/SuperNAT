@@ -64,7 +64,7 @@ namespace SuperNAT.Server
                             Body = "nat client not found"
                         };
                         //把处理信息返回到客户端
-                        session.Send(response.Write404());
+                        session.Send(response.Write());
                     }
                     else
                     {
@@ -97,43 +97,41 @@ namespace SuperNAT.Server
             }
         }
 
-        public void ProcessData(NatSession session, NatRequestInfo requestInfo, TcpModel tcpModel)
+        public void ProcessData(NatSession session, NatRequestInfo requestInfo, HttpModel httpModel)
         {
             try
             {
                 switch (requestInfo.Body.Action)
                 {
-                    case (int)TcpAction.TransferData:
+                    case (int)HttpAction.Response:
                         {
-                            //响应请求
-                            int count = 0;
-                            mark:
-                            var tcpSession = GetSingle(c => c.SessionId == tcpModel.SessionId);
-                            if (tcpSession == null)
+                            var context = GetSingle(c => c.SessionId == httpModel.SessionId);
+                            if (context == null)
                             {
-                                count++;
-                                Thread.Sleep(500);
-                                if (count < 5)
-                                {
-                                    goto mark;
-                                }
-                                HandleLog.WriteLine($"tcpSession【{tcpModel.SessionId}】不存在");
+                                HandleLog.WriteLine($"未找到上下文context，SessionId={httpModel.SessionId}");
                                 return;
                             }
-                            //先讲16进制字符串转为byte数组  再gzip解压
-                            var response = DataHelper.Decompress(tcpModel.Content);
-                            tcpSession.Send(response);
-                            HandleLog.WriteLine($"----> {tcpSession.SessionId} 发送报文{response.Length}字节");
-                        }
-                        break;
-                    case (int)TcpAction.Close:
-                        {
-                            //关闭请求
-                            var tcpSession = GetSingle(c => c.SessionId == tcpModel.SessionId);
-                            if (tcpSession != null)
+                            HttpResponse httpResponse = new HttpResponse()
                             {
-                                tcpSession.Close();
-                                HandleLog.WriteLine($"连接【{tcpSession.SessionId},{tcpSession.Remote}】关闭成功");
+                                HttpVersion = httpModel.HttpVersion,
+                                Status = httpModel.StatusCode,
+                                StatusMessage = httpModel.StatusMessage
+                            };
+                            if (httpModel.Content?.Length > 0)
+                            {
+                                //解压
+                                var byteData = DataHelper.Decompress(httpModel.Content);
+                                httpResponse.Body = byteData.ToUTF8String();
+                                //把处理信息返回到客户端
+                                context.Send(byteData);
+
+                                var timeSpan = (DateTime.Now - httpModel.RequestTime);
+                                var totalSize = byteData.Length * 1.00 / 1024;
+                                var speed = Math.Round(totalSize / timeSpan.TotalSeconds, 1);
+                                HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {httpModel.Method} {httpModel.Host}{httpModel.Path} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(totalSize, 1)}KB {timeSpan.TotalMilliseconds}ms {speed}KB/s");
+
+                                //关闭http连接
+                                context.Close();
                             }
                         }
                         break;
@@ -141,7 +139,7 @@ namespace SuperNAT.Server
             }
             catch (Exception ex)
             {
-                HandleLog.WriteLine($"TcpServer穿透处理异常，{ex}");
+                HandleLog.WriteLine($"HttpsServer ProcessData穿透处理异常，{ex}");
             }
         }
     }
