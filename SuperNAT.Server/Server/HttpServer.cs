@@ -132,17 +132,16 @@ namespace SuperNAT.Server
                                 {
                                     context.Response.AddHeader(item.Key, item.Value);
                                 }
-                                foreach (var item in httpModel.ContentHeaders)
-                                {
-                                    context.Response.AppendHeader(item.Key, item.Value);
-                                }
                                 context.Response.StatusCode = httpModel.StatusCode;
                                 context.Response.ContentType = httpModel.ContentType;
                                 context.Response.ContentLength64 = byteData.Length;
                                 //把处理信息返回到客户端
                                 stream.WriteAsync(byteData, 0, byteData.Length).ContinueWith((t) =>
                                 {
-                                    HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {context.Request.HttpMethod} {context.Request.Url.AbsoluteUri} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(byteData.Length * 1.00 / 1024, 1)}KB {(DateTime.Now - httpModel.RequestTime).TotalMilliseconds}ms");
+                                    var timeSpan = (DateTime.Now - httpModel.RequestTime);
+                                    var totalSize = byteData.Length * 1.00 / 1024;
+                                    var speed = Math.Round(totalSize / timeSpan.TotalSeconds, 1);
+                                    HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {context.Request.HttpMethod} {context.Request.Url.AbsoluteUri} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(totalSize, 1)}KB {timeSpan.TotalMilliseconds}ms {speed}KB/s");
                                     ContextDict.Remove(httpModel.SessionId);
                                 });
                             }

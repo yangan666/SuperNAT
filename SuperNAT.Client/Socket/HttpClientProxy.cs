@@ -63,16 +63,16 @@ namespace SuperNAT.Client
                                 httpModel.StatusMessage = response.StatusCode.ToString();
                                 httpModel.Local = map.local_endpoint;
                                 httpModel.Headers = response.Headers.ToDictionary();
-                                httpModel.Headers.Remove("Transfer-Encoding");//response收到的是完整的 这个响应头要去掉 不然浏览器解析出错
                                 httpModel.ResponseTime = DateTime.Now;
                                 foreach (var item in response.Content.Headers)
                                 {
-                                    httpModel.ContentHeaders.Add(item.Key, string.Join(";", item.Value));
+                                    httpModel.Headers.Add(item.Key, string.Join(";", item.Value));
                                     if (item.Key == "Content-Type")
                                     {
                                         httpModel.ContentType = string.Join(";", item.Value);
                                     }
                                 }
+                                httpModel.Headers.Remove("Transfer-Encoding");//response收到的是完整的 这个响应头要去掉 不然浏览器解析出错
                                 var returnContent = DataHelper.StreamToBytes(response.Content.ReadAsStreamAsync().Result);
                                 if (returnContent.Length > 0)
                                     httpModel.Content = DataHelper.Compress(returnContent);
@@ -83,7 +83,7 @@ namespace SuperNAT.Client
                                     Data = httpModel.ToJson()
                                 });
                                 natClient?.Send(pack);
-                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(returnContent.Length * 1.00 / 1024, 1)}KB {(DateTime.Now - httpModel.RequestTime).TotalMilliseconds}ms");
+                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(returnContent.Length * 1.00 / 1024, 1)}KB");
                                 break;
                             }
                     }

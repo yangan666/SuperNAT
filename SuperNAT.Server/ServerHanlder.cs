@@ -27,6 +27,7 @@ namespace SuperNAT.Server
         public static string CertPassword = "IoM@1234";
         public static NatServer NATServer { get; set; }
         public static List<HttpServer> HttpServerList { get; set; } = new List<HttpServer>();
+        public static List<HttpsServer> HttpsServerList { get; set; } = new List<HttpsServer>();
         public static List<TcpServer> TcpServerList { get; set; } = new List<TcpServer>();
 
         public void Start(string[] args)

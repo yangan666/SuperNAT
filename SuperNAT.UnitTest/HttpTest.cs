@@ -26,7 +26,7 @@ namespace SuperNAT.UnitTest
                 using HttpRequestMessage httpRequest = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Get,
-                    RequestUri = new Uri($"http://ylog.supernat.cn:10001/Script/index.js"),
+                    RequestUri = new Uri($"http://water.supernat.cn:10001/static/js/vendor.c34ca220daf55aa22f65.js"),
                     //Content = new StringContent(new { }.ToJson(), Encoding.UTF8, "application/json")
                 };
 

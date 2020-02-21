@@ -84,11 +84,59 @@ namespace SuperNAT.AsyncSocket
         public string Method { get; set; }
         public string Path { get; set; }
         public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
-        public Dictionary<string, string> ContentHeaders { get; set; } = new Dictionary<string, string>();
         public string ContentType { get; set; }
         public int StatusCode { get; set; }
         public string StatusMessage { get; set; }
         public DateTime ResponseTime { get; set; }
+    }
+
+    public enum FilterStatus
+    {
+        None,
+        LoadingHeader,
+        LoadingBody,
+        Completed
+    }
+
+    public class HttpResponse
+    {
+
+        public HttpResponse()
+        {
+            Headers["Content-Type"] = "text/html";
+        }
+
+        public string HttpVersion { get; set; } = "HTTP/1.1";
+
+        public int Status { get; set; }
+
+        public string StatusMessage { get; set; } = "OK";
+
+        public string Body { get; set; }
+
+        public Dictionary<string, string> Headers = new Dictionary<string, string>();
+
+
+        public byte[] Write404()
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine($"{HttpVersion} {Status} {StatusMessage}");
+            foreach (var item in Headers)
+                sb.AppendLine($"{item.Key}: {item.Value}");
+            if (!string.IsNullOrWhiteSpace(Body))
+            {
+                sb.AppendLine($"Content-Length: {Encoding.UTF8.GetBytes(Body).Length}");
+            }
+
+            sb.AppendLine("");
+            if (!string.IsNullOrWhiteSpace(Body))
+            {
+                sb.Append(Body);
+            }
+
+            return Encoding.UTF8.GetBytes(sb.ToString());
+        }
     }
 
     public class ServerMessage
