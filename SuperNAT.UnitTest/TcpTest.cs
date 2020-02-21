@@ -21,7 +21,7 @@ namespace SuperNAT.UnitTest
             {
                 Console.WriteLine(s);
             };
-            var hex = "7E7E010040803540000037002B02FCA7170206163612F1F1004080354050F0F01702061636201900000026190131433923009980993812118203BAFE";
+            var hex = "01 30 30 37 37 02 7B 22 74 79 70 65 22 3A 22 67 65 74 54 6F 6B 65 6E 22 2C 22 76 65 72 73 69 6F 6E 22 3A 22 31 2E 30 2E 30 2E 30 22 7D 03 36 36 63 33 39 65 62 62 64 32 61 63 36 30 32 66 33 64 32 34 32 32 36 35 31 65 33 61 66 61 31 66 04";
             var bytes = DataHelper.HexToByte(hex);
 
             SocketClient<RequestInfo> socketClient = new SocketClient<RequestInfo>(new ClientOptions()

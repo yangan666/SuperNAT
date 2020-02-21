@@ -220,8 +220,21 @@ namespace SuperNAT.Client
                         break;
                     case (byte)JsonType.TCP:
                         {
+                            int waitTimes = 50;
                             var tcpModel = packageInfo.Body.Data.FromJson<TcpModel>();
-                            var clientProxy = TcpClientProxyList.Find(c => c.RemoteSession.SessionId == tcpModel.SessionId);
+                            TcpClientProxy clientProxy = null;
+                        mark:
+                            clientProxy = TcpClientProxyList.Find(c => c.RemoteSession.SessionId == tcpModel.SessionId);
+                            if (packageInfo.Body.Action == (int)TcpAction.TransferData)
+                            {
+                                if ((clientProxy == null || !clientProxy.IsConnected) && waitTimes >= 0)
+                                {
+                                    HandleLog.WriteLine($"----> {tcpModel.SessionId} 未连接  IsConnected={clientProxy?.IsConnected.ToString() ?? "NULL"} ProxyCount={TcpClientProxyList.Count}");
+                                    Thread.Sleep(100);
+                                    waitTimes--;
+                                    goto mark;
+                                }
+                            }
                             if (clientProxy == null)
                             {
                                 var arr = tcpModel.Local.Split(":");

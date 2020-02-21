@@ -20,14 +20,14 @@ namespace SuperNAT.UnitTest
         [TestMethod]
         public void TestHttp()
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 using var client = new HttpClient();
                 using HttpRequestMessage httpRequest = new HttpRequestMessage()
                 {
-                    Method = HttpMethod.Post,
-                    RequestUri = new Uri($"http://water.supernat.cn:10001/Api/Device/GetList"),
-                    Content = new StringContent(new { }.ToJson(), Encoding.UTF8, "application/json")
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri($"http://ylog.supernat.cn:10001/Script/index.js"),
+                    //Content = new StringContent(new { }.ToJson(), Encoding.UTF8, "application/json")
                 };
 
                 var response = client.SendAsync(httpRequest).Result;

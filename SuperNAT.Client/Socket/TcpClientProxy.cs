@@ -39,7 +39,7 @@ namespace SuperNAT.Client
         private void OnClientConnected(Socket socket)
         {
             ClientHandler.TcpClientProxyList.Add(this);
-            HandleLog.WriteLine($"【{RemoteSession.SessionId},{Local}】已连接到服务器【{Remote}】");
+            HandleLog.WriteLine($"【{RemoteSession.SessionId},{Local}】已连接到服务器【{Remote}】  IsConnected={IsConnected}");
         }
 
         private void OnPackageReceived(Socket socket, NatPackageInfo packageInfo)
@@ -91,18 +91,7 @@ namespace SuperNAT.Client
                         {
                             //先讲16进制字符串转为byte数组  再gzip解压
                             var request = DataHelper.Decompress(tcpModel.Content);
-                            int waitTimes = 5;
-                            while (!IsConnected && waitTimes > 0)
-                            {
-                                Thread.Sleep(500);
-                                waitTimes--;
-                            }
                             //发送原始包
-                            if (!IsConnected)
-                            {
-                                HandleLog.WriteLine($"----> {RemoteSession.SessionId} 未连接");
-                                return;
-                            }
                             Send(request);
                             HandleLog.WriteLine($"----> {RemoteSession.SessionId} 发送报文{request.Length}字节");
                         }
