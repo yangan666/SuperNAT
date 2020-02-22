@@ -1,5 +1,6 @@
 ﻿using SuperNAT.AsyncSocket;
 using SuperNAT.Common;
+using SuperNAT.Model;
 using System;
 using System.Buffers;
 using System.Collections.Generic;

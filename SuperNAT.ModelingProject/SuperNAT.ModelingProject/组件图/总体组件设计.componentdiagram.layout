@@ -1,23 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<componentDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 13.25, 9.375" name="总体组件设计">
+<componentDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 13.5, 10.125" name="总体组件设计">
   <componentModelMoniker Id="dd05c00d-1ec3-4382-9ce4-5548156479f2" />
   <nestedChildShapes>
-    <componentShape Id="e33b588d-7db1-49ea-9258-f200f69890e9" absoluteBounds="5.875, 0.75, 2.1145833333333321, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="e33b588d-7db1-49ea-9258-f200f69890e9" absoluteBounds="5.5, 0.5, 2.1145833333333321, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="fd0eef2e-cd96-45ce-83ae-a4aa43936601" LastKnownName="SuperNAT.Server" />
     </componentShape>
-    <componentShape Id="ed6a1af8-55ff-4b79-a86a-85f36866aec7" absoluteBounds="2.625, 1, 1.90625, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="ed6a1af8-55ff-4b79-a86a-85f36866aec7" absoluteBounds="2.625, 0.5, 1.90625, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="af50e260-acc2-48c7-91c2-360d7dae91f6" LastKnownName="SuperNAT.Client" />
     </componentShape>
     <componentShape Id="ba54711c-7527-4550-bb59-681fab8522b2" absoluteBounds="4.5, 2.875, 1.90625, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="823a1170-1205-4774-af9e-37c3b178444d" LastKnownName="SuperNAT.Common" />
     </componentShape>
-    <componentShape Id="02b37f5b-9915-4f3d-b9a5-d28ea77029c4" absoluteBounds="5, 4.875, 1.979166666666667, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0.95" whiteBoxBoundsWidth="1.979166666666667" blackBoxBoundsHeight="0.7" blackBoxBoundsWidth="1.979166666666667" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0" whiteBoxSettingsInitialized="true" blackBoxSettingsInitialized="true">
+    <componentShape Id="02b37f5b-9915-4f3d-b9a5-d28ea77029c4" absoluteBounds="4.75, 5.625, 1.979166666666667, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0.95" whiteBoxBoundsWidth="1.979166666666667" blackBoxBoundsHeight="0.7" blackBoxBoundsWidth="1.979166666666667" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0" whiteBoxSettingsInitialized="true" blackBoxSettingsInitialized="true">
       <componentMoniker Id="f4b982d2-05cd-44a7-b474-b06a40c0bd2b" LastKnownName="IServer" />
     </componentShape>
-    <componentShape Id="b9e02aec-599f-4070-ae35-e73a6d93489c" absoluteBounds="2.125, 6.375, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="b9e02aec-599f-4070-ae35-e73a6d93489c" absoluteBounds="1.875, 7.125, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="e07838d0-a821-4dba-9bcb-d053b96ecb33" LastKnownName="HttpServer" />
     </componentShape>
-    <dependencyConnector edgePoints="[(5 : 5.35); (2.875 : 5.35); (2.875 : 6.375)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
+    <dependencyConnector edgePoints="[(4.75 : 6.1); (2.625 : 6.1); (2.625 : 7.125)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
       <dependencyMoniker Id="0917014b-e3eb-49f9-ae54-89272cc8d106" />
       <relativeChildShapes />
       <nodes>
@@ -25,19 +25,19 @@
         <componentShapeMoniker Id="b9e02aec-599f-4070-ae35-e73a6d93489c" />
       </nodes>
     </dependencyConnector>
-    <componentShape Id="2a587d0f-8c22-4423-bb08-f2ca82e83a7e" absoluteBounds="6.75, 6.375, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="2a587d0f-8c22-4423-bb08-f2ca82e83a7e" absoluteBounds="6.5, 7.125, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="aedd2274-3f99-4ff2-aa34-db4d4bb7397c" LastKnownName="TcpServer" />
     </componentShape>
-    <componentShape Id="d455b224-3608-4871-8d40-ba550a8951fd" absoluteBounds="9, 6.375, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="d455b224-3608-4871-8d40-ba550a8951fd" absoluteBounds="8.75, 7.125, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="0e52929c-7ac9-4ed8-9b52-71304a0ef404" LastKnownName="UdpServer" />
     </componentShape>
-    <componentShape Id="dfd3e5ed-9473-4e3a-a7d8-1dd62d22dfaf" absoluteBounds="4.125, 6.375, 1.9895833333333339, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="dfd3e5ed-9473-4e3a-a7d8-1dd62d22dfaf" absoluteBounds="3.875, 7.125, 1.9895833333333339, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="820d0cc4-9c07-46ff-ad52-bf89680d1cf0" LastKnownName="WebSocketServer" />
     </componentShape>
-    <componentShape Id="39c006e4-3efd-4c56-a2e6-dd514301aac9" absoluteBounds="2.125, 8.125, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="39c006e4-3efd-4c56-a2e6-dd514301aac9" absoluteBounds="1.875, 8.875, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="6d6b0b2b-d8cb-4654-872d-a3a15d4fd974" LastKnownName="HttpListener" />
     </componentShape>
-    <dependencyConnector edgePoints="[(5.55729166666667 : 5.825); (5.55729166666667 : 6.375)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
+    <dependencyConnector edgePoints="[(5.30729166666667 : 6.575); (5.30729166666667 : 7.125)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
       <dependencyMoniker Id="d0af15d3-2f11-4f40-abd7-ec66b14bf927" />
       <relativeChildShapes />
       <nodes>
@@ -45,7 +45,7 @@
         <componentShapeMoniker Id="dfd3e5ed-9473-4e3a-a7d8-1dd62d22dfaf" />
       </nodes>
     </dependencyConnector>
-    <dependencyConnector edgePoints="[(6.86458333333333 : 5.825); (6.86458333333333 : 6.375)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
+    <dependencyConnector edgePoints="[(6.61458333333333 : 6.575); (6.61458333333333 : 7.125)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
       <dependencyMoniker Id="f2e0a606-6988-4235-af56-3dd7172f6026" />
       <relativeChildShapes />
       <nodes>
@@ -53,7 +53,7 @@
         <componentShapeMoniker Id="2a587d0f-8c22-4423-bb08-f2ca82e83a7e" />
       </nodes>
     </dependencyConnector>
-    <dependencyConnector edgePoints="[(6.97916666666667 : 5.35); (9.75 : 5.35); (9.75 : 6.375)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
+    <dependencyConnector edgePoints="[(6.72916666666667 : 6.1); (9.5 : 6.1); (9.5 : 7.125)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
       <dependencyMoniker Id="dafabc1e-1b2e-4cfb-903e-eaae28f42705" />
       <relativeChildShapes />
       <nodes>
@@ -61,7 +61,7 @@
         <componentShapeMoniker Id="d455b224-3608-4871-8d40-ba550a8951fd" />
       </nodes>
     </dependencyConnector>
-    <dependencyConnector edgePoints="[(2.875 : 7.325); (2.875 : 8.125)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
+    <dependencyConnector edgePoints="[(2.625 : 8.075); (2.625 : 8.875)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
       <dependencyMoniker Id="ce2cfffc-121f-4004-9e93-9960bb8570a9" />
       <relativeChildShapes />
       <nodes>
@@ -69,7 +69,7 @@
         <componentShapeMoniker Id="39c006e4-3efd-4c56-a2e6-dd514301aac9" />
       </nodes>
     </dependencyConnector>
-    <dependencyConnector edgePoints="[(5.11979166666667 : 7.325); (5.11979166666667 : 8.6); (3.625 : 8.6)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
+    <dependencyConnector edgePoints="[(4.86979166666667 : 8.075); (4.86979166666667 : 9.35); (3.375 : 9.35)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
       <dependencyMoniker Id="2b823f5b-9845-4eb7-8741-2849ecfa803c" />
       <relativeChildShapes />
       <nodes>
@@ -77,10 +77,10 @@
         <componentShapeMoniker Id="39c006e4-3efd-4c56-a2e6-dd514301aac9" />
       </nodes>
     </dependencyConnector>
-    <componentShape Id="c8bc0763-5804-4773-b31c-6d3e04fd7233" absoluteBounds="7.875, 8, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="c8bc0763-5804-4773-b31c-6d3e04fd7233" absoluteBounds="7.625, 8.75, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="c4e58d8c-ca18-4adb-bada-636d723df7d5" LastKnownName="SocketServer" />
     </componentShape>
-    <dependencyConnector edgePoints="[(8.0625 : 7.325); (8.0625 : 8)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
+    <dependencyConnector edgePoints="[(7.8125 : 8.075); (7.8125 : 8.75)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
       <dependencyMoniker Id="938c6a76-9a39-4742-9a4f-96ddc37f9f21" />
       <relativeChildShapes />
       <nodes>
@@ -88,7 +88,7 @@
         <componentShapeMoniker Id="c8bc0763-5804-4773-b31c-6d3e04fd7233" />
       </nodes>
     </dependencyConnector>
-    <dependencyConnector edgePoints="[(9.1875 : 7.325); (9.1875 : 8)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
+    <dependencyConnector edgePoints="[(8.9375 : 8.075); (8.9375 : 8.75)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black">
       <dependencyMoniker Id="d6088a4a-8bf7-4dd3-ac6c-4429847b93c4" />
       <relativeChildShapes />
       <nodes>
@@ -96,22 +96,22 @@
         <componentShapeMoniker Id="c8bc0763-5804-4773-b31c-6d3e04fd7233" />
       </nodes>
     </dependencyConnector>
-    <componentShape Id="92e90052-4bbe-4c40-b7ad-27ac7bb39e9c" absoluteBounds="7.25, 3, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="92e90052-4bbe-4c40-b7ad-27ac7bb39e9c" absoluteBounds="11.625, 0.5, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="5f340060-de62-46f4-9406-cf1c5f17a407" LastKnownName="SuperNAT.Dal" />
     </componentShape>
-    <componentShape Id="13ea20b7-0d91-479e-8f2c-9098de850455" absoluteBounds="9.625, 0.75, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="13ea20b7-0d91-479e-8f2c-9098de850455" absoluteBounds="9.25, 0.5, 1.5, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="31374e34-20ce-4007-aef3-12df1532d59c" LastKnownName="SuperNAT.Bll" />
     </componentShape>
-    <componentShape Id="d4858359-a15c-4e33-adb3-6d45914d3e0a" absoluteBounds="11, 4.125, 1.9895833333333322, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
-      <componentMoniker Id="e828c909-4742-4935-bdf9-036aefe115fb" LastKnownName="SuperNAT.Socket" />
+    <componentShape Id="d4858359-a15c-4e33-adb3-6d45914d3e0a" absoluteBounds="6.75, 4.125, 2.3124999999999982, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+      <componentMoniker Id="e828c909-4742-4935-bdf9-036aefe115fb" LastKnownName="SuperNAT.AsyncSocket" />
     </componentShape>
-    <componentShape Id="e46deadb-3298-4523-a448-80b183886770" absoluteBounds="8.375, 4.125, 2.0416666666666679, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="e46deadb-3298-4523-a448-80b183886770" absoluteBounds="4.125, 4.125, 2.0416666666666679, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="751faa82-c6b4-479b-8e34-03e0b4db52df" LastKnownName="SuperNAT.Http" />
     </componentShape>
-    <componentShape Id="4cb0e65a-9e55-4563-987d-30ef6304dd7c" absoluteBounds="9.75, 2.75, 2.1458333333333321, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="4cb0e65a-9e55-4563-987d-30ef6304dd7c" absoluteBounds="7.625, 2.75, 2.1458333333333321, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="bf48c230-f3a2-4117-abe2-4cf7f89300da" LastKnownName="SuperNAT.WebSocket" />
     </componentShape>
-    <componentShape Id="a637d28f-8481-4880-a751-60174cd22008" absoluteBounds="2, 2.875, 1.71875, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
+    <componentShape Id="a637d28f-8481-4880-a751-60174cd22008" absoluteBounds="11.5, 2.5, 1.71875, 0.95" customColor="161, 199, 231" whiteBoxBoundsHeight="0" whiteBoxBoundsWidth="0" blackBoxBoundsHeight="0" blackBoxBoundsWidth="0" whiteBoxTopEdgeShapesCount="0" whiteBoxRightEdgeShapesCount="0" whiteBoxBottomEdgeShapesCount="0" whiteBoxLeftEdgeShapesCount="0" blackBoxTopEdgeShapesCount="0" blackBoxRightEdgeShapesCount="0" blackBoxBottomEdgeShapesCount="0" blackBoxLeftEdgeShapesCount="0">
       <componentMoniker Id="4953a173-7719-4488-b7bf-186e8e6f1d5d" LastKnownName="SuperNAT.Model" />
     </componentShape>
   </nestedChildShapes>

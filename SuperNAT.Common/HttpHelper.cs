@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -21,7 +22,7 @@ namespace SuperNAT.Common
             {
                 if (url.StartsWith("https"))
                 {
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 }
                 //反向代理手动设置cookies
                 client = new HttpClient(new HttpClientHandler() { UseCookies = false });
@@ -105,7 +106,7 @@ namespace SuperNAT.Common
             {
                 if (url.StartsWith("https"))
                 {
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 }
                 //反向代理手动设置cookies
                 client = new HttpClient(new HttpClientHandler() { UseCookies = false });
@@ -162,6 +163,49 @@ namespace SuperNAT.Common
             finally
             {
                 client.Dispose();
+            }
+
+            return result;
+        }
+
+        public static string HttpsRequest(string method, string url, string postData = null, Dictionary<string, string> headers = null, string contentType = null, int timeout = 60, Encoding encoding = null)
+        {
+            string result = string.Empty;
+
+            try
+            {
+                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
+                X509Certificate2 cerCaiShang = new X509Certificate2(GlobalConfig.CertFile, GlobalConfig.CertPassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
+                httpRequest.ClientCertificates.Add(cerCaiShang);
+
+                httpRequest.Method = method;
+                if (!string.IsNullOrEmpty(contentType))
+                {
+                    httpRequest.ContentType = contentType;
+                }
+                if (headers != null)
+                {
+                    foreach (KeyValuePair<string, string> header in headers)
+                    {
+                        httpRequest.Headers.Add(header.Key, header.Value);
+                    }
+                }
+                if (method != "Get" && !string.IsNullOrEmpty(postData))
+                {
+                    using Stream requestStem = httpRequest.GetRequestStream();
+                    using StreamWriter sw = new StreamWriter(requestStem);
+                    sw.Write(postData);
+                }
+
+                HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse();
+                Stream receiveStream = httpResponse.GetResponseStream();
+                using StreamReader sr = new StreamReader(receiveStream);
+                result = sr.ReadToEnd();
+            }
+            catch (Exception ex)
+            {
+                Log4netUtil.Error("Api接口出错了", ex.InnerException ?? ex);
+                Console.WriteLine($"Api接口出错了：{ex.InnerException ?? ex}");
             }
 
             return result;

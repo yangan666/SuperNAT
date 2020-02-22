@@ -1,8 +1,10 @@
 ﻿using SuperNAT.AsyncSocket;
 using SuperNAT.Common;
+using SuperNAT.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -46,6 +48,8 @@ namespace SuperNAT.Client
                                     httpRequest.Content = new StringContent(bodyStr, Encoding.UTF8, httpModel.ContentType.Split(";")[0]);
                                 }
                                 using HttpClient _httpClient = new HttpClient();
+                                //替换Host 不然400 Bad Request
+                                //httpModel.Headers["Host"] = map.local_endpoint;
                                 foreach (var item in httpModel.Headers)
                                 {
                                     if (item.Key != "Content-Type")
@@ -56,9 +60,13 @@ namespace SuperNAT.Client
                                         }
                                     }
                                 }
+                                if (map.protocol == "https")
+                                {
+                                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                                }
                                 var response = await _httpClient.SendAsync(httpRequest);
                                 //回传给服务器
-                                httpModel.HttpVersion = response.Version.ToString();
+                                httpModel.HttpVersion = $"{map.protocol.ToUpper()}/{response.Version.ToString()}";
                                 httpModel.StatusCode = (int)response.StatusCode;
                                 httpModel.StatusMessage = response.StatusCode.ToString();
                                 httpModel.Local = map.local_endpoint;

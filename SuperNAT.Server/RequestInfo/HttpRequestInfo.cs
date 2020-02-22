@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SuperNAT.Common;
+using SuperNAT.Model;
 
 namespace SuperNAT.Server
 {
@@ -24,6 +26,8 @@ namespace SuperNAT.Server
         public string Url { get; set; }
 
         public Dictionary<string, string> Headers { get; private set; } = new Dictionary<string, string>();
+
+        public string ContentType { get; set; }
 
         public byte[] Body { get; set; }
 

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using SuperNAT.Common;
 using SuperNAT.Bll;
 using SuperNAT.Model;
+using System.Linq;
 
 namespace SuperNAT.Server.Controllers
 {
@@ -74,6 +75,56 @@ namespace SuperNAT.Server.Controllers
             }
 
             return Json(rst);
+        }
+
+        [HttpGet]
+        [Route("GetSessions")]
+        public IActionResult GetSessions(string name)
+        {
+            IActionResult result = null;
+            switch (name)
+            {
+                case "nat":
+                    result = Json(ServerHanlder.NATServer.GetAll().Select(s => new
+                    {
+                        s.Client,
+                        s.ConnectTime,
+                        s.Local,
+                        s.MapList,
+                        s.Remote,
+                        s.SessionId
+                    }));
+                    break;
+                case "http":
+                    result = Json(ServerHanlder.HttpServerList.SelectMany(s => s.ContextDict));
+                    break;
+                case "https":
+                    result = Json(ServerHanlder.HttpsServerList.SelectMany(s => s.GetAll()).Select(s => new
+                    {
+                        s.NatSession.Client.name,
+                        s.ConnectTime,
+                        s.Local,
+                        s.Map,
+                        s.Remote,
+                        s.SessionId
+                    }));
+                    break;
+                case "tcp":
+                    result = Json(ServerHanlder.TcpServerList.SelectMany(s => s.GetAll()).Select(s => new
+                    {
+                        s.NatSession.Client.name,
+                        s.ConnectTime,
+                        s.Local,
+                        s.Map,
+                        s.Remote,
+                        s.SessionId
+                    }));
+                    break;
+                case "udp":
+                    break;
+            }
+
+            return result;
         }
     }
 }

@@ -104,7 +104,7 @@
       </component>
     </componentModelHasComponents>
     <componentModelHasComponents>
-      <component Id="e828c909-4742-4935-bdf9-036aefe115fb" name="SuperNAT.Socket" isAbstract="false" isLeaf="false" isActiveClass="false">
+      <component Id="e828c909-4742-4935-bdf9-036aefe115fb" name="SuperNAT.AsyncSocket" isAbstract="false" isLeaf="false" isActiveClass="false">
         <elementDefinition Id="396f7bc5-62f1-4800-9716-b2931be65d92" />
       </component>
     </componentModelHasComponents>

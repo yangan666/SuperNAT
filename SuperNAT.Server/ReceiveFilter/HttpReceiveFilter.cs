@@ -3,69 +3,57 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Text;
+using SuperNAT.Common;
+using SuperNAT.Model;
 
 namespace SuperNAT.Server
 {
     public class HttpReceiveFilter : IReceiveFilter<HttpRequestInfo>
     {
-        private List<byte> raw = new List<byte>();
+        //private List<byte> raw = new List<byte>();
         private HttpRequestInfo _httpRequestInfo = null;
+        private static object lockObj = new object();
         public HttpRequestInfo Filter(ref SequenceReader<byte> reader)
         {
-            if (_httpRequestInfo == null)
-                _httpRequestInfo = new HttpRequestInfo();
+            lock (lockObj)
+            {
+                if (_httpRequestInfo == null || (_httpRequestInfo != null && _httpRequestInfo.FilterStatus == FilterStatus.Completed))
+                    _httpRequestInfo = new HttpRequestInfo();
 
-            raw.AddRange(reader.Sequence.ToArray());
+                //raw.AddRange(reader.Sequence.ToArray());
 
-            LoadRequestLine(ref reader);
-            LoadRequestHeader(ref reader);
-            LoadRequestBody(ref reader);
+                LoadRequestLine(ref reader);
+                LoadRequestHeader(ref reader);
+                LoadRequestBody(ref reader);
 
-            if (_httpRequestInfo.FilterStatus != FilterStatus.Completed)
-                return null;
+                if (_httpRequestInfo.FilterStatus != FilterStatus.Completed)
+                    return null;
 
-            return _httpRequestInfo;
+                //_httpRequestInfo.Raw = raw.ToArray();
+                _httpRequestInfo.BaseUrl = _httpRequestInfo.Headers["Host"];
+                _httpRequestInfo.Success = true;
+                _httpRequestInfo.Message = "HTTP请求解析成功";
+                return _httpRequestInfo;
+            }
         }
 
-        public virtual HttpModel DecodePackage()
+        public virtual HttpModel DecodePackage(ref HttpModel httpModel)
         {
-            HttpModel httpModel = new HttpModel
-            {
-                HttpVersion = _httpRequestInfo.HttpVersion,
-                Method = _httpRequestInfo.Method,
-                Path = _httpRequestInfo.Path,
-                Headers = _httpRequestInfo.Headers,
-                Host = _httpRequestInfo.Headers["Host"],
-                Content = _httpRequestInfo.Body
-            };
+            httpModel.HttpVersion = _httpRequestInfo.HttpVersion;
+            httpModel.Method = _httpRequestInfo.Method;
+            httpModel.Path = _httpRequestInfo.Path;
+            httpModel.Headers = _httpRequestInfo.Headers;
+            httpModel.Host = _httpRequestInfo.BaseUrl;
+            httpModel.ContentType = _httpRequestInfo.ContentType;
+            httpModel.Content = _httpRequestInfo.ContentLength > 0 ? DataHelper.Compress(_httpRequestInfo.Body) : null;
+
             return httpModel;
         }
 
         public void Reset()
         {
+            //raw.Clear();
             _httpRequestInfo = null;
-        }
-
-        private static bool TryReadLine(ref SequenceReader<byte> reader, out string line)
-        {
-            // Look for a EOL in the buffer.
-            var readLine = reader.TryReadTo(out ReadOnlySequence<byte> lineBytes, (byte)'\n', true);
-
-            if (!readLine)
-            {
-                line = default;
-                return false;
-            }
-
-            // Skip the line + the \n.
-            StringBuilder lineStr = new StringBuilder();
-            foreach (var segment in lineBytes)
-            {
-                lineStr.Append(Encoding.UTF8.GetString(segment.Span));
-            }
-            line = lineStr.ToString();
-
-            return true;
         }
 
         private void LoadRequestLine(ref SequenceReader<byte> reader)
@@ -77,7 +65,7 @@ namespace SuperNAT.Server
                     var subItems = line.Split(' ');
                     _httpRequestInfo.Method = subItems[0];
                     _httpRequestInfo.Path = subItems[1];
-                    _httpRequestInfo.HttpVersion = subItems[3];
+                    _httpRequestInfo.HttpVersion = subItems[2];
                     _httpRequestInfo.FilterStatus = FilterStatus.LoadingHeader;
                 }
             }
@@ -101,12 +89,16 @@ namespace SuperNAT.Server
                         }
                         return;
                     }
-                    var valueArr = line.Split(':');
-                    if (valueArr[0] == "Content-Length")
+                    var value = line.SubLeftWith(':', out string name);
+                    if (name == "Content-Length")
                     {
-                        _httpRequestInfo.ContentLength = int.Parse(valueArr[1]);
+                        _httpRequestInfo.ContentLength = int.Parse(value);
                     }
-                    _httpRequestInfo.Headers.Add(valueArr[0], valueArr[1]);
+                    if (name == "Content-Type")
+                    {
+                        _httpRequestInfo.ContentType = value;
+                    }
+                    _httpRequestInfo.Headers.Add(name, value);
                 }
             }
         }
@@ -115,14 +107,38 @@ namespace SuperNAT.Server
         {
             if (_httpRequestInfo.FilterStatus == FilterStatus.LoadingBody)
             {
-                if (reader.Length >= _httpRequestInfo.ContentLength)
+                var position = reader.Consumed;
+                var rest = reader.Length - position;
+                if (rest >= _httpRequestInfo.ContentLength)
                 {
-                    _httpRequestInfo.Body = reader.Sequence.ToArray();
-                    _httpRequestInfo.Success = true;
-                    _httpRequestInfo.Message = "HTTP请求解析成功";
+                    _httpRequestInfo.Body = reader.Sequence.Slice(position, _httpRequestInfo.ContentLength).ToArray();
+                    reader.Advance(rest);//多余的不要了
                     _httpRequestInfo.FilterStatus = FilterStatus.Completed;
                 }
             }
+        }
+
+        private static bool TryReadLine(ref SequenceReader<byte> reader, out string line)
+        {
+            // Look for a \n in the buffer.
+            var readLine = reader.TryReadTo(out ReadOnlySequence<byte> lineBytes, (byte)'\n', true);
+
+            if (!readLine)
+            {
+                line = default;
+                return false;
+            }
+
+            StringBuilder lineStr = new StringBuilder();
+            foreach (var segment in lineBytes)
+            {
+                lineStr.Append(Encoding.UTF8.GetString(segment.Span));
+            }
+            line = lineStr.ToString();
+            // Skip the line + the \n.
+            line = line[0..^1];
+
+            return true;
         }
     }
 }

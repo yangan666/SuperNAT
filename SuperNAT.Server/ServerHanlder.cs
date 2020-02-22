@@ -23,8 +23,6 @@ namespace SuperNAT.Server
 {
     public class ServerHanlder
     {
-        public static string CertFile = "iot3rd.p12";
-        public static string CertPassword = "IoM@1234";
         public static NatServer NATServer { get; set; }
         public static List<HttpServer> HttpServerList { get; set; } = new List<HttpServer>();
         public static List<HttpsServer> HttpsServerList { get; set; } = new List<HttpsServer>();
@@ -66,8 +64,8 @@ namespace SuperNAT.Server
                         switch (item.protocol)
                         {
                             case "http":
-                                StartHttpServer(item);
-                                break;
+                                //StartHttpServer(item);
+                                //break;
                             case "https":
                                 StartHttpsServer(item);
                                 break;
@@ -159,7 +157,7 @@ namespace SuperNAT.Server
                     {
                         EnabledSslProtocols = SslProtocols.Tls12,
                         ClientCertificateRequired = false,
-                        ServerCertificate = new X509Certificate2(CertFile, CertPassword)
+                        ServerCertificate = new X509Certificate2(GlobalConfig.CertFile, GlobalConfig.CertPassword)
                     }
                 });
                 NATServer.OnConnected += Connected;
@@ -199,7 +197,7 @@ namespace SuperNAT.Server
                         case (byte)JsonType.HTTP:
                             {
                                 var httpModel = requestInfo.Body.Data.FromJson<HttpModel>();
-                                var server = HttpServerList.Find(c => c.ServerId == httpModel.ServerId);
+                                var server = HttpsServerList.Find(c => c.ServerId == httpModel.ServerId);
                                 server?.ProcessData(session, requestInfo, httpModel);
                                 break;
                             }
@@ -272,7 +270,7 @@ namespace SuperNAT.Server
                         SslServerAuthenticationOptions = serverConfig.is_ssl ? new SslServerAuthenticationOptions
                         {
                             EnabledSslProtocols = SslProtocols.Tls12,
-                            ServerCertificate = new X509Certificate2(string.IsNullOrEmpty(serverConfig.certfile) ? CertFile : serverConfig.certfile, string.IsNullOrEmpty(serverConfig.certpwd) ? CertPassword : serverConfig.certpwd)
+                            ServerCertificate = new X509Certificate2(string.IsNullOrEmpty(serverConfig.certfile) ? GlobalConfig.CertFile : serverConfig.certfile, string.IsNullOrEmpty(serverConfig.certpwd) ? GlobalConfig.CertPassword : serverConfig.certpwd)
                         } : null
                     })
                     {
@@ -309,7 +307,7 @@ namespace SuperNAT.Server
                         SslServerAuthenticationOptions = serverConfig.is_ssl ? new SslServerAuthenticationOptions
                         {
                             EnabledSslProtocols = SslProtocols.Tls12,
-                            ServerCertificate = new X509Certificate2(string.IsNullOrEmpty(serverConfig.certfile) ? CertFile : serverConfig.certfile, string.IsNullOrEmpty(serverConfig.certpwd) ? CertPassword : serverConfig.certpwd)
+                            ServerCertificate = new X509Certificate2(string.IsNullOrEmpty(serverConfig.certfile) ? GlobalConfig.CertFile : serverConfig.certfile, string.IsNullOrEmpty(serverConfig.certpwd) ? GlobalConfig.CertPassword : serverConfig.certpwd)
                         } : null
                     })
                     {
@@ -349,11 +347,11 @@ namespace SuperNAT.Server
                                 new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
                             options.Limits.MinResponseDataRate =
                                 new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
-                            options.Listen(IPAddress.Any, GlobalConfig.ServerPort);
-                            //options.Listen(IPAddress.Loopback, 5001, listenOptions =>
-                            //{
-                            //    listenOptions.UseHttps("testCert.pfx", "testPassword");
-                            //});
+                            options.Listen(IPAddress.Any, GlobalConfig.ServerPort + 1);
+                            options.Listen(IPAddress.Any, GlobalConfig.ServerPort, listenOptions =>
+                            {
+                                listenOptions.UseHttps(GlobalConfig.CertFile, GlobalConfig.CertPassword);
+                            });
                         })
                         .UseContentRoot(contentRoot)  // set content root
                         .UseWebRoot(webRoot);         // set web root

@@ -69,10 +69,10 @@ namespace SuperNAT.Server
             {
                 app.UseDeveloperExceptionPage();
             }
-            //else
-            //{
-            //    app.UseHsts();
-            //}
+            else
+            {
+                app.UseHsts();
+            }
 
             //app.UseRouting(routes =>
             //{
@@ -97,6 +97,7 @@ namespace SuperNAT.Server
                     template: "{controller=Show}/{action=Index}/{id?}");
             });
             app.UseMvc();
+            app.UseHttpsRedirection();
 
             DefaultFilesOptions defaultFilesOptions = new DefaultFilesOptions();
             defaultFilesOptions.DefaultFileNames.Clear();

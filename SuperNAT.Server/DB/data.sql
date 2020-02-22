@@ -1,6 +1,6 @@
 -- 用户表
 DELETE FROM `user`;
-INSERT INTO `user` (`user_id`, `user_name`, `password`, `wechat`, `email`, `tel`, `is_disabled`, `is_admin`, `role_id`) VALUES ('dd7e6727968544298e016f7f246f879d', 'admin', '3A03EDF0A917A6A757194FCF4D429A5E', NULL, 'admin@qq.com', NULL, '\0', '\0', '2c033d577bea44aa825ffae125c7367e');
+INSERT INTO `user` (`user_id`, `user_name`, `password`, `wechat`, `email`, `tel`, `is_disabled`, `is_admin`, `role_id`) VALUES ('dd7e6727968544298e016f7f246f879d', 'admin', '3A03EDF0A917A6A757194FCF4D429A5E', NULL, 'admin@qq.com', NULL, '\0', '1', '2c033d577bea44aa825ffae125c7367e');
 
 -- 菜单表
 DELETE FROM `menu`;

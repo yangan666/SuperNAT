@@ -28,7 +28,7 @@ namespace SuperNAT.Client
         public static List<TcpClientProxy> TcpClientProxyList { get; set; } = new List<TcpClientProxy>();
         public static string Secret { get; set; } = AppConfig.GetSetting("Secret");
         public static string ServerUrl { get; set; } = AppConfig.GetSetting("ServerUrl");
-        public static string ServerPort { get; set; } = AppConfig.GetSetting("ServerPort");
+        public static int ServerPort { get; set; } = Convert.ToInt32(AppConfig.GetSetting("ServerPort"));
         public static int NatPort { get; set; } = Convert.ToInt32(AppConfig.GetSetting("NatPort"));
         public static List<Map> MapList { get; set; }
         public static ILoggerRepository Repository { get; set; }
@@ -97,7 +97,7 @@ namespace SuperNAT.Client
 
             try
             {
-                var response = HttpHelper.HttpRequest("POST", $"http://{ServerUrl}:{ServerPort}/Api/Map/GetMapList?secret={secret}");
+                var response = HttpHelper.HttpRequest("POST", $"http://{ServerUrl}:{ServerPort + 1}/Api/Map/GetMapList?secret={secret}");
                 if (!string.IsNullOrEmpty(response))
                 {
                     res = JsonHelper.Instance.Deserialize<ReturnResult<List<Map>>>(response);
@@ -223,7 +223,7 @@ namespace SuperNAT.Client
                             int waitTimes = 50;
                             var tcpModel = packageInfo.Body.Data.FromJson<TcpModel>();
                             TcpClientProxy clientProxy = null;
-                        mark:
+                            mark:
                             clientProxy = TcpClientProxyList.Find(c => c.RemoteSession.SessionId == tcpModel.SessionId);
                             if (packageInfo.Body.Action == (int)TcpAction.TransferData)
                             {

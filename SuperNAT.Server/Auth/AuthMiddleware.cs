@@ -18,7 +18,7 @@ namespace SuperNAT.Server.Auth
     {
         private readonly RequestDelegate _next;
         private readonly JwtSetting _jwtSetting;
-        private readonly List<string> _allowAnonymousPathList = new List<string>() { "/Api/User/Login", "/Api/User/Register", "/Api/Map/GetMapList" };
+        private readonly List<string> _allowAnonymousPathList = new List<string>() { "/Api/User/Login", "/Api/User/Register", "/Api/Map/GetMapList", "/Api/Common/GetSessions" };
 
         public AuthMiddleware(RequestDelegate next, IOptions<JwtSetting> option)
         {

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SuperNAT.Server
 {
-    public class HttpsServer : SocketServer<TcpSession, HttpRequestInfo>
+    public class HttpsServer : SocketServer<HttpSession, HttpRequestInfo>
     {
         public NatServer NATServer { get; set; }
         public HttpsServer(ServerOption serverOption) : base(serverOption)
@@ -30,71 +30,65 @@ namespace SuperNAT.Server
             });
         }
 
-        private void Connected(TcpSession session)
+        private void Connected(HttpSession session)
         {
-            HandleLog.WriteLine($"HTTP客户端【{session.SessionId},{session.Remote}】已连接【{session.Local}】");
+            HandleLog.WriteLine($"HTTP客户端【{session.SessionId},{session.Remote}】已连接【{session.Local}】", false);
         }
 
-        private void Received(TcpSession session, HttpRequestInfo requestInfo)
+        private void Received(HttpSession session, HttpRequestInfo requestInfo)
         {
             Task.Run(() =>
             {
-                try
-                {
-                    var httpModel = new HttpModel
-                    {
-                        RequestTime = DateTime.Now,
-                        ServerId = ServerId,
-                        HttpVersion = requestInfo.HttpVersion,
-                        Method = requestInfo.Method,
-                        Path = requestInfo.Path,
-                        Headers = requestInfo.Headers,
-                        Host = requestInfo.Headers["Host"],
-                        Content = requestInfo.ContentLength > 0 ? DataHelper.Compress(requestInfo.Body) : null
-                    };
-                    //转发请求
-                    var natSession = NATServer.GetSingle(c => c.MapList.Any(c => c.remote_endpoint == httpModel.Host));
-                    if (natSession == null)
-                    {
-                        //TODO 错误页面
-                        HandleLog.WriteLine($"穿透客户端未连接到服务器，请求地址：{httpModel.Host}{httpModel.Path}");
-                        var response = new HttpResponse()
-                        {
-                            Status = 404,
-                            Body = "nat client not found"
-                        };
-                        //把处理信息返回到客户端
-                        session.Send(response.Write());
-                    }
-                    else
-                    {
-                        //转发数据
-                        var pack = new JsonData()
-                        {
-                            Type = (int)JsonType.HTTP,
-                            Action = (int)HttpAction.Request,
-                            Data = httpModel.ToJson()
-                        };
-                        session.NatSession.Send(PackHelper.CreatePack(pack));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    HandleLog.WriteLine($"【{session.Local}】请求参数：{requestInfo.Raw.ToHexWithSpace()}，处理发生异常：{ex}");
-                }
-            });
-        }
 
-        private void Closed(TcpSession session)
-        {
+            });
+
             try
             {
-                HandleLog.WriteLine($"HTTP客户端【{session.SessionId},{session.Remote}】已下线");
+                var httpModel = new HttpModel
+                {
+                    RequestTime = DateTime.Now,
+                    ServerId = ServerId,
+                    SessionId = session.SessionId
+                };
+                var filter = ReceiveFilter as HttpReceiveFilter;
+                filter.DecodePackage(ref httpModel);
+                //转发请求
+                var natSession = NATServer.GetSingle(c => c.MapList.Any(c => c.remote_endpoint == httpModel.Host));
+                if (natSession == null)
+                {
+                    //TODO 错误页面
+                    HandleLog.WriteLine($"穿透客户端未连接到服务器，请求地址：{httpModel.Host}{httpModel.Path}");
+                    var response = new HttpResponse()
+                    {
+                        Status = 404,
+                        ContentType = "text/html",
+                        Body = Encoding.UTF8.GetBytes("nat client not found")
+                    };
+                    //把处理信息返回到客户端
+                    session.Send(response.Write());
+                }
+                else
+                {
+                    //转发数据
+                    var pack = new JsonData()
+                    {
+                        Type = (int)JsonType.HTTP,
+                        Action = (int)HttpAction.Request,
+                        Data = httpModel.ToJson()
+                    };
+                    natSession.Send(PackHelper.CreatePack(pack));
+                    session.NatSession = natSession;
+                }
             }
             catch (Exception ex)
             {
-                HandleLog.WriteLine($"关闭连接【{session.Local}】发生异常：{ex}");
+                HandleLog.WriteLine($"【{session.Local}】请求地址：{requestInfo.BaseUrl}{requestInfo.Path}，处理发生异常：{ex}");
             }
+        }
+
+        private void Closed(HttpSession session)
+        {
+            HandleLog.WriteLine($"HTTP客户端【{session.SessionId},{session.Remote}】已下线", false);
         }
 
         public void ProcessData(NatSession session, NatRequestInfo requestInfo, HttpModel httpModel)
@@ -121,17 +115,15 @@ namespace SuperNAT.Server
                             {
                                 //解压
                                 var byteData = DataHelper.Decompress(httpModel.Content);
-                                httpResponse.Body = byteData.ToUTF8String();
+                                httpResponse.ContentType = httpModel.ContentType;
+                                httpResponse.Body = byteData;
                                 //把处理信息返回到客户端
-                                context.Send(byteData);
+                                context.Send(httpResponse.Write());
 
                                 var timeSpan = (DateTime.Now - httpModel.RequestTime);
                                 var totalSize = byteData.Length * 1.00 / 1024;
-                                var speed = Math.Round(totalSize / timeSpan.TotalSeconds, 1);
-                                HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {httpModel.Method} {httpModel.Host}{httpModel.Path} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(totalSize, 1)}KB {timeSpan.TotalMilliseconds}ms {speed}KB/s");
-
-                                //关闭http连接
-                                context.Close();
+                                var map = session.MapList.Find(c => c.remote_endpoint == httpModel.Host);
+                                HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {map?.name} {httpModel.Method} {httpModel.Path} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(totalSize, 1)}KB {timeSpan.TotalMilliseconds}ms");
                             }
                         }
                         break;

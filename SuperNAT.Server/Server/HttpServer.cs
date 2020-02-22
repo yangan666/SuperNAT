@@ -1,5 +1,6 @@
 ﻿using SuperNAT.AsyncSocket;
 using SuperNAT.Common;
+using SuperNAT.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,11 +58,12 @@ namespace SuperNAT.Server
                     var sessionId = Guid.NewGuid().ToString();
                     ContextDict.Add(sessionId, context);
 
+                    var map = natSession.MapList.Find(c => c.remote_endpoint == context.Request.Url.Authority);
                     var httpModel = new HttpModel()
                     {
                         RequestTime = DateTime.Now,
                         ServerId = ServerId,
-                        HttpVersion = context.Request.ProtocolVersion.ToString(),
+                        HttpVersion = $"{map?.protocol.ToUpper()}/{context.Request.ProtocolVersion.ToString()}",
                         Host = context.Request.Url.Authority,
                         SessionId = sessionId,
                         Method = context.Request.HttpMethod,
