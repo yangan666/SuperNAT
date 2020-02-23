@@ -97,7 +97,7 @@ namespace SuperNAT.Client
 
             try
             {
-                var response = HttpHelper.HttpRequest("POST", $"http://{ServerUrl}:{ServerPort + 1}/Api/Map/GetMapList?secret={secret}");
+                var response = HttpHelper.HttpRequest("POST", $"http://{ServerUrl}:{ServerPort}/Api/Map/GetMapList?secret={secret}");
                 if (!string.IsNullOrEmpty(response))
                 {
                     res = JsonHelper.Instance.Deserialize<ReturnResult<List<Map>>>(response);

@@ -347,11 +347,11 @@ namespace SuperNAT.Server
                                 new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
                             options.Limits.MinResponseDataRate =
                                 new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
-                            options.Listen(IPAddress.Any, GlobalConfig.ServerPort + 1);
-                            options.Listen(IPAddress.Any, GlobalConfig.ServerPort, listenOptions =>
-                            {
-                                listenOptions.UseHttps(GlobalConfig.CertFile, GlobalConfig.CertPassword);
-                            });
+                            options.Listen(IPAddress.Any, GlobalConfig.ServerPort);
+                            //options.Listen(IPAddress.Any, GlobalConfig.ServerPort, listenOptions =>
+                            //{
+                            //    listenOptions.UseHttps(GlobalConfig.CertFile, GlobalConfig.CertPassword);
+                            //});
                         })
                         .UseContentRoot(contentRoot)  // set content root
                         .UseWebRoot(webRoot);         // set web root
