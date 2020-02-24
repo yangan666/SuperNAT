@@ -37,7 +37,7 @@ namespace SuperNAT.Model
             //关闭连接
             sb.AppendLine("Connection: close");
 
-            if (Body?.Count() > 0)
+            if (Body?.Length > 0)
             {
                 sb.AppendLine($"Content-Type: {ContentType}");
                 sb.AppendLine($"Content-Length: {Body.Length}");

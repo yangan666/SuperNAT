@@ -108,6 +108,7 @@ namespace SuperNAT.Server
                             HttpResponse httpResponse = new HttpResponse()
                             {
                                 HttpVersion = httpModel.HttpVersion,
+                                Headers = httpModel.Headers,
                                 Status = httpModel.StatusCode,
                                 StatusMessage = httpModel.StatusMessage
                             };
@@ -117,14 +118,14 @@ namespace SuperNAT.Server
                                 var byteData = DataHelper.Decompress(httpModel.Content);
                                 httpResponse.ContentType = httpModel.ContentType;
                                 httpResponse.Body = byteData;
-                                //把处理信息返回到客户端
-                                context.Send(httpResponse.Write());
-
-                                var timeSpan = (DateTime.Now - httpModel.RequestTime);
-                                var totalSize = byteData.Length * 1.00 / 1024;
-                                var map = session.MapList.Find(c => c.remote_endpoint == httpModel.Host);
-                                HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {map?.name} {httpModel.Method} {httpModel.Path} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(totalSize, 1)}KB {timeSpan.TotalMilliseconds}ms");
                             }
+                            //把处理信息返回到客户端
+                            context.Send(httpResponse.Write());
+
+                            var timeSpan = (DateTime.Now - httpModel.RequestTime);
+                            var totalSize = (httpResponse.Body?.Length ?? 0) * 1.00 / 1024;
+                            var map = session.MapList.Find(c => c.remote_endpoint == httpModel.Host);
+                            HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {map?.name} {httpModel.Method} {httpModel.Path} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(totalSize, 1)}KB {timeSpan.TotalMilliseconds}ms");
                         }
                         break;
                 }

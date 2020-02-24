@@ -49,7 +49,7 @@ namespace SuperNAT.Client
                                 }
                                 using HttpClient _httpClient = new HttpClient();
                                 //替换Host 不然400 Bad Request
-                                //httpModel.Headers["Host"] = map.local_endpoint;
+                                httpModel.Headers["Host"] = map.local_endpoint;
                                 foreach (var item in httpModel.Headers)
                                 {
                                     if (item.Key != "Content-Type")
