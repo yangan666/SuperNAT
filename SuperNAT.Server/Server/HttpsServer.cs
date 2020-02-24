@@ -37,11 +37,6 @@ namespace SuperNAT.Server
 
         private void Received(HttpSession session, HttpRequestInfo requestInfo)
         {
-            Task.Run(() =>
-            {
-
-            });
-
             try
             {
                 var httpModel = new HttpModel
