@@ -27,5 +27,22 @@ namespace SuperNAT.Common
 
             return strValue.Substring(position + 1, strValue.Length - left.Length - 1).Trim();//去掉前后空格
         }
+
+        /// <summary>
+        /// 根据If条件是否返回字符串
+        /// </summary>
+        /// <param name="str">传入的字符串</param>
+        /// <param name="condition">条件</param>
+        /// <param name="falseStr">条件为false</param>
+        /// <returns></returns>
+        public static string If(this string str, bool condition, string falseStr = "")
+        {
+            return condition ? str : falseStr;
+        }
+
+        public static string ToLikeString(this string str, string joinStr, string likeStr)
+        {
+            return string.Join(joinStr, str.Split(',').Select(s => $" {s} like @{likeStr} "));
+        }
     }
 }

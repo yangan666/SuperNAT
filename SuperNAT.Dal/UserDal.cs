@@ -61,10 +61,7 @@ namespace SuperNAT.Dal
                 sql.Append("update user set ");
                 sql.Append("user_name=@user_name,");
                 sql.Append("role_id=@role_id,");
-                if (!string.IsNullOrWhiteSpace(model.password))
-                {
-                    sql.Append("password=@password,");
-                }
+                sql.Append("password=@password,".If(!string.IsNullOrWhiteSpace(model.password)));
                 sql.Append("wechat=@wechat,");
                 sql.Append("email=@email,");
                 sql.Append("tel=@tel ");
@@ -173,14 +170,8 @@ namespace SuperNAT.Dal
                                                 LEFT JOIN Role t2 ON t1.role_id = t2.role_id ");
                 if (model.page_index > 0)
                 {
-                    if (!string.IsNullOrWhiteSpace(model.search))
-                    {
-                        model.search = $"%{model.search}%";
-                        sql.Append("where t1.user_name like @search ");
-                        sql.Append("or t1.wechat like @search ");
-                        sql.Append("or t1.email like @search ");
-                        sql.Append("or t1.tel like @search ");
-                    }
+                    sql.Append($"where {"t1.user_name,t1.wechat,t1.email,t1.tel".ToLikeString("or", "search")} ".If(!string.IsNullOrWhiteSpace(model.search)));
+                    model.search = $"%{model.search}%";
                     rst.Data = conn.GetListPaged<User>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {

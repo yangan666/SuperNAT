@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using SuperNAT.Common;
 using SuperNAT.Model;
 using System;
 using System.Collections.Generic;
@@ -24,15 +25,8 @@ namespace SuperNAT.Dal
                                                 LEFT JOIN Menu t2 ON t1.pid = t2.menu_id ");
                 if (model.page_index > 0)
                 {
-                    if (!string.IsNullOrWhiteSpace(model.search))
-                    {
-                        model.search = $"%{model.search}%";
-                        sql.Append("where t1.title like @search ");
-                        sql.Append("or t1.name like @search ");
-                        sql.Append("or t1.path like @search ");
-                        sql.Append("or t1.component like @search ");
-                        sql.Append("or t2.title like @search ");
-                    }
+                    sql.Append($"where {"t1.title,t1.path,t1.component,t2.title".ToLikeString("or", "search")} ".If(!string.IsNullOrWhiteSpace(model.search)));
+                    model.search = $"%{model.search}%";
                     rst.Data = conn.GetListPaged<Menu>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "sort_no asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {

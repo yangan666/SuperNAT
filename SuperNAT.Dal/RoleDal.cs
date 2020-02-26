@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using SuperNAT.Common;
 using SuperNAT.Model;
 using System;
 using System.Collections.Generic;
@@ -45,12 +46,8 @@ namespace SuperNAT.Dal
                 var sql = new StringBuilder(@"select * from role ");
                 if (model.page_index > 0)
                 {
-                    if (!string.IsNullOrWhiteSpace(model.search))
-                    {
-                        model.search = $"%{model.search}%";
-                        sql.Append("where name like @search ");
-                        sql.Append("or remark like @search ");
-                    }
+                    sql.Append($"where {"name,remark".ToLikeString("or", "search")} ".If(!string.IsNullOrWhiteSpace(model.search)));
+                    model.search = $"%{model.search}%";
                     rst.Data = conn.GetListPaged<Role>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {

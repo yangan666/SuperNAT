@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using SuperNAT.Common;
 using SuperNAT.Model;
 using System;
 using System.Collections.Generic;
@@ -60,20 +61,8 @@ namespace SuperNAT.Dal
                 bool is_admin = !string.IsNullOrWhiteSpace(model.user_id) && !model.is_admin;
                 if (model.page_index > 0)
                 {
-                    if (!string.IsNullOrWhiteSpace(model.search))
-                    {
-                        model.search = $"%{model.search}%";
-                        sql.Append("where (t1.name like @search ");
-                        sql.Append("or t1.local like @search ");
-                        sql.Append("or t1.remote like @search ");
-                        sql.Append("or t2.name like @search ");
-                        sql.Append("or t3.user_name like @search) ");
-                        sql.Append(is_admin ? "and t3.user_id = @user_id " : "");
-                    }
-                    else
-                    {
-                        sql.Append(is_admin ? "where t3.user_id = @user_id " : "");
-                    }
+                    sql.Append($"where ({"t1.name,t1.local,t1.remote,t2.name,t3.user_name".ToLikeString("or", "search")}) {"and t3.user_id = @user_id ".If(is_admin)}".If(!string.IsNullOrWhiteSpace(model.search), "where t3.user_id = @user_id ".If(is_admin)));
+                    model.search = $"%{model.search}%";
                     rst.Data = conn.GetListPaged<Map>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "user_id, client_id, remote asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {

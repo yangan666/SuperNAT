@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using SuperNAT.Common;
 using SuperNAT.Model;
 using System;
 using System.Collections.Generic;
@@ -20,15 +21,8 @@ namespace SuperNAT.Dal
                 var sql = new StringBuilder(@"SELECT * FROM `server_config` ");
                 if (model.page_index > 0)
                 {
-                    if (!string.IsNullOrWhiteSpace(model.search))
-                    {
-                        model.search = $"%{model.search}%";
-                        sql.Append("where protocol like @search ");
-                        sql.Append("or port like @search ");
-                        sql.Append("or ssl_type like @search ");
-                        sql.Append("or certfile like @search ");
-                        sql.Append("or certpwd like @search ");
-                    }
+                    sql.Append($"where {"protocol,port,ssl_type,certfile,certpwd".ToLikeString("or", "search")} ".If(!string.IsNullOrWhiteSpace(model.search)));
+                    model.search = $"%{model.search}%";
                     rst.Data = conn.GetListPaged<ServerConfig>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {

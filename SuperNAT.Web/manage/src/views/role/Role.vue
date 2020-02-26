@@ -282,7 +282,7 @@ export default {
         url: '/Api/Role/GetList',
         method: 'post',
         data: {
-          user_name: this.search,
+          search: this.search,
           page_index: this.table.pageIndex,
           page_size: this.table.pageSize
         }

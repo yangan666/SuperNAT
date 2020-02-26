@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using SuperNAT.Common;
 using SuperNAT.Model;
 using System;
 using System.Collections.Generic;
@@ -56,18 +57,8 @@ namespace SuperNAT.Dal
                 bool is_admin = !string.IsNullOrWhiteSpace(model.user_id) && !model.is_admin;
                 if (model.page_index > 0)
                 {
-                    if (!string.IsNullOrWhiteSpace(model.search))
-                    {
-                        model.search = $"%{model.search}%";
-                        sql.Append("where (t1.name like @search ");
-                        sql.Append("or t1.remark like @search ");
-                        sql.Append("or t2.user_name like @search) ");
-                        sql.Append(is_admin ? "and t2.user_id = @user_id " : "");
-                    }
-                    else
-                    {
-                        sql.Append(is_admin ? "where t2.user_id = @user_id " : "");
-                    }
+                    sql.Append($"where ({"t1.name,t1.remark,t2.user_name".ToLikeString("or", "search")}) {"and t2.user_id = @user_id ".If(is_admin)}".If(!string.IsNullOrWhiteSpace(model.search), "and t2.user_id = @user_id ".If(is_admin)));
+                    model.search = $"%{model.search}%";
                     rst.Data = conn.GetListPaged<Client>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {
@@ -105,7 +96,7 @@ namespace SuperNAT.Dal
             try
             {
                 conn = CreateMySqlConnection(t);
-                if (conn.Execute($"update client set is_online=@is_online{(model.is_online ? ",last_heart_time=@last_heart_time" : "")} where secret=@secret", model, t?.DbTrans) > 0)
+                if (conn.Execute($"update client set is_online=@is_online{",last_heart_time=@last_heart_time".If(model.is_online)} where secret=@secret", model, t?.DbTrans) > 0)
                 {
                     rst.Result = true;
                     rst.Message = "更新成功";
