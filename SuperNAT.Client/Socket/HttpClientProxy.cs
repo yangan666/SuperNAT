@@ -36,6 +36,7 @@ namespace SuperNAT.Client
                                     Method = new HttpMethod(httpModel.Method),
                                     RequestUri = new Uri($"{map.protocol}://{map.local_endpoint}{httpModel.Path}")
                                 };
+                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {httpModel.Headers.ToJson()}");
                                 if (httpRequest.Method != HttpMethod.Get && httpModel.Content?.Length > 0)
                                 {
                                     var body = DataHelper.Decompress(httpModel.Content);//解压
