@@ -97,7 +97,6 @@ namespace SuperNAT.Server
                     template: "{controller=Show}/{action=Index}/{id?}");
             });
             app.UseMvc();
-            app.UseHttpsRedirection();
 
             DefaultFilesOptions defaultFilesOptions = new DefaultFilesOptions();
             defaultFilesOptions.DefaultFileNames.Clear();

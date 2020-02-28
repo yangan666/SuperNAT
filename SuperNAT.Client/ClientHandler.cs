@@ -116,7 +116,7 @@ namespace SuperNAT.Client
             return res;
         }
 
-        static void ConnectNatServer()
+        static async void ConnectNatServer()
         {
             try
             {
@@ -148,10 +148,7 @@ namespace SuperNAT.Client
                 NatClient.OnReceived += OnPackageReceived;
                 NatClient.OnClosed += OnClientClosed;
 
-                Task.Run(async () =>
-                {
-                    await NatClient.ConnectAsync();
-                });
+                await NatClient.ConnectAsync();
             }
             catch (Exception ex)
             {
