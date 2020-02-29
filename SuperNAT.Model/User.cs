@@ -21,6 +21,7 @@ namespace SuperNAT.Model
         public bool is_disabled { get; set; } = false;
         public bool is_admin { get; set; } = false;
         public string role_id { get; set; }
+        public DateTime create_time { get; set; } = DateTime.Now;
         [Editable(false)]
         public string is_disabled_str => is_disabled ? "禁用" : "正常";
         [Editable(false)]

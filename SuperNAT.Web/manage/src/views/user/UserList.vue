@@ -98,6 +98,8 @@ export default {
           type: 'select',
           text: "角色",
           value: 'role_id',
+          align: 'left',
+          width: 100,
           form: true,
           items: [],
           itemText: 'name',
@@ -109,6 +111,15 @@ export default {
           requiredInfo: {
             required: () => '请选择角色'
           }
+        },
+        {
+          type: 'input',
+          text: "创建时间",
+          value: 'create_time',
+          align: 'left',
+          width: 200,
+          sortable: false,
+          table: true
         },
         {
           type: 'tag',

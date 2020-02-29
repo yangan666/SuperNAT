@@ -78,20 +78,20 @@ export default {
           sortable: false,
           table: true
         },
-        {
-          type: 'input',
-          text: '二级域名',
-          value: 'subdomain',
-          align: 'left',
-          width: 160,
-          sortable: false,
-          table: true,
-          form: true,
-          validate: 'required',
-          requiredInfo: {
-            required: () => '二级域名不能为空'
-          }
-        },
+        // {
+        //   type: 'input',
+        //   text: '二级域名',
+        //   value: 'subdomain',
+        //   align: 'left',
+        //   width: 160,
+        //   sortable: false,
+        //   table: true,
+        //   form: true,
+        //   validate: 'required',
+        //   requiredInfo: {
+        //     required: () => '二级域名不能为空'
+        //   }
+        // },
         {
           type: 'input',
           text: '最后活动时间',
