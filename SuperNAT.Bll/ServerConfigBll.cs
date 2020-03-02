@@ -61,5 +61,29 @@ namespace SuperNAT.Bll
                 return serverConfigDal.GetList(model);
             }
         }
+
+        public ReturnResult<string> GetServerConfig()
+        {
+            var rst = new ReturnResult<string>() { Message = "暂无开放的端口" };
+            try
+            {
+                using (serverConfigDal)
+                {
+                    var data = serverConfigDal.GetServerConfig().Data ?? new List<ServerConfig>();
+                    var strList = data.Select(s => $"{s.protocol}:{s.port}").ToList();
+                    if (strList.Any())
+                    {
+                        rst.Result = true;
+                        rst.Data = $"开放端口：{string.Join(" ", strList)}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log4netUtil.Error($"获取失败：{ex}");
+            }
+
+            return rst;
+        }
     }
 }

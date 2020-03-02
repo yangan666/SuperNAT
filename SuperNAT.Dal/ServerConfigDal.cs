@@ -21,7 +21,7 @@ namespace SuperNAT.Dal
                 var sql = new StringBuilder(@"SELECT * FROM `server_config` ");
                 if (model.page_index > 0)
                 {
-                    sql.Append($"where {"protocol,port,ssl_type,certfile,certpwd".ToLikeString("or", "search")} ".If(!string.IsNullOrWhiteSpace(model.search)));
+                    sql.Append($"where is_disabled!=1 {"and protocol,port,ssl_type,certfile,certpwd".ToLikeString("or", "search")} ".If(!string.IsNullOrWhiteSpace(model.search)));
                     model.search = $"%{model.search}%";
                     rst.Data = conn.GetListPaged<ServerConfig>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
@@ -38,6 +38,37 @@ namespace SuperNAT.Dal
                     sql.Append("order by id ");
                     rst.Data = conn.Query<ServerConfig>(sql.ToString(), null, t?.DbTrans).ToList();
                 }
+                if (rst.Data != null)
+                {
+                    rst.Result = true;
+                    rst.Message = "获取成功";
+                }
+            }
+            catch (Exception ex)
+            {
+                rst.Message = $"获取失败：{ex.InnerException ?? ex}";
+                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+            }
+
+            return rst;
+        }
+
+        public ReturnResult<List<ServerConfig>> GetServerConfig()
+        {
+            var rst = new ReturnResult<List<ServerConfig>>() { Message = "暂无记录" };
+
+            try
+            {
+                conn = CreateMySqlConnection();
+                var sql = new StringBuilder(@"SELECT
+	                                                protocol,
+	                                                GROUP_CONCAT(`port`) `port`
+                                                FROM
+	                                                server_config
+                                                GROUP BY
+	                                                protocol ");
+
+                rst.Data = conn.Query<ServerConfig>(sql.ToString()).ToList();
                 if (rst.Data != null)
                 {
                     rst.Result = true;

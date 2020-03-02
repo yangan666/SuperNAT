@@ -15,18 +15,51 @@ namespace SuperNAT.Bll
 
         public ReturnResult<bool> Add(Map model)
         {
-            using (mapDal)
+            var rst = new ReturnResult<bool>();
+
+            try
             {
-                return mapDal.Add(model);
+                using Trans t = new Trans();
+                var exitRemote = mapDal.IsExit(model, t);
+                if (exitRemote.Result)
+                {
+                    rst.Message = "外网地址已被使用，请更换其它地址";
+                    return rst;
+                }
+
+                rst = mapDal.Add(model, t);
+                t.Commit();
             }
+            catch (Exception ex)
+            {
+                Log4netUtil.Error($"添加映射失败：{ex}");
+            }
+
+            return rst;
         }
 
         public ReturnResult<bool> Update(Map model)
         {
-            using (mapDal)
+            var rst = new ReturnResult<bool>();
+
+            try
             {
-                return mapDal.Update(model);
+                using Trans t = new Trans();
+                var exitRemote = mapDal.IsExit(model, t);
+                if (exitRemote.Result)
+                {
+                    rst.Message = "外网地址已被使用，请更换其它地址";
+                    return rst;
+                }
+
+                rst = mapDal.Update(model, t);
             }
+            catch (Exception ex)
+            {
+                Log4netUtil.Error($"更新映射失败：{ex}");
+            }
+
+            return rst;
         }
 
         public ReturnResult<bool> Delete(Map model)

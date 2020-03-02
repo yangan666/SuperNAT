@@ -27,6 +27,7 @@ export default {
         affterGetOne: item => {
           this.selectUserChange(item.user_id)
           // this.selectProtocolChange(item.protocol)
+          this.getServerConfig()
         }
       },
       columns: [
@@ -249,6 +250,13 @@ export default {
           table: true
         },
         {
+          type: "alert",
+          text: "开放端口",
+          value: "server_config",
+          align: "left",
+          form: true
+        },
+        {
           type: "action",
           text: "操作",
           align: "left",
@@ -283,6 +291,18 @@ export default {
     }
   },
   methods: {
+    //开放端口
+    getServerConfig() {
+      request({
+        url: "/Api/ServerConfig/GetServerConfig",
+        method: "post",
+        data: {}
+      }).then(({ data }) => {
+        if (data.Result) {
+          this.$refs.curd.formItem.server_config = data.Data
+        }
+      })
+    },
     //用户列表
     getUserList() {
       request({

@@ -11,6 +11,33 @@ namespace SuperNAT.Dal
 {
     public class MapDal : BaseDal<Map>
     {
+        public ReturnResult<Map> IsExit(Map model, Trans t = null)
+        {
+            var rst = new ReturnResult<Map>() { Message = "暂无记录" };
+
+            try
+            {
+                conn = CreateMySqlConnection(t);
+                var sql = new StringBuilder("select * from map where ");
+                sql.Append("remote=@remote and remote_port=@remote_port ".If(model.protocol.Contains("http")));
+                sql.Append("remote_port=@remote_port ".If(model.protocol == "tcp" || model.protocol == "udp"));
+                sql.Append("and id!=@id".If(model.id > 0));
+                rst.Data = conn.QueryFirstOrDefault<Map>(sql.ToString(), model, t?.DbTrans);
+                if (rst.Data != null)
+                {
+                    rst.Result = true;
+                    rst.Message = "获取成功";
+                }
+            }
+            catch (Exception ex)
+            {
+                rst.Message = $"获取失败：{ex.InnerException ?? ex}";
+                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+            }
+
+            return rst;
+        }
+
         public ReturnResult<Map> GetOne(Map model, Trans t = null)
         {
             var rst = new ReturnResult<Map>() { Message = "暂无记录" };

@@ -1,33 +1,29 @@
 <template>
   <div class="list-table">
-    <v-container grid-list-xl
-                 fluid>
-      <v-layout row
-                wrap>
+    <v-container grid-list-xl fluid>
+      <v-layout row wrap>
         <v-flex lg12>
           <v-card>
             <!-- 菜单栏 -->
-            <v-toolbar card
-                       color="white">
-              <v-text-field flat
-                            solo
-                            clearable
-                            prepend-icon="search"
-                            @click:prepend='table.pageIndex=1;getList()'
-                            placeholder="请输入关键词"
-                            v-model="search"
-                            hide-details
-                            class="hidden-sm-and-down"></v-text-field>
+            <v-toolbar card color="white">
+              <v-text-field
+                flat
+                solo
+                clearable
+                prepend-icon="search"
+                @click:prepend="
+                  table.pageIndex = 1
+                  getList()
+                "
+                placeholder="请输入关键词"
+                v-model="search"
+                hide-details
+                class="hidden-sm-and-down"
+              ></v-text-field>
               <!-- 弹框 -->
-              <v-dialog v-model="dialog"
-                        persistent
-                        :width="basic.dialogWith || 500">
+              <v-dialog v-model="dialog" persistent :width="basic.dialogWith || 500">
                 <template v-slot:activator="{ on }">
-                  <v-btn color="primary"
-                         dark
-                         class="mb-2"
-                         v-on="on"
-                         @click="add">新建{{basic.title}}</v-btn>
+                  <v-btn color="primary" dark class="mb-2" v-on="on" @click="add">新建{{ basic.title }}</v-btn>
                 </template>
                 <v-card>
                   <v-card-title>
@@ -38,64 +34,89 @@
                     <v-container grid-list-md>
                       <!-- 动态form表单 -->
                       <form>
-                        <v-layout row
-                                  wrap>
-                          <template v-for="(item,index) in forms">
+                        <v-layout row wrap>
+                          <template v-for="(item, index) in forms">
                             <!-- 输入框 -->
-                            <v-flex v-if="item.type == 'input'"
-                                    v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
-                                    :key="index">
-                              <v-text-field clearable
-                                            v-model="formItem[item.value]"
-                                            v-validate="item.validate"
-                                            :counter="item.counter"
-                                            :error-messages="errors.collect(item.value)"
-                                            :data-vv-name="item.value"
-                                            :data-vv-as="item.text"
-                                            :label="item.text"></v-text-field>
+                            <v-flex
+                              v-if="item.type == 'input'"
+                              v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
+                              :key="index"
+                            >
+                              <v-text-field
+                                clearable
+                                v-model="formItem[item.value]"
+                                v-validate="item.validate"
+                                :counter="item.counter"
+                                :error-messages="errors.collect(item.value)"
+                                :data-vv-name="item.value"
+                                :data-vv-as="item.text"
+                                :label="item.text"
+                              ></v-text-field>
                             </v-flex>
                             <!-- 密码框 -->
-                            <v-flex v-else-if="item.type == 'password'"
-                                    v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
-                                    :key="index">
-                              <v-text-field clearable
-                                            type='password'
-                                            v-model="formItem[item.value]"
-                                            v-validate="item.validate"
-                                            :counter="item.counter"
-                                            :error-messages="errors.collect(item.value)"
-                                            :data-vv-name="item.value"
-                                            :data-vv-as="item.text"
-                                            :label="item.text"></v-text-field>
+                            <v-flex
+                              v-else-if="item.type == 'password'"
+                              v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
+                              :key="index"
+                            >
+                              <v-text-field
+                                clearable
+                                type="password"
+                                v-model="formItem[item.value]"
+                                v-validate="item.validate"
+                                :counter="item.counter"
+                                :error-messages="errors.collect(item.value)"
+                                :data-vv-name="item.value"
+                                :data-vv-as="item.text"
+                                :label="item.text"
+                              ></v-text-field>
                             </v-flex>
                             <!-- 下拉框 -->
-                            <v-flex v-else-if="item.type == 'select'"
-                                    v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
-                                    :key="index">
-                              <v-select clearable
-                                        v-model="formItem[item.value]"
-                                        v-validate="item.validate"
-                                        :error-messages="errors.collect(item.value)"
-                                        :data-vv-name="item.value"
-                                        :data-vv-as="item.text"
-                                        :items="item.items"
-                                        :item-text="item.itemText"
-                                        :item-value="item.itemValue"
-                                        @change="item.change"
-                                        :label="item.text"></v-select>
+                            <v-flex
+                              v-else-if="item.type == 'select'"
+                              v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
+                              :key="index"
+                            >
+                              <v-select
+                                clearable
+                                v-model="formItem[item.value]"
+                                v-validate="item.validate"
+                                :error-messages="errors.collect(item.value)"
+                                :data-vv-name="item.value"
+                                :data-vv-as="item.text"
+                                :items="item.items"
+                                :item-text="item.itemText"
+                                :item-value="item.itemValue"
+                                @change="item.change"
+                                :label="item.text"
+                              ></v-select>
                             </v-flex>
                             <!-- 开关 -->
-                            <v-flex v-else-if="item.type == 'switch'"
-                                    v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
-                                    :key="index">
-                              <v-switch clearable
-                                        v-model="formItem[item.value]"
-                                        v-validate="item.validate"
-                                        :error-messages="errors.collect(item.value)"
-                                        :data-vv-name="item.value"
-                                        :data-vv-as="item.text"
-                                        @change="item.change"
-                                        :label="item.text"></v-switch>
+                            <v-flex
+                              v-else-if="item.type == 'switch'"
+                              v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
+                              :key="index"
+                            >
+                              <v-switch
+                                clearable
+                                v-model="formItem[item.value]"
+                                v-validate="item.validate"
+                                :error-messages="errors.collect(item.value)"
+                                :data-vv-name="item.value"
+                                :data-vv-as="item.text"
+                                @change="item.change"
+                                :label="item.text"
+                              ></v-switch>
+                            </v-flex>
+                            <!-- 提示框 -->
+                            <v-flex
+                              v-else-if="item.type == 'alert'"
+                              v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
+                              :key="index"
+                            >
+                              <v-alert :value="true" type="info">
+                                {{formItem[item.value]}}
+                              </v-alert>
                             </v-flex>
                           </template>
                         </v-layout>
@@ -105,12 +126,8 @@
 
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1"
-                           flat
-                           @click="save">保存</v-btn>
-                    <v-btn color="blue darken-1"
-                           flat
-                           @click="close">取消</v-btn>
+                    <v-btn color="blue darken-1" flat @click="save">保存</v-btn>
+                    <v-btn color="blue darken-1" flat @click="close">取消</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -118,46 +135,46 @@
             <v-divider></v-divider>
             <!-- 表格数据 -->
             <v-card-text class="pa-0">
-              <v-data-table :headers="headers"
-                            :items="table.items"
-                            :rows-per-page-items="table.pageSizes"
-                            class="elevation-1"
-                            item-key="name"
-                            disable-initial-sort
-                            hide-actions>
-                <template slot="items"
-                          slot-scope="props">
-                  <template v-for="(item,index) in headers">
-                    <td v-if="item.type == 'action'"
-                        :key="index"
-                        class="text-xs-left">
-                      <v-btn v-for="(action,bIndex) in item.actions"
-                             :key="bIndex"
-                             flat
-                             small
-                             href
-                             color="primary"
-                             @click="action.handle(props.item)">{{ action.name(props.item) }}</v-btn>
+              <v-data-table
+                :headers="headers"
+                :items="table.items"
+                :rows-per-page-items="table.pageSizes"
+                class="elevation-1"
+                item-key="name"
+                disable-initial-sort
+                hide-actions
+              >
+                <template slot="items" slot-scope="props">
+                  <template v-for="(item, index) in headers">
+                    <td v-if="item.type == 'action'" :key="index" class="text-xs-left">
+                      <v-btn
+                        v-for="(action, bIndex) in item.actions"
+                        :key="bIndex"
+                        flat
+                        small
+                        href
+                        color="primary"
+                        @click="action.handle(props.item)"
+                        >{{ action.name(props.item) }}</v-btn
+                      >
                     </td>
-                    <td v-else-if="item.type == 'tag'"
-                        :key="index"
-                        class="text-xs-left">
-                      <v-btn flat
-                             small
-                             :color="item.color(props.item)">{{ props.item[item.value] }}</v-btn>
+                    <td v-else-if="item.type == 'tag'" :key="index" class="text-xs-left">
+                      <v-btn flat small :color="item.color(props.item)">{{ props.item[item.value] }}</v-btn>
                     </td>
-                    <td v-else
-                        :key="index"
-                        class="text-xs-left">{{ item.textFormat ? item.textFormat(props.item) : props.item[item.value] }}</td>
+                    <td v-else :key="index" class="text-xs-left">
+                      {{ item.textFormat ? item.textFormat(props.item) : props.item[item.value] }}
+                    </td>
                   </template>
                 </template>
                 <!-- 分页 -->
                 <template v-slot:footer>
                   <td :colspan="headers.length">
                     <div class="text-xs-center pt-2">
-                      <v-pagination v-model="table.pageIndex"
-                                    :length="table.pageCount"
-                                    total-visible="10"></v-pagination>
+                      <v-pagination
+                        v-model="table.pageIndex"
+                        :length="table.pageCount"
+                        total-visible="10"
+                      ></v-pagination>
                     </div>
                   </td>
                 </template>
@@ -174,7 +191,7 @@
 import request from "@/util/request"
 export default {
   $_veeValidate: {
-    validator: 'new'
+    validator: "new"
   },
   props: {
     basic: {
@@ -188,16 +205,16 @@ export default {
       default: []
     }
   },
-  data () {
+  data() {
     return {
       search: "",
       dialog: false,
-      formTitle: '',
+      formTitle: "",
       formItem: {},
       table: {
         pageIndex: 1,
         pageSize: 10,
-        pageSizes: [10, 20, 50, 100, { text: '全部', value: -1 }],
+        pageSizes: [10, 20, 50, 100, { text: "全部", value: -1 }],
         pageCount: 0,
         totalCount: 0,
         selected: [],
@@ -206,73 +223,73 @@ export default {
     }
   },
   computed: {
-    headers () {
+    headers() {
       return this.columns.filter(c => c.table)
     },
-    forms () {
+    forms() {
       return this.columns.filter(c => c.form)
     }
   },
   watch: {
-    'table.pageIndex' (newVal, oldVal) {
+    "table.pageIndex"(newVal, oldVal) {
       this.getList()
     }
   },
-  mounted () {
+  mounted() {
     var dictionary = { custom: {} }
     for (let col of this.columns) {
       if (col.requiredInfo) {
         dictionary.custom[col.value] = col.requiredInfo
       }
     }
-    this.$validator.localize('zh_CN', dictionary)
+    this.$validator.localize("zh_CN", dictionary)
     this.getList()
   },
   methods: {
     //新增
-    add () {
+    add() {
       this.getOne(0)
       this.curd.affterAdd()
     },
     //修改
-    edit (item) {
+    edit(item) {
       this.getOne(item.id)
     },
     //删除
-    del (item) {
+    del(item) {
       this.$dialog.error({
         text: `确定删除${this.basic.title}"${item[this.basic.showValue]}"吗`,
-        title: '警告',
+        title: "警告",
         persistent: true,
         actions: {
           true: {
-            color: 'primary',
-            text: '确定',
+            color: "primary",
+            text: "确定",
             handle: () => {
               request({
                 url: `/Api/${this.basic.controller}/Delete`,
-                method: 'post',
+                method: "post",
                 data: item
               }).then(({ data }) => {
                 if (data.Result) {
                   this.getList()
                   this.$dialog.message.success(data.Message, {
-                    position: 'top'
+                    position: "top"
                   })
                 } else {
                   this.$dialog.message.error(data.Message, {
-                    position: 'top'
+                    position: "top"
                   })
                 }
               })
             }
           },
-          false: '取消'
+          false: "取消"
         }
       })
     },
     //关闭窗口
-    close () {
+    close() {
       this.dialog = false
       setTimeout(() => {
         this.formItem = {}
@@ -280,23 +297,23 @@ export default {
       }, 300)
     },
     //保存
-    save () {
+    save() {
       this.$validator.validateAll().then(res => {
         if (res) {
           request({
             url: `/Api/${this.basic.controller}/Add`,
-            method: 'post',
+            method: "post",
             data: this.formItem
           }).then(({ data }) => {
             if (data.Result) {
               this.getList()
               this.close()
               this.$dialog.message.success(data.Message, {
-                position: 'top'
+                position: "top"
               })
             } else {
               this.$dialog.message.error(data.Message, {
-                position: 'top'
+                position: "top"
               })
             }
           })
@@ -304,10 +321,10 @@ export default {
       })
     },
     //获取单个
-    getOne (id) {
+    getOne(id) {
       request({
         url: `/Api/${this.basic.controller}/GetOne`,
-        method: 'post',
+        method: "post",
         data: {
           id: id
         }
@@ -321,16 +338,16 @@ export default {
           this.formTitle = id == 0 ? `新建${this.basic.title}` : `编辑${this.basic.title}`
         } else {
           this.$dialog.message.error(data.Message, {
-            position: 'top'
+            position: "top"
           })
         }
       })
     },
     //获取列表
-    getList () {
+    getList() {
       request({
         url: `/Api/${this.basic.controller}/GetList`,
-        method: 'post',
+        method: "post",
         data: {
           search: this.search,
           user_id: this.$store.getters.user.user_id,
@@ -345,7 +362,7 @@ export default {
           this.table.totalCount = data.PageInfo.TotalCount
         } else {
           this.$dialog.message.error(data.Message, {
-            position: 'top'
+            position: "top"
           })
         }
       })

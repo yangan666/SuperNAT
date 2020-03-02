@@ -67,5 +67,14 @@ namespace SuperNAT.Server.Controllers
             var rst = bll.GetList(model);
             return Json(rst);
         }
+
+        [HttpPost]
+        [Route("GetServerConfig")]
+        public IActionResult GetServerConfig()
+        {
+            var bll = new ServerConfigBll();
+            var rst = bll.GetServerConfig();
+            return Json(rst);
+        }
     }
 }

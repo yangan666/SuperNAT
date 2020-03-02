@@ -46,5 +46,7 @@ namespace SuperNAT.Model
         public string local_endpoint => $"{local}{(local_port == 80 ? "" : $":{local_port}")}";
         [Editable(false)]
         public string remote_endpoint => $"{remote}{(remote_port == 80 ? "" : $":{remote_port}")}";
+        [Editable(false)]
+        public string server_config { get; set; }
     }
 }
