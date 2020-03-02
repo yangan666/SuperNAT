@@ -45,7 +45,7 @@ namespace SuperNAT.Server
             httpModel.Headers = _httpRequestInfo.Headers;
             httpModel.Host = _httpRequestInfo.BaseUrl;
             httpModel.ContentType = _httpRequestInfo.ContentType;
-            httpModel.Content = _httpRequestInfo.ContentLength > 0 ? DataHelper.Compress(_httpRequestInfo.Body) : null;
+            httpModel.Content = _httpRequestInfo.Body;
 
             return httpModel;
         }

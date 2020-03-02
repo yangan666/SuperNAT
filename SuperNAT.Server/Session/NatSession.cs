@@ -12,7 +12,7 @@ namespace SuperNAT.Server
     public class NatSession : SocketSession
     {
         public Client Client { get; set; }
-        public List<Map> MapList { get; set; }
+        public List<Map> MapList { get; set; } = new List<Map>();
 
         public override void Close()
         {

@@ -24,6 +24,7 @@ namespace SuperNAT.Server
     public class ServerHanlder
     {
         public static NatServer NATServer { get; set; }
+        public static List<Map> MapList { get; set; } = new List<Map>();
         public static List<HttpServer> HttpServerList { get; set; } = new List<HttpServer>();
         public static List<HttpsServer> HttpsServerList { get; set; } = new List<HttpsServer>();
         public static List<TcpServer> TcpServerList { get; set; } = new List<TcpServer>();
@@ -35,8 +36,8 @@ namespace SuperNAT.Server
 
             //开启内网TCP服务
             StartNATServer(GlobalConfig.NatPort);
-            //启动所有服务
-            StartAllServer();
+            //拉取Map列表到缓存
+            GetMapList();
             //接口服务
             Task.Run(() =>
             {
@@ -51,7 +52,13 @@ namespace SuperNAT.Server
             TcpServerList?.ForEach(c => c.Stop());
         }
 
-        public void StartAllServer()
+        public void GetMapList()
+        {
+            MapBll mapBll = new MapBll();
+            MapList = mapBll.GetList(new Map()).Data ?? new List<Map>();
+        }
+
+        public static void StartAllServer()
         {
             try
             {
@@ -88,6 +95,7 @@ namespace SuperNAT.Server
             try
             {
                 map.ChangeType = type;
+                ChangeMapList(map);
                 ChangeMap(map);
 
                 var pack = PackHelper.CreatePack(new JsonData()
@@ -131,8 +139,34 @@ namespace SuperNAT.Server
                         session.MapList.RemoveAll(c => c.id == map.id);
                         break;
                 }
-                HandleLog.WriteLine($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
-                HandleLog.WriteLine($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
+                HandleLog.WriteLine($"Session映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
+                HandleLog.WriteLine($"【{map.name}】Session映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        static void ChangeMapList(Map map)
+        {
+            try
+            {
+                switch (map.ChangeType)
+                {
+                    case (int)ChangeMapType.新增:
+                        MapList.Add(map);
+                        break;
+                    case (int)ChangeMapType.修改:
+                        MapList.RemoveAll(c => c.id == map.id);
+                        MapList.Add(map);
+                        break;
+                    case (int)ChangeMapType.删除:
+                        MapList.RemoveAll(c => c.id == map.id);
+                        break;
+                }
+                HandleLog.WriteLine($"服务映射缓存{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
+                HandleLog.WriteLine($"【{map.name}】服务映射缓存{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
             }
             catch (Exception ex)
             {
@@ -143,36 +177,36 @@ namespace SuperNAT.Server
         #region 内网TCP服务
         private static void StartNATServer(int port)
         {
-            Task.Run(async () =>
+            try
             {
-                try
+                NATServer = new NatServer(new ServerOption()
                 {
-                    NATServer = new NatServer(new ServerOption()
+                    Ip = "Any",
+                    Port = port,
+                    ProtocolType = ProtocolType.Tcp,
+                    BackLog = 100,
+                    NoDelay = true,
+                    Security = SslProtocols.Tls12,
+                    SslServerAuthenticationOptions = new SslServerAuthenticationOptions
                     {
-                        Ip = "Any",
-                        Port = port,
-                        ProtocolType = ProtocolType.Tcp,
-                        BackLog = 100,
-                        NoDelay = true,
-                        Security = SslProtocols.Tls12,
-                        SslServerAuthenticationOptions = new SslServerAuthenticationOptions
-                        {
-                            EnabledSslProtocols = SslProtocols.Tls12,
-                            ClientCertificateRequired = false,
-                            ServerCertificate = new X509Certificate2(GlobalConfig.CertFile, GlobalConfig.CertPassword)
-                        }
-                    });
-                    NATServer.OnConnected += Connected;
-                    NATServer.OnReceived += Received;
-                    NATServer.OnClosed += Closed;
-                    await NATServer.StartAsync();
-                    HandleLog.WriteLine($"NAT服务启动成功，监听端口：{port}");
-                }
-                catch (Exception ex)
-                {
-                    HandleLog.WriteLine($"NAT服务启动失败，端口：{port}，{ex}");
-                }
-            });
+                        EnabledSslProtocols = SslProtocols.Tls12,
+                        ClientCertificateRequired = false,
+                        ServerCertificate = new X509Certificate2(GlobalConfig.CertFile, GlobalConfig.CertPassword)
+                    }
+                });
+                NATServer.OnConnected += Connected;
+                NATServer.OnReceived += Received;
+                NATServer.OnClosed += Closed;
+                _ = NATServer.StartAsync();
+                HandleLog.WriteLine($"NAT服务启动成功，监听端口：{port}");
+
+                //启动所有服务
+                StartAllServer();
+            }
+            catch (Exception ex)
+            {
+                HandleLog.WriteLine($"NAT服务启动失败，端口：{port}，{ex}");
+            }
         }
 
         private static void Connected(NatSession session)
@@ -315,10 +349,7 @@ namespace SuperNAT.Server
                     };
 
                     TcpServerList.Add(server);
-                    Task.Run(async () =>
-                    {
-                        await server.StartAsync();
-                    });
+                    _ = server.StartAsync();
                 }
 
                 HandleLog.WriteLine($"{serverConfig.protocol}服务启动成功，监听端口：{serverConfig.port}");

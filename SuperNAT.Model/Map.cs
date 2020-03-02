@@ -22,6 +22,10 @@ namespace SuperNAT.Model
         public string certpwd { get; set; }
         public bool is_ssl { get; set; } = false;
         public int? ssl_type { get; set; }
+        /// <summary>
+        /// 1:反向代理 2:正向代理
+        /// </summary>
+        public int proxy_type { get; set; }
         public int? client_id { get; set; }
         public bool is_disabled { get; set; } = false;
         [Editable(false)]

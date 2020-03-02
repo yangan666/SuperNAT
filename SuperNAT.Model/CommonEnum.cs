@@ -4,6 +4,14 @@ using System.Text;
 
 namespace SuperNAT.Model
 {
+    public enum protocol
+    {
+        http,
+        https,
+        tcp,
+        udp
+    }
+
     public enum ssl_type
     {
         ssl3 = 0x30,
@@ -18,5 +26,11 @@ namespace SuperNAT.Model
         新增 = 1,
         修改 = 2,
         删除 = 3
+    }
+
+    public enum proxy_type
+    {
+        反向代理 = 1,
+        正向代理 = 2
     }
 }

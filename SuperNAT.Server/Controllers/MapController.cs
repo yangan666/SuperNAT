@@ -72,7 +72,7 @@ namespace SuperNAT.Server.Controllers
                 var defalut = new ReturnResult<Map>()
                 {
                     Result = true,
-                    Data = new Map() { remote = GlobalConfig.DefaultUrl }
+                    Data = new Map() { remote = GlobalConfig.DefaultUrl, proxy_type = (int)proxy_type.反向代理 }
                 };
                 return Json(defalut);
             }

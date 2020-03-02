@@ -26,7 +26,7 @@ namespace SuperNAT.Server.Controllers
         [Route("GetEnumList")]
         public IActionResult GetEnumList(string type)
         {
-            ReflectionLesson reflectionLesson = new ReflectionLesson(AppDomain.CurrentDomain.BaseDirectory + "SuperNAT.Common.dll", "SuperNAT.Model", type);
+            ReflectionLesson reflectionLesson = new ReflectionLesson(AppDomain.CurrentDomain.BaseDirectory + "SuperNAT.Model.dll", "SuperNAT.Model", type);
             Type t = reflectionLesson.ReflectionType();
             var rst = new ReturnResult<List<KeyValue>>
             {
