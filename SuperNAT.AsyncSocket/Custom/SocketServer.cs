@@ -47,6 +47,7 @@ namespace SuperNAT.AsyncSocket
             while (true)
             {
                 var socket = await listenSocket.AcceptAsync();
+
                 TSession session = new TSession()
                 {
                     Server = this,
@@ -61,20 +62,37 @@ namespace SuperNAT.AsyncSocket
                 if (ServerOption.Security == SslProtocols.None)
                 {
                     session.Stream = new NetworkStream(session.Socket, true);
+
+                    session.Reader = PipeReader.Create(session.Stream);
+                    session.Writer = PipeWriter.Create(session.Stream);
+
+                    _ = ProcessReadAsync(session);
                 }
                 else
                 {
                     ServerOption.SslServerAuthenticationOptions.RemoteCertificateValidationCallback = SSLValidationCallback;
                     var sslStream = new SslStream(new NetworkStream(session.Socket, true), false);
-                    await sslStream.AuthenticateAsServerAsync(ServerOption.SslServerAuthenticationOptions, CancellationToken.None);
+                    var cancelTokenSource = new CancellationTokenSource();
+                    cancelTokenSource.CancelAfter(5000);
+                    _ = sslStream.AuthenticateAsServerAsync(ServerOption.SslServerAuthenticationOptions, cancelTokenSource.Token).ContinueWith(t =>
+                    {
+                        if (sslStream.IsAuthenticated)
+                        {
+                            session.Stream = sslStream;
 
-                    session.Stream = sslStream;
+                            session.Reader = PipeReader.Create(session.Stream);
+                            session.Writer = PipeWriter.Create(session.Stream);
+
+                            _ = ProcessReadAsync(session);
+                        }
+                        else
+                        {
+                            if (t.IsCanceled)
+                                HandleLog.WriteLine($"连接{session.Remote}证书验证超时，关闭连接");
+                            session.Close();
+                        }
+                    });
                 }
-
-                session.Reader = PipeReader.Create(session.Stream);
-                session.Writer = PipeWriter.Create(session.Stream);
-
-                _ = ProcessReadAsync(session);
             }
         }
 

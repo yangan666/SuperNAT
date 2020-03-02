@@ -53,6 +53,7 @@ namespace SuperNAT.Bll
                 }
 
                 rst = mapDal.Update(model, t);
+                t.Commit();
             }
             catch (Exception ex)
             {

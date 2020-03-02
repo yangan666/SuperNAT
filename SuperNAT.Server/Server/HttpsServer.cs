@@ -14,7 +14,6 @@ namespace SuperNAT.Server
 {
     public class HttpsServer : SocketServer<HttpSession, HttpRequestInfo>
     {
-        public NatServer NATServer { get; set; }
         public HttpsServer(ServerOption serverOption) : base(serverOption)
         {
             ReceiveFilter = new HttpReceiveFilter();
@@ -156,7 +155,7 @@ namespace SuperNAT.Server
                     return;
                 }
                 //转发请求
-                var natSession = NATServer.GetSingle(c => c.MapList.Any(c => c.remote_endpoint == httpModel.Host || (c.remote == httpModel.Host && c.remote_port == 80)));
+                var natSession = ServerHanlder.NATServer.GetSingle(c => c.MapList.Any(c => c.remote_endpoint == httpModel.Host || (c.remote == httpModel.Host && c.remote_port == 80)));
                 if (natSession == null)
                 {
                     //TODO 错误页面

@@ -13,7 +13,6 @@ namespace SuperNAT.Server
 {
     public class TcpServer : SocketServer<TcpSession, NatRequestInfo>
     {
-        public NatServer NATServer { get; set; }
         public TcpServer(ServerOption serverOption) : base(serverOption)
         {
 
@@ -35,7 +34,7 @@ namespace SuperNAT.Server
             try
             {
                 //转发连接请求
-                var natSession = NATServer.GetSingle(c => c.MapList?.Any(m => m.remote_port == ServerOption.Port) ?? false);
+                var natSession = ServerHanlder.NATServer.GetSingle(c => c.MapList?.Any(m => m.remote_port == ServerOption.Port) ?? false);
                 if (natSession == null)
                 {
                     session?.Close();

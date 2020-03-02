@@ -38,6 +38,8 @@ namespace SuperNAT.Server
             StartNATServer(GlobalConfig.NatPort);
             //拉取Map列表到缓存
             GetMapList();
+            //启动所有服务
+            StartAllServer();
             //接口服务
             Task.Run(() =>
             {
@@ -199,9 +201,6 @@ namespace SuperNAT.Server
                 NATServer.OnClosed += Closed;
                 _ = NATServer.StartAsync();
                 HandleLog.WriteLine($"NAT服务启动成功，监听端口：{port}");
-
-                //启动所有服务
-                StartAllServer();
             }
             catch (Exception ex)
             {
@@ -306,10 +305,7 @@ namespace SuperNAT.Server
                             EnabledSslProtocols = SslProtocols.Tls12,
                             ServerCertificate = new X509Certificate2(string.IsNullOrEmpty(serverConfig.certfile) ? GlobalConfig.CertFile : serverConfig.certfile, string.IsNullOrEmpty(serverConfig.certpwd) ? GlobalConfig.CertPassword : serverConfig.certpwd)
                         } : null
-                    })
-                    {
-                        NATServer = NATServer
-                    };
+                    });
                     _ = server.StartAsync();
                     HttpsServerList.Add(server);
                 }
@@ -343,13 +339,10 @@ namespace SuperNAT.Server
                             EnabledSslProtocols = SslProtocols.Tls12,
                             ServerCertificate = new X509Certificate2(string.IsNullOrEmpty(serverConfig.certfile) ? GlobalConfig.CertFile : serverConfig.certfile, string.IsNullOrEmpty(serverConfig.certpwd) ? GlobalConfig.CertPassword : serverConfig.certpwd)
                         } : null
-                    })
-                    {
-                        NATServer = NATServer
-                    };
+                    });
 
-                    TcpServerList.Add(server);
                     _ = server.StartAsync();
+                    TcpServerList.Add(server);
                 }
 
                 HandleLog.WriteLine($"{serverConfig.protocol}服务启动成功，监听端口：{serverConfig.port}");
