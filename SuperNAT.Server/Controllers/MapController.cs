@@ -36,8 +36,9 @@ namespace SuperNAT.Server.Controllers
                 {
                     if (model.client_id != map.Data.client_id)
                     {
-                        ServerHanlder.ChangeMap((int)ChangeMapType.新增, model);
+                        //改了所属主机  删掉原来的  新增修改后的
                         ServerHanlder.ChangeMap((int)ChangeMapType.删除, map.Data);
+                        ServerHanlder.ChangeMap((int)ChangeMapType.新增, model);
                     }
                     else
                     {

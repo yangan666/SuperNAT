@@ -98,16 +98,18 @@ namespace SuperNAT.Server
             {
                 map.ChangeType = type;
                 ChangeMapList(map);
-                ChangeMap(map);
 
+                var natClient = NATServer.GetSingle(c => c.Client?.id == map.client_id);
+                if (natClient == null)
+                    return;
+                ChangeMap(map, natClient);
                 var pack = PackHelper.CreatePack(new JsonData()
                 {
                     Type = (int)JsonType.NAT,
                     Action = (int)NatAction.MapChange,
                     Data = map.ToJson()
                 });
-                var natClient = NATServer.GetSingle(c => c.Client?.id == map.client_id);
-                natClient?.Send(pack);
+                natClient.Send(pack);
             }
             catch (Exception ex)
             {
@@ -115,19 +117,10 @@ namespace SuperNAT.Server
             }
         }
 
-        static void ChangeMap(Map map)
+        static void ChangeMap(Map map, NatSession session)
         {
             try
             {
-                var session = NATServer.GetSingle(c => c.MapList.Any(s => s.client_id == map.client_id));
-                if (session == null)
-                {
-                    return;
-                }
-                if (session.MapList == null)
-                {
-                    session.MapList = new List<Map>();
-                }
                 switch (map.ChangeType)
                 {
                     case (int)ChangeMapType.新增:
