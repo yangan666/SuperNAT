@@ -117,8 +117,6 @@ namespace SuperNAT.Server
             app.UseStaticFiles();
         }
 
-
-
         public static void Init()
         {
             var builder = new ConfigurationBuilder()
