@@ -117,7 +117,15 @@ namespace SuperNAT.Server
             }
             catch (Exception ex)
             {
-                throw ex;
+                HandleLog.WriteLine($"【{session.Local}】请求地址：{map.protocol}://{httpModel.Host}{httpModel.Path}，正向代理异常：{ex}");
+                var response = new HttpResponse()
+                {
+                    Status = 404,
+                    ContentType = "text/html",
+                    Body = Encoding.UTF8.GetBytes($"server error")
+                };
+                //把处理信息返回到客户端
+                session.Send(response.Write());
             }
         }
 
