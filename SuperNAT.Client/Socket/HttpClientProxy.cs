@@ -93,7 +93,7 @@ namespace SuperNAT.Client
                                     Data = httpModel.ToJson()
                                 });
                                 natClient?.Send(pack);
-                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {returnContent.ToUTF8String()} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(returnContent.Length * 1.00 / 1024, 1)}KB");
+                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri}{$" {returnContent.ToUTF8String()}".If(returnContent.Length < 1024)} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(returnContent.Length * 1.00 / 1024, 1)}KB");
                                 break;
                             }
                     }
