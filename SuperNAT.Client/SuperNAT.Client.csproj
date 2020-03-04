@@ -6,6 +6,7 @@
     <Version>1.2.0.1</Version>
     <AssemblyVersion>1.2.0.1</AssemblyVersion>
     <FileVersion>1.2.0.1</FileVersion>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
