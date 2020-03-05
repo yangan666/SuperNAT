@@ -54,7 +54,7 @@ namespace SuperNAT.Client
                                 //httpModel.Headers["Host"] = map.local_endpoint;
                                 foreach (var item in httpModel.Headers)
                                 {
-                                    if (item.Key != "Content-Type")
+                                    if (item.Key.ToUpper() != "Content-Type".ToUpper())
                                     {
                                         if (!httpRequest.Content?.Headers.TryAddWithoutValidation(item.Key, item.Value) ?? true)
                                         {
@@ -77,7 +77,7 @@ namespace SuperNAT.Client
                                 foreach (var item in response.Content.Headers)
                                 {
                                     httpModel.Headers.Add(item.Key, string.Join(";", item.Value));
-                                    if (item.Key == "Content-Type")
+                                    if (item.Key.ToUpper() == "Content-Type".ToUpper())
                                     {
                                         httpModel.ContentType = string.Join(";", item.Value);
                                     }
@@ -101,6 +101,19 @@ namespace SuperNAT.Client
                 catch (Exception ex)
                 {
                     HandleLog.WriteLine($"处理请求异常：{ex}");
+
+                    var pack = PackHelper.CreatePack(new JsonData()
+                    {
+                        Type = (int)JsonType.HTTP,
+                        Action = (int)HttpAction.Response,
+                        Data = new HttpModel()
+                        {
+                            StatusCode = (int)HttpStatusCode.BadRequest,
+                            ContentType = "text/html",
+                            Content = DataHelper.Compress(Encoding.UTF8.GetBytes($"server error"))
+                        }.ToJson()
+                    });
+                    natClient?.Send(pack);
                 }
             });
         }
