@@ -26,5 +26,7 @@ namespace SuperNAT.Model
         public string is_online_str => is_online ? "在线" : "离线";
         [Editable(false)]
         public bool is_admin { get; set; } = false;
+        [Editable(false)]
+        public List<Map> MapList { get; set; }
     }
 }

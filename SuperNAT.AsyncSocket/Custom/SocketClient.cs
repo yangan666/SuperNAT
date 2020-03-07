@@ -52,7 +52,6 @@ namespace SuperNAT.AsyncSocket
                 await Socket.ConnectAsync(new IPEndPoint(IPAddress.Parse(ClientOptions.Ip), ClientOptions.Port));
                 Remote = Socket.RemoteEndPoint.ToString();
                 Local = Socket.LocalEndPoint.ToString();
-                HandleLog.WriteLine($"连接服务器[{ClientOptions.Ip}:{ClientOptions.Port}]成功");
 
                 if (ClientOptions.Security == SslProtocols.None)
                 {
@@ -71,6 +70,7 @@ namespace SuperNAT.AsyncSocket
                 Writer = PipeWriter.Create(Stream);
 
                 IsConnected = true;
+                HandleLog.WriteLine($"连接服务器[{ClientOptions.Ip}:{ClientOptions.Port}]成功");
                 OnConnected?.Invoke(Socket);
 
                 await ProcessReadAsync();

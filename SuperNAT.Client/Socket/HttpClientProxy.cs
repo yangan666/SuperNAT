@@ -26,7 +26,7 @@ namespace SuperNAT.Client
                         case (byte)HttpAction.Request:
                             {
                                 var httpModel = packageInfo.Body.Data.FromJson<HttpModel>();
-                                var map = ClientHandler.MapList.Find(c => c.remote_endpoint == httpModel.Host || (c.remote == httpModel.Host && c.remote_port == 80));
+                                var map = natClient.Client.MapList.Find(c => c.remote_endpoint == httpModel.Host || (c.remote == httpModel.Host && c.remote_port == 80));
                                 if (map == null)
                                 {
                                     HandleLog.WriteLine($"映射不存在，外网访问地址：{httpModel.Host}");

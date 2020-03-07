@@ -58,12 +58,14 @@ namespace SuperNAT.Server
                                     c.Close();
                                 });
                             }
-                            session.Client = client;
 
                             var mapBll = new MapBll();
                             session.MapList = mapBll.GetMapList(secret).Data ?? new List<Map>();
+                            client.MapList = session.MapList;
+                            session.Client = client;
                             //原样返回回复客户端注册成功
-                            session.Send(requestInfo.Raw);
+                            requestInfo.Body.Data = client.ToJson();
+                            session.Send(PackHelper.CreatePack(requestInfo.Body));
                             Task.Run(() =>
                             {
                                 //更新在线状态

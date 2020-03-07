@@ -30,7 +30,6 @@ namespace SuperNAT.Client
         public static string ServerUrl { get; set; } = AppConfig.GetSetting("ServerUrl");
         public static int ServerPort { get; set; } = Convert.ToInt32(AppConfig.GetSetting("ServerPort"));
         public static int NatPort { get; set; } = Convert.ToInt32(AppConfig.GetSetting("NatPort"));
-        public static List<Map> MapList { get; set; }
         public static ILoggerRepository Repository { get; set; }
         public static Thread reConnectThread, heartThread;
         public static bool IsReConnect = true;
@@ -53,16 +52,6 @@ namespace SuperNAT.Client
                     Repository = LogManager.CreateRepository("NETCoreRepository");
                     XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
                     Log4netUtil.LogRepository = Repository;//类库中定义的静态变量
-                    //加载映射列表
-                    var maps = GetMapList(Secret);
-                    while (!maps.Result && maps.Status == -1)
-                    {
-                        maps = GetMapList(Secret);
-                        //请求失败5s后重新请求
-                        HandleLog.WriteLine($"请求获取映射列表失败！5s后重新请求！");
-                        Thread.Sleep(5000);
-                    }
-                    MapList = maps.Data ?? new List<Map>();
                     //连接服务器
                     ConnectNatServer();
                     //开启重连线程
@@ -89,31 +78,6 @@ namespace SuperNAT.Client
 
             NatClient?.Close();
             NatClient = null;
-        }
-
-        static ReturnResult<List<Map>> GetMapList(string secret)
-        {
-            var res = new ReturnResult<List<Map>>();
-
-            try
-            {
-                var response = HttpHelper.HttpRequest("POST", $"http://{ServerUrl}:{ServerPort}/Api/Map/GetMapList?secret={secret}");
-                if (!string.IsNullOrEmpty(response))
-                {
-                    res = JsonHelper.Instance.Deserialize<ReturnResult<List<Map>>>(response);
-                }
-                else
-                {
-                    //请求失败
-                    res.Status = -1;
-                }
-            }
-            catch (Exception ex)
-            {
-                HandleLog.WriteLine($"获取端口映射列表失败：{ex}");
-            }
-
-            return res;
         }
 
         static async void ConnectNatServer()
@@ -258,29 +222,6 @@ namespace SuperNAT.Client
         static void OnClientClosed(Socket socket)
         {
             HandleLog.WriteLine($"NatClient{NatClient.Local}已关闭");
-        }
-
-        public static void ChangeMap(Map map)
-        {
-            if (MapList == null)
-            {
-                MapList = new List<Map>();
-            }
-            switch (map.ChangeType)
-            {
-                case (int)ChangeMapType.新增:
-                    MapList.Add(map);
-                    break;
-                case (int)ChangeMapType.修改:
-                    MapList.RemoveAll(c => c.id == map.id);
-                    MapList.Add(map);
-                    break;
-                case (int)ChangeMapType.删除:
-                    MapList.RemoveAll(c => c.id == map.id);
-                    break;
-            }
-            HandleLog.WriteLine($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
-            HandleLog.WriteLine($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
         }
     }
 }
