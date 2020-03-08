@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 139.155.104.69
+Source Server         : 127.0.0.1
 Source Server Version : 50505
-Source Host           : 139.155.104.69:3306
+Source Host           : 127.0.0.1:3306
 Source Database       : supernat
 
 Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2020-02-18 14:23:28
+Date: 2020-03-08 19:10:19
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -32,7 +32,7 @@ CREATE TABLE `authority` (
 DROP TABLE IF EXISTS `client`;
 CREATE TABLE `client` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '主机名称',
   `subdomain` varchar(150) DEFAULT '',
   `secret` varchar(50) NOT NULL DEFAULT '',
   `is_online` bit(1) NOT NULL DEFAULT b'0',
@@ -42,7 +42,7 @@ CREATE TABLE `client` (
   `user_id` varchar(50) DEFAULT '',
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT='主机客户端';
 
 -- ----------------------------
 -- Table structure for map
@@ -60,10 +60,11 @@ CREATE TABLE `map` (
   `certpwd` varchar(150) DEFAULT NULL,
   `is_ssl` bit(1) NOT NULL DEFAULT b'0',
   `ssl_type` int(11) DEFAULT NULL,
+  `proxy_type` int(11) NOT NULL,
   `client_id` int(11) NOT NULL,
   `is_disabled` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for menu
@@ -126,7 +127,7 @@ CREATE TABLE `server_config` (
   `certpwd` varchar(150) DEFAULT NULL,
   `is_disabled` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user
@@ -134,7 +135,7 @@ CREATE TABLE `server_config` (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(50) DEFAULT '',
+  `user_id` varchar(50) NOT NULL DEFAULT '',
   `user_name` varchar(150) NOT NULL DEFAULT '',
   `password` varchar(150) NOT NULL DEFAULT '',
   `wechat` varchar(150) DEFAULT '',
@@ -143,5 +144,6 @@ CREATE TABLE `user` (
   `is_disabled` bit(1) NOT NULL DEFAULT b'0',
   `is_admin` bit(1) NOT NULL DEFAULT b'0',
   `role_id` varchar(50) DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+  `create_time` datetime NOT NULL,
+  PRIMARY KEY (`id`,`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;

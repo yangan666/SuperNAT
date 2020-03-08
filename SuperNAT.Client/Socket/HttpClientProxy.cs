@@ -37,18 +37,15 @@ namespace SuperNAT.Client
                                     Method = new HttpMethod(httpModel.Method),
                                     RequestUri = new Uri($"{map.protocol}://{map.local_endpoint}{httpModel.Path}")
                                 };
-                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {httpModel.Headers.ToJson()}");
+                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {httpModel.Headers.ToJson()}{Environment.NewLine}");
+                                string bodyStr = string.Empty;
                                 if (httpRequest.Method != HttpMethod.Get && httpModel.Content?.Length > 0)
                                 {
                                     var body = DataHelper.Decompress(httpModel.Content);//解压
-                                    var bodyStr = body.ToUTF8String();
-                                    //记录请求小于1kb的参数
-                                    if (httpModel.Content.Length < 1024)
-                                    {
-                                        HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {bodyStr}");
-                                    }
+                                    bodyStr = body.ToUTF8String();
                                     httpRequest.Content = new StringContent(bodyStr, Encoding.UTF8, httpModel.ContentType.Split(";")[0]);
                                 }
+                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri}{Environment.NewLine}【Header】{httpModel.Headers.ToJson()}{$"{Environment.NewLine}【Body】{bodyStr}".If(httpModel.Content?.Length < 1024)}{Environment.NewLine}");
                                 using HttpClient _httpClient = new HttpClient();
                                 //替换Host 不然400 Bad Request
                                 //httpModel.Headers["Host"] = map.local_endpoint;
@@ -93,7 +90,7 @@ namespace SuperNAT.Client
                                     Data = httpModel.ToJson()
                                 });
                                 natClient?.Send(pack);
-                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri}{$" {returnContent.ToUTF8String()}".If(returnContent.Length < 1024)} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(returnContent.Length * 1.00 / 1024, 1)}KB");
+                                HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri}{$"{returnContent.ToUTF8String()}".If(returnContent.Length < 1024)} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(returnContent.Length * 1.00 / 1024, 1)}KB{Environment.NewLine}");
                                 break;
                             }
                     }
