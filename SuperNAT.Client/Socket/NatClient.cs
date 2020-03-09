@@ -14,6 +14,7 @@ namespace SuperNAT.Client
 {
     public class NatClient : SocketClient<NatPackageInfo>
     {
+        public Model.Client Client { get; set; }
         public NatClient(ClientOptions clientOptions) : base(clientOptions)
         {
 
@@ -28,10 +29,13 @@ namespace SuperNAT.Client
                     case (int)NatAction.Connect:
                         {
                             //注册包回复
-                            HandleLog.WriteLine($"主机密钥验证成功！");
-                            if (ClientHandler.MapList.Any())
+                            Client = packageInfo.Body.Data.FromJson<Model.Client>();
+                            if (Client.MapList == null)
+                                Client.MapList = new List<Map>();
+                            HandleLog.WriteLine($"【{Client.user_name},{Client.name}】主机密钥验证成功！");
+                            if (Client.MapList.Any())
                             {
-                                foreach (var item in ClientHandler.MapList)
+                                foreach (var item in Client.MapList)
                                 {
                                     HandleLog.WriteLine($"【{item.name}】映射成功：{item.local_endpoint} --> {item.remote_endpoint}");
                                 }
@@ -46,7 +50,7 @@ namespace SuperNAT.Client
                         {
                             //Map变动
                             var map = packageInfo.Body.Data.FromJson<Map>();
-                            ClientHandler.ChangeMap(map);
+                            ChangeMap(map);
                         }
                         break;
                     case (int)NatAction.ServerMessage:
@@ -63,6 +67,29 @@ namespace SuperNAT.Client
             {
                 HandleLog.WriteLine($"客户端处理穿透业务异常，{ex}");
             }
+        }
+
+        public void ChangeMap(Map map)
+        {
+            if (Client.MapList == null)
+            {
+                Client.MapList = new List<Map>();
+            }
+            switch (map.ChangeType)
+            {
+                case (int)ChangeMapType.新增:
+                    Client.MapList.Add(map);
+                    break;
+                case (int)ChangeMapType.修改:
+                    Client.MapList.RemoveAll(c => c.id == map.id);
+                    Client.MapList.Add(map);
+                    break;
+                case (int)ChangeMapType.删除:
+                    Client.MapList.RemoveAll(c => c.id == map.id);
+                    break;
+            }
+            HandleLog.WriteLine($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
+            HandleLog.WriteLine($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
         }
     }
 }

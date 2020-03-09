@@ -11,7 +11,7 @@ namespace SuperNAT.Common
         public static Action<string, bool> WriteLog { get; set; }
         public static void WriteLine(string log, bool isPrint = true)
         {
-            WriteLog?.Invoke(log + Environment.NewLine, isPrint);
+            WriteLog?.Invoke(log, isPrint);
         }
     }
 }

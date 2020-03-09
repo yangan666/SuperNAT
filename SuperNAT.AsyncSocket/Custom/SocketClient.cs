@@ -52,7 +52,6 @@ namespace SuperNAT.AsyncSocket
                 await Socket.ConnectAsync(new IPEndPoint(IPAddress.Parse(ClientOptions.Ip), ClientOptions.Port));
                 Remote = Socket.RemoteEndPoint.ToString();
                 Local = Socket.LocalEndPoint.ToString();
-                HandleLog.WriteLine($"连接服务器[{ClientOptions.Ip}:{ClientOptions.Port}]成功");
 
                 if (ClientOptions.Security == SslProtocols.None)
                 {
@@ -62,18 +61,31 @@ namespace SuperNAT.AsyncSocket
                 {
                     ClientOptions.SslClientAuthenticationOptions.RemoteCertificateValidationCallback = SSLValidationCallback;
                     var sslStream = new SslStream(new NetworkStream(Socket, true), false);
-                    await sslStream.AuthenticateAsClientAsync(ClientOptions.SslClientAuthenticationOptions, CancellationToken.None);
+                    var cancelTokenSource = new CancellationTokenSource();
+                    cancelTokenSource.CancelAfter(5000);
+                    _ = sslStream.AuthenticateAsClientAsync(ClientOptions.SslClientAuthenticationOptions, cancelTokenSource.Token).ContinueWith(t =>
+                    {
+                        if (sslStream.IsAuthenticated)
+                        {
+                            Stream = sslStream;
+                            Reader = PipeReader.Create(Stream);
+                            Writer = PipeWriter.Create(Stream);
 
-                    Stream = sslStream;
+                            IsConnected = true;
+                            HandleLog.WriteLine($"连接服务器[{ClientOptions.Ip}:{ClientOptions.Port}]成功");
+                            OnConnected?.Invoke(Socket);
+
+                            _ = ProcessReadAsync();
+                        }
+                        else
+                        {
+                            if (t.IsCanceled)
+                                HandleLog.WriteLine($"连接{Remote}证书验证超时，关闭连接");
+                            Close();
+                        }
+                    });
                 }
 
-                Reader = PipeReader.Create(Stream);
-                Writer = PipeWriter.Create(Stream);
-
-                IsConnected = true;
-                OnConnected?.Invoke(Socket);
-
-                await ProcessReadAsync();
             }
             catch (Exception ex)
             {
