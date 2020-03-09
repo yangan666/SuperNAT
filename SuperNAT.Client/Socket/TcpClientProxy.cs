@@ -24,17 +24,13 @@ namespace SuperNAT.Client
 
         }
 
-        public void ConectLocalServer()
+        public async void ConectLocalServerAsync()
         {
-            Task.Run(async () =>
-            {
-                //不加过滤器
-                //NatClient.Initialize(null);
-                OnConnected += OnClientConnected;
-                OnReceived += OnPackageReceived;
-                OnClosed += OnClientClosed;
-                await ConnectAsync();
-            });
+            NatClient.Initialize();
+            OnConnected += OnClientConnected;
+            OnReceived += OnPackageReceived;
+            OnClosed += OnClientClosed;
+            await ConnectAsync();
         }
 
         private void OnClientConnected(Socket socket)
@@ -85,7 +81,7 @@ namespace SuperNAT.Client
                         {
                             //tcp注册包  发起连接到内网服务器
                             RemoteSession = tcpModel;
-                            ConectLocalServer();
+                            ConectLocalServerAsync();
                         }
                         break;
                     case (int)TcpAction.TransferData:

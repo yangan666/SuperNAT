@@ -40,7 +40,7 @@ namespace SuperNAT.AsyncSocket
             };
         }
 
-        public void Initialize(IReceiveFilter<TRequestInfo> receiveFilter)
+        public void Initialize(IReceiveFilter<TRequestInfo> receiveFilter = null)
         {
             ReceiveFilter = receiveFilter;
         }
