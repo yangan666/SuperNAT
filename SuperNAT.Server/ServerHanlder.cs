@@ -212,11 +212,11 @@ namespace SuperNAT.Server
             {
                 try
                 {
-                    //HandleLog.WriteLine($"NAT服务收到数据：{requestInfo.Raw.ToHexWithSpace()},正文内容: {requestInfo.Body.ToJson()}");
                     switch (requestInfo.Body.Type)
                     {
                         case (byte)JsonType.NAT:
                             {
+                                HandleLog.WriteLine($"NAT收到数据：{requestInfo.Raw.ToHexWithSpace()},正文内容: {requestInfo.Body.ToJson()}");
                                 NATServer.ProcessData(session, requestInfo);
                                 break;
                             }

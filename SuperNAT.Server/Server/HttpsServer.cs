@@ -253,6 +253,7 @@ namespace SuperNAT.Server
             catch (Exception ex)
             {
                 HandleLog.WriteLine($"HttpsServer ProcessData穿透处理异常，{ex}");
+                session?.Close();
             }
         }
     }

@@ -40,6 +40,7 @@ namespace SuperNAT.Server
                         {
                             //注册包
                             var secret = requestInfo.Body.Data.ToString();
+                            HandleLog.WriteLine($"收到连接{session.Remote}的注册包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
                             var bll = new ClientBll();
                             var client = bll.GetOne(secret).Data;
                             if (client == null)
