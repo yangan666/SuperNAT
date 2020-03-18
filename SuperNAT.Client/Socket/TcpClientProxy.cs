@@ -26,7 +26,7 @@ namespace SuperNAT.Client
 
         public async void ConectLocalServerAsync()
         {
-            NatClient.Initialize();
+            Initialize();
             OnConnected += OnClientConnected;
             OnReceived += OnPackageReceived;
             OnClosed += OnClientClosed;

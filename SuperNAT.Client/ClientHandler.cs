@@ -89,7 +89,6 @@ namespace SuperNAT.Client
                     return;
                 }
                 HandleLog.WriteLine($"正在连接服务器...");
-                NatClient = null;
                 //解析主机名
                 IPHostEntry ipInfo = Dns.GetHostEntry(ServerUrl);
                 var serverIp = ipInfo.AddressList.Any() ? ipInfo.AddressList[0].ToString() : throw new Exception($"域名【{ServerUrl}】无法解析");

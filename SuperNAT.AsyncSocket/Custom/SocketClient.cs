@@ -56,6 +56,14 @@ namespace SuperNAT.AsyncSocket
                 if (ClientOptions.Security == SslProtocols.None)
                 {
                     Stream = new NetworkStream(Socket, true);
+                    Reader = PipeReader.Create(Stream);
+                    Writer = PipeWriter.Create(Stream);
+
+                    IsConnected = true;
+                    HandleLog.WriteLine($"连接服务器[{ClientOptions.Ip}:{ClientOptions.Port}]成功");
+                    OnConnected?.Invoke(Socket);
+
+                    _ = ProcessReadAsync();
                 }
                 else
                 {
