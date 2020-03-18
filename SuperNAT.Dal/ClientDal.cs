@@ -54,10 +54,10 @@ namespace SuperNAT.Dal
                                                 FROM
 	                                                client t1
                                                 LEFT JOIN `user` t2 ON t1.user_id = t2.user_id ");
-                bool is_admin = !string.IsNullOrWhiteSpace(model.user_id) && !model.is_admin;
+                bool not_admin = !string.IsNullOrWhiteSpace(model.user_id) && !model.is_admin;
                 if (model.page_index > 0)
                 {
-                    sql.Append($"where ({"t1.name,t1.remark,t2.user_name".ToLikeString("or", "search")}) {"and t2.user_id = @user_id ".If(is_admin)}".If(!string.IsNullOrWhiteSpace(model.search), "and t2.user_id = @user_id ".If(is_admin)));
+                    sql.Append($"where ({"t1.name,t1.remark,t2.user_name".ToLikeString("or", "search")}) {"and t2.user_id = @user_id ".If(not_admin)}".If(!string.IsNullOrWhiteSpace(model.search), "where t2.user_id = @user_id ".If(not_admin)));
                     model.search = $"%{model.search}%";
                     rst.Data = conn.GetListPaged<Client>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
