@@ -172,33 +172,36 @@ namespace SuperNAT.Server
         #region 内网TCP服务
         private static void StartNATServer(int port)
         {
-            try
+            Task.Run(() =>
             {
-                NATServer = new NatServer(new ServerOption()
+                try
                 {
-                    Ip = "Any",
-                    Port = port,
-                    ProtocolType = ProtocolType.Tcp,
-                    BackLog = 100,
-                    NoDelay = true,
-                    Security = SslProtocols.Tls12,
-                    SslServerAuthenticationOptions = new SslServerAuthenticationOptions
+                    NATServer = new NatServer(new ServerOption()
                     {
-                        EnabledSslProtocols = SslProtocols.Tls12,
-                        ClientCertificateRequired = false,
-                        ServerCertificate = new X509Certificate2(GlobalConfig.CertFile, GlobalConfig.CertPassword)
-                    }
-                });
-                NATServer.OnConnected += Connected;
-                NATServer.OnReceived += Received;
-                NATServer.OnClosed += Closed;
-                _ = NATServer.StartAsync();
-                HandleLog.WriteLine($"NAT服务启动成功，监听端口：{port}");
-            }
-            catch (Exception ex)
-            {
-                HandleLog.WriteLine($"NAT服务启动失败，端口：{port}，{ex}");
-            }
+                        Ip = "Any",
+                        Port = port,
+                        ProtocolType = ProtocolType.Tcp,
+                        BackLog = 100,
+                        NoDelay = true,
+                        Security = SslProtocols.Tls12,
+                        SslServerAuthenticationOptions = new SslServerAuthenticationOptions
+                        {
+                            EnabledSslProtocols = SslProtocols.Tls12,
+                            ClientCertificateRequired = false,
+                            ServerCertificate = new X509Certificate2(GlobalConfig.CertFile, GlobalConfig.CertPassword)
+                        }
+                    });
+                    NATServer.OnConnected += Connected;
+                    NATServer.OnReceived += Received;
+                    NATServer.OnClosed += Closed;
+                    _ = NATServer.StartAsync();
+                    HandleLog.WriteLine($"NAT服务启动成功，监听端口：{port}");
+                }
+                catch (Exception ex)
+                {
+                    HandleLog.WriteLine($"NAT服务启动失败，端口：{port}，{ex}");
+                }
+            });
         }
 
         private static void Connected(NatSession session)

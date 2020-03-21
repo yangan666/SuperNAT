@@ -17,23 +17,32 @@ namespace SuperNAT.Server
         {
             lock (lockObj)
             {
-                if (_httpRequestInfo == null || (_httpRequestInfo != null && _httpRequestInfo.FilterStatus == FilterStatus.Completed))
-                    _httpRequestInfo = new HttpRequestInfo();
+                try
+                {
+                    if (_httpRequestInfo == null || (_httpRequestInfo != null && _httpRequestInfo.FilterStatus == FilterStatus.Completed))
+                        _httpRequestInfo = new HttpRequestInfo();
 
-                //raw.AddRange(reader.Sequence.ToArray());
+                    //raw.AddRange(reader.Sequence.ToArray());
 
-                LoadRequestLine(ref reader);
-                LoadRequestHeader(ref reader);
-                LoadRequestBody(ref reader);
+                    LoadRequestLine(ref reader);
+                    LoadRequestHeader(ref reader);
+                    LoadRequestBody(ref reader);
 
-                if (_httpRequestInfo.FilterStatus != FilterStatus.Completed)
-                    return null;
+                    if (_httpRequestInfo.FilterStatus != FilterStatus.Completed)
+                        return null;
 
-                //_httpRequestInfo.Raw = raw.ToArray();
-                _httpRequestInfo.BaseUrl = _httpRequestInfo.Headers["Host"];
-                _httpRequestInfo.Success = true;
-                _httpRequestInfo.Message = "HTTP请求解析成功";
-                return _httpRequestInfo;
+                    //_httpRequestInfo.Raw = raw.ToArray();
+                    _httpRequestInfo.BaseUrl = _httpRequestInfo.Headers["Host"];
+                    _httpRequestInfo.Success = true;
+                    _httpRequestInfo.Message = "HTTP请求解析成功";
+                    return _httpRequestInfo;
+                }
+                catch (Exception ex)
+                {
+                    HandleLog.WriteLine($"http解析异常：{ex}");
+                    _httpRequestInfo.FilterStatus = FilterStatus.Completed;
+                    return new HttpRequestInfo() { Success = false, Message = ex.Message };
+                }
             }
         }
 

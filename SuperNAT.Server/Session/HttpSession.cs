@@ -16,5 +16,17 @@ namespace SuperNAT.Server
             var server = (HttpsServer)Server;
             server?.Close(this);
         }
+
+        public void Write(string msg)
+        {
+            var response = new HttpResponse()
+            {
+                Status = 200,
+                ContentType = "text/html",
+                Body = Encoding.UTF8.GetBytes(msg)
+            };
+            //把处理信息返回到客户端
+            Send(response.Write());
+        }
     }
 }

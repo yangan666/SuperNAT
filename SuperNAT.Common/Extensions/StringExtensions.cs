@@ -44,5 +44,10 @@ namespace SuperNAT.Common
         {
             return string.Join(joinStr, str.Split(',').Select(s => $" {s} like @{likeStr} "));
         }
+
+        public static bool EqualsWhithNoCase(this string str, string compare)
+        {
+            return str.ToUpper() == compare.ToUpper();
+        }
     }
 }

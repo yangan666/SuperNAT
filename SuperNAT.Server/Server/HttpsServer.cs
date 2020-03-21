@@ -61,7 +61,7 @@ namespace SuperNAT.Server
                 //httpModel.Headers["Host"] = map.local_endpoint;
                 foreach (var item in httpModel.Headers)
                 {
-                    if (item.Key.ToUpper() != "Content-Type".ToUpper())
+                    if (!item.Key.EqualsWhithNoCase("Content-Type"))
                     {
                         if (!httpRequest.Content?.Headers.TryAddWithoutValidation(item.Key, item.Value) ?? true)
                         {
@@ -86,10 +86,15 @@ namespace SuperNAT.Server
                 };
                 foreach (var item in response.Content.Headers)
                 {
-                    respHttpModel.Headers.Add(item.Key, string.Join(";", item.Value));
-                    if (item.Key.ToUpper() == "Content-Type".ToUpper())
+                    if (item.Key.EqualsWhithNoCase("Content-Type"))
                     {
                         respHttpModel.ContentType = string.Join(";", item.Value);
+                    }
+                    else
+                    {
+                        if (item.Key.EqualsWhithNoCase("Content-Length"))
+                            continue;
+                        respHttpModel.Headers.Add(item.Key, string.Join(";", item.Value));
                     }
                 }
                 respHttpModel.Headers.Remove("Transfer-Encoding");//response收到的是完整的 这个响应头要去掉 不然浏览器解析出错
@@ -118,14 +123,8 @@ namespace SuperNAT.Server
             catch (Exception ex)
             {
                 HandleLog.WriteLine($"【{session.Local}】请求地址：{map.protocol}://{httpModel.Host}{httpModel.Path}，正向代理异常：{ex}");
-                var response = new HttpResponse()
-                {
-                    Status = 404,
-                    ContentType = "text/html",
-                    Body = Encoding.UTF8.GetBytes($"server error")
-                };
                 //把处理信息返回到客户端
-                session.Send(response.Write());
+                session.Write("server error");
             }
         }
 
@@ -135,6 +134,12 @@ namespace SuperNAT.Server
             {
                 try
                 {
+                    if (!requestInfo.Success)
+                    {
+                        HandleLog.WriteLine($"http请求解析异常，ip地址：{session.Remote}");
+                        session.Write("request parse error");
+                        return;
+                    }
                     var httpModel = new HttpModel
                     {
                         RequestTime = DateTime.Now,
@@ -147,15 +152,8 @@ namespace SuperNAT.Server
                     if (map == null)
                     {
                         HandleLog.WriteLine($"映射不存在，请求：{httpModel.Host}{httpModel.Path} {httpModel.Headers.ToJson()} {httpModel.Content.ToUTF8String()}");
-
-                        var response = new HttpResponse()
-                        {
-                            Status = 404,
-                            ContentType = "text/html",
-                            Body = Encoding.UTF8.GetBytes("map not found")
-                        };
                         //把处理信息返回到客户端
-                        session.Send(response.Write());
+                        session.Write("map not found");
                         return;
                     }
                     //正向代理www.supernat.cn
@@ -168,16 +166,9 @@ namespace SuperNAT.Server
                     var natSession = ServerHanlder.NATServer.GetSingle(c => c.MapList.Any(c => c.remote_endpoint == httpModel.Host || (c.remote == httpModel.Host && c.remote_port == 80)));
                     if (natSession == null)
                     {
-                        //TODO 错误页面
                         HandleLog.WriteLine($"穿透客户端未连接到服务器，请求地址：{httpModel.Host}{httpModel.Path}");
-                        var response = new HttpResponse()
-                        {
-                            Status = 404,
-                            ContentType = "text/html",
-                            Body = Encoding.UTF8.GetBytes("nat client not found")
-                        };
                         //把处理信息返回到客户端
-                        session.Send(response.Write());
+                        session.Write("nat client not found");
                     }
                     else
                     {
@@ -197,14 +188,8 @@ namespace SuperNAT.Server
                 catch (Exception ex)
                 {
                     HandleLog.WriteLine($"【{session.Local}】请求地址：{requestInfo.BaseUrl}{requestInfo.Path}，处理发生异常：{ex}");
-                    var response = new HttpResponse()
-                    {
-                        Status = 404,
-                        ContentType = "text/html",
-                        Body = Encoding.UTF8.GetBytes($"server error")
-                    };
                     //把处理信息返回到客户端
-                    session.Send(response.Write());
+                    session.Write("server error");
                 }
             });
         }
@@ -256,7 +241,6 @@ namespace SuperNAT.Server
             catch (Exception ex)
             {
                 HandleLog.WriteLine($"HttpsServer ProcessData穿透处理异常，{ex}");
-                session?.Close();
             }
         }
     }

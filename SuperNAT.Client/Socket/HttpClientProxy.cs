@@ -49,7 +49,7 @@ namespace SuperNAT.Client
                             //httpModel.Headers["Host"] = map.local_endpoint;
                             foreach (var item in httpModel.Headers)
                             {
-                                if (item.Key.ToUpper() != "Content-Type".ToUpper())
+                                if (!item.Key.EqualsWhithNoCase("Content-Type"))
                                 {
                                     if (!httpRequest.Content?.Headers.TryAddWithoutValidation(item.Key, item.Value) ?? true)
                                     {
@@ -72,7 +72,7 @@ namespace SuperNAT.Client
                             foreach (var item in response.Content.Headers)
                             {
                                 httpModel.Headers.Add(item.Key, string.Join(";", item.Value));
-                                if (item.Key.ToUpper() == "Content-Type".ToUpper())
+                                if (item.Key.EqualsWhithNoCase("Content-Type"))
                                 {
                                     httpModel.ContentType = string.Join(";", item.Value);
                                 }
