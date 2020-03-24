@@ -46,7 +46,7 @@ namespace SuperNAT.Client
                             HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri}{Environment.NewLine}【Header】{httpModel.Headers.ToJson()}{$"{Environment.NewLine}【Body】{bodyStr}".If(httpModel.Content?.Length < 1024)}{Environment.NewLine}");
                             using HttpClient _httpClient = new HttpClient();
                             //替换Host 不然400 Bad Request
-                            //httpModel.Headers["Host"] = map.local_endpoint;
+                            httpModel.Headers["Host"] = map.local_endpoint;
                             foreach (var item in httpModel.Headers)
                             {
                                 if (!item.Key.EqualsWhithNoCase("Content-Type"))

@@ -7,7 +7,7 @@ namespace SuperNAT.AsyncSocket
 {
     public interface IServer
     {
-        Task StartAsync();
+        bool Start();
 
         void Stop();
 

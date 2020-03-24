@@ -194,7 +194,7 @@ namespace SuperNAT.Server
                     NATServer.OnConnected += Connected;
                     NATServer.OnReceived += Received;
                     NATServer.OnClosed += Closed;
-                    _ = NATServer.StartAsync();
+                    NATServer.Start();
                     HandleLog.WriteLine($"NAT服务启动成功，监听端口：{port}");
                 }
                 catch (Exception ex)
@@ -288,25 +288,31 @@ namespace SuperNAT.Server
             {
                 foreach (var port in serverConfig.port_list)
                 {
-                    var server = new HttpsServer(new ServerOption()
+                    Task.Run(() =>
                     {
-                        Ip = "Any",
-                        Port = port,
-                        ProtocolType = ProtocolType.Tcp,
-                        BackLog = 100,
-                        NoDelay = true,
-                        Security = serverConfig.is_ssl ? SslProtocols.Tls12 : SslProtocols.None,
-                        SslServerAuthenticationOptions = serverConfig.is_ssl ? new SslServerAuthenticationOptions
+                        var server = new HttpsServer(new ServerOption()
                         {
-                            EnabledSslProtocols = SslProtocols.Tls12,
-                            ServerCertificate = new X509Certificate2(string.IsNullOrEmpty(serverConfig.certfile) ? GlobalConfig.CertFile : serverConfig.certfile, string.IsNullOrEmpty(serverConfig.certpwd) ? GlobalConfig.CertPassword : serverConfig.certpwd)
-                        } : null
-                    });
-                    _ = server.StartAsync();
-                    HttpsServerList.Add(server);
-                }
+                            Ip = "Any",
+                            Port = port,
+                            ProtocolType = ProtocolType.Tcp,
+                            BackLog = 100,
+                            NoDelay = true,
+                            Security = serverConfig.is_ssl ? SslProtocols.Tls12 : SslProtocols.None,
+                            SslServerAuthenticationOptions = serverConfig.is_ssl ? new SslServerAuthenticationOptions
+                            {
+                                EnabledSslProtocols = SslProtocols.Tls12,
+                                ServerCertificate = new X509Certificate2(string.IsNullOrEmpty(serverConfig.certfile) ? GlobalConfig.CertFile : serverConfig.certfile, string.IsNullOrEmpty(serverConfig.certpwd) ? GlobalConfig.CertPassword : serverConfig.certpwd)
+                            } : null
+                        });
 
-                HandleLog.WriteLine($"{serverConfig.protocol}服务启动成功，监听端口：{serverConfig.port}");
+                        var res = server.Start();
+                        if (res)
+                        {
+                            HttpsServerList.Add(server);
+                        }
+                        HandleLog.WriteLine($"{serverConfig.protocol}服务启动{"成功".If(res, "失败")}，监听端口：{port}");
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -322,26 +328,31 @@ namespace SuperNAT.Server
             {
                 foreach (var port in serverConfig.port_list)
                 {
-                    var server = new TcpServer(new ServerOption()
+                    Task.Run(() =>
                     {
-                        Ip = "Any",
-                        Port = port,
-                        ProtocolType = ProtocolType.Tcp,
-                        BackLog = 100,
-                        NoDelay = true,
-                        Security = serverConfig.is_ssl ? SslProtocols.Tls12 : SslProtocols.None,
-                        SslServerAuthenticationOptions = serverConfig.is_ssl ? new SslServerAuthenticationOptions
+                        var server = new TcpServer(new ServerOption()
                         {
-                            EnabledSslProtocols = SslProtocols.Tls12,
-                            ServerCertificate = new X509Certificate2(string.IsNullOrEmpty(serverConfig.certfile) ? GlobalConfig.CertFile : serverConfig.certfile, string.IsNullOrEmpty(serverConfig.certpwd) ? GlobalConfig.CertPassword : serverConfig.certpwd)
-                        } : null
+                            Ip = "Any",
+                            Port = port,
+                            ProtocolType = ProtocolType.Tcp,
+                            BackLog = 100,
+                            NoDelay = true,
+                            Security = serverConfig.is_ssl ? SslProtocols.Tls12 : SslProtocols.None,
+                            SslServerAuthenticationOptions = serverConfig.is_ssl ? new SslServerAuthenticationOptions
+                            {
+                                EnabledSslProtocols = SslProtocols.Tls12,
+                                ServerCertificate = new X509Certificate2(string.IsNullOrEmpty(serverConfig.certfile) ? GlobalConfig.CertFile : serverConfig.certfile, string.IsNullOrEmpty(serverConfig.certpwd) ? GlobalConfig.CertPassword : serverConfig.certpwd)
+                            } : null
+                        });
+
+                        var res = server.Start();
+                        if (res)
+                        {
+                            TcpServerList.Add(server);
+                        }
+                        HandleLog.WriteLine($"{serverConfig.protocol}服务启动{"成功".If(res, "失败")}，监听端口：{port}");
                     });
-
-                    _ = server.StartAsync();
-                    TcpServerList.Add(server);
                 }
-
-                HandleLog.WriteLine($"{serverConfig.protocol}服务启动成功，监听端口：{serverConfig.port}");
             }
             catch (Exception ex)
             {

@@ -36,75 +36,96 @@ namespace SuperNAT.AsyncSocket
             ServerOption = serverOption;
         }
 
-        public virtual async Task StartAsync()
+        public virtual bool Start()
         {
-            IPEndPoint localEndPoint = new IPEndPoint(ServerOption.Ip == "Any" ? IPAddress.Any : IPAddress.Parse(ServerOption.Ip), ServerOption.Port);
-            listenSocket = new Socket(localEndPoint.AddressFamily, SocketType.Stream, ServerOption.ProtocolType);
-            listenSocket.Bind(localEndPoint);
-            listenSocket.Listen(ServerOption.BackLog);
-            listenSocket.NoDelay = ServerOption.NoDelay;
-
-            await Task.Run(async () =>
+            try
             {
-                while (true)
+                IPEndPoint localEndPoint = new IPEndPoint(ServerOption.Ip == "Any" ? IPAddress.Any : IPAddress.Parse(ServerOption.Ip), ServerOption.Port);
+                listenSocket = new Socket(localEndPoint.AddressFamily, SocketType.Stream, ServerOption.ProtocolType);
+                listenSocket.Bind(localEndPoint);
+                listenSocket.Listen(ServerOption.BackLog);
+                listenSocket.NoDelay = ServerOption.NoDelay;
+
+                //循环接收连接的任务
+                Task.Run(async () =>
                 {
-                    var socket = await listenSocket.AcceptAsync();
-
-                    TSession session = new TSession()
+                    while (true)
                     {
-                        Server = this,
-                        Socket = socket,
-                        Remote = socket.RemoteEndPoint.ToString(),
-                        Local = socket.LocalEndPoint.ToString()
-                    };
-                    m_sessionManager.Add(session);
-                    OnConnected?.Invoke(session);
-
-                    // Create a PipeReader over the network stream
-                    if (ServerOption.Security == SslProtocols.None)
-                    {
-                        session.Stream = new NetworkStream(session.Socket, true);
-
-                        session.Reader = PipeReader.Create(session.Stream);
-                        session.Writer = PipeWriter.Create(session.Stream);
-
-                        _ = ProcessReadAsync(session);
+                        var socket = await listenSocket.AcceptAsync();
+                        ProcessSocketAsync(socket);
                     }
-                    else
+                });
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                HandleLog.WriteLine($"【{ServerOption.Port}】端口启动监听异常：{ex}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 异步处理Socket SSL握手
+        /// </summary>
+        /// <param name="socket"></param>
+        private async void ProcessSocketAsync(Socket socket)
+        {
+            await Task.Run(() =>
+            {
+                TSession session = new TSession()
+                {
+                    Server = this,
+                    Socket = socket,
+                    Remote = socket.RemoteEndPoint.ToString(),
+                    Local = socket.LocalEndPoint.ToString()
+                };
+                m_sessionManager.Add(session);
+                OnConnected?.Invoke(session);
+
+                // Create a PipeReader over the network stream
+                if (ServerOption.Security == SslProtocols.None)
+                {
+                    session.Stream = new NetworkStream(session.Socket, true);
+
+                    session.Reader = PipeReader.Create(session.Stream);
+                    session.Writer = PipeWriter.Create(session.Stream);
+
+                    ProcessReadAsync(session);
+                }
+                else
+                {
+                    ServerOption.SslServerAuthenticationOptions.RemoteCertificateValidationCallback = SSLValidationCallback;
+                    var sslStream = new SslStream(new NetworkStream(session.Socket, true), false);
+                    var cancelTokenSource = new CancellationTokenSource();
+                    cancelTokenSource.CancelAfter(5000);
+                    _ = sslStream.AuthenticateAsServerAsync(ServerOption.SslServerAuthenticationOptions, cancelTokenSource.Token).ContinueWith(t =>
                     {
-                        ServerOption.SslServerAuthenticationOptions.RemoteCertificateValidationCallback = SSLValidationCallback;
-                        var sslStream = new SslStream(new NetworkStream(session.Socket, true), false);
-                        var cancelTokenSource = new CancellationTokenSource();
-                        cancelTokenSource.CancelAfter(5000);
-                        _ = sslStream.AuthenticateAsServerAsync(ServerOption.SslServerAuthenticationOptions, cancelTokenSource.Token).ContinueWith(t =>
+                        if (sslStream.IsAuthenticated)
                         {
-                            if (sslStream.IsAuthenticated)
-                            {
-                                session.Stream = sslStream;
+                            session.Stream = sslStream;
 
-                                session.Reader = PipeReader.Create(session.Stream);
-                                session.Writer = PipeWriter.Create(session.Stream);
+                            session.Reader = PipeReader.Create(session.Stream);
+                            session.Writer = PipeWriter.Create(session.Stream);
 
-                                _ = ProcessReadAsync(session);
-                            }
-                            else
-                            {
-                                if (t.IsCanceled)
-                                    HandleLog.WriteLine($"连接{session.Remote}证书验证超时，关闭连接");
-                                session.Close();
-                            }
-                        });
-                    }
+                            ProcessReadAsync(session);
+                        }
+                        else
+                        {
+                            if (t.IsCanceled)
+                                HandleLog.WriteLine($"连接{session.Remote}证书验证超时，关闭连接");
+                            session.Close();
+                        }
+                    });
                 }
             });
         }
 
-        public void Stop()
-        {
-            listenSocket?.Close();
-        }
-
-        private async Task ProcessReadAsync(TSession session)
+        /// <summary>
+        /// 异步接收数据
+        /// </summary>
+        /// <param name="session"></param>
+        private async void ProcessReadAsync(TSession session)
         {
             try
             {
@@ -237,6 +258,11 @@ namespace SuperNAT.AsyncSocket
         private bool SSLValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             return true;
+        }
+
+        public void Stop()
+        {
+            listenSocket?.Close();
         }
 
         public void Close(TSession session)

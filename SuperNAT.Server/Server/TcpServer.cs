@@ -18,15 +18,12 @@ namespace SuperNAT.Server
 
         }
 
-        public override async Task StartAsync()
+        public override bool Start()
         {
-            await Task.Run(async () =>
-            {
-                OnConnected += Connected;
-                OnReceived += Received;
-                OnClosed += Closed;
-                await base.StartAsync();
-            });
+            OnConnected += Connected;
+            OnReceived += Received;
+            OnClosed += Closed;
+            return base.Start();
         }
 
         private void Connected(TcpSession session)
