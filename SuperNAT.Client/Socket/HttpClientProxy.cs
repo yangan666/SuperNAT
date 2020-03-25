@@ -71,10 +71,15 @@ namespace SuperNAT.Client
                             httpModel.ResponseTime = DateTime.Now;
                             foreach (var item in response.Content.Headers)
                             {
-                                httpModel.Headers.Add(item.Key, string.Join(";", item.Value));
                                 if (item.Key.EqualsWhithNoCase("Content-Type"))
                                 {
                                     httpModel.ContentType = string.Join(";", item.Value);
+                                }
+                                else
+                                {
+                                    if (item.Key.EqualsWhithNoCase("Content-Length"))
+                                        continue;
+                                    httpModel.Headers.Add(item.Key, string.Join(";", item.Value));
                                 }
                             }
                             httpModel.Headers.Remove("Transfer-Encoding");//response收到的是完整的 这个响应头要去掉 不然浏览器解析出错
