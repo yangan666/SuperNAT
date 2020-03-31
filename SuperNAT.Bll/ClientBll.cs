@@ -13,6 +13,7 @@ namespace SuperNAT.Bll
     public class ClientBll
     {
         private ClientDal clientDal = new ClientDal();
+        private MapDal mapDal = new MapDal();
 
         public ReturnResult<bool> Add(Client model)
         {
@@ -32,10 +33,15 @@ namespace SuperNAT.Bll
 
         public ReturnResult<bool> Delete(Client model)
         {
-            using (clientDal)
+            using var t = new Trans();
+            var res = mapDal.DeleteList("where client_id=@client_id ", new { client_id = model.id });
+            if (!res.Result)
             {
-                return clientDal.Delete(model);
+                return new ReturnResult<bool>() { Message = "删除失败" };
             }
+            res = clientDal.Delete(model);
+            t.Commit();
+            return res;
         }
 
         public ReturnResult<Client> GetOne(Client model)
