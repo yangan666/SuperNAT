@@ -1,4 +1,4 @@
-﻿using Dapper;
+﻿using Dapper.Contrib.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +19,13 @@ namespace SuperNAT.Model
         public string certfile { get; set; }
         public string certpwd { get; set; }
         public bool is_disabled { get; set; } = false;
-        [Editable(false)]
+        [Write(false)]
         public string user_id { get; set; }
-        [Editable(false)]
+        [Write(false)]
         public bool is_admin { get; set; }
-        [Editable(false)]
+        [Write(false)]
         public string is_disabled_str => is_disabled ? "禁用" : "启用";
-        [Editable(false)]
+        [Write(false)]
         public List<int> port_list
         {
             get

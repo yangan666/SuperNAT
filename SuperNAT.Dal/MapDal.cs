@@ -11,13 +11,13 @@ namespace SuperNAT.Dal
 {
     public class MapDal : BaseDal<Map>
     {
-        public ReturnResult<Map> IsExit(Map model, Trans t = null)
+        public ApiResult<Map> IsExit(Map model, Trans t = null)
         {
-            var rst = new ReturnResult<Map>() { Message = "暂无记录" };
+            var rst = new ApiResult<Map>() { Message = "暂无记录" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 var sql = new StringBuilder("select * from map where ");
                 sql.Append("remote=@remote and remote_port=@remote_port ".If(model.protocol.Contains("http")));
                 sql.Append("remote_port=@remote_port ".If(model.protocol == "tcp" || model.protocol == "udp"));
@@ -38,13 +38,13 @@ namespace SuperNAT.Dal
             return rst;
         }
 
-        public ReturnResult<Map> GetOne(Map model, Trans t = null)
+        public ApiResult<Map> GetOne(Map model, Trans t = null)
         {
-            var rst = new ReturnResult<Map>() { Message = "暂无记录" };
+            var rst = new ApiResult<Map>() { Message = "暂无记录" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 rst.Data = conn.QueryFirstOrDefault<Map>(@"SELECT
 	                                                            t1.*, t2.`name` client_name,
                                                                 t2.user_id,
@@ -69,13 +69,13 @@ namespace SuperNAT.Dal
             return rst;
         }
 
-        public ReturnResult<List<Map>> GetList(Map model, Trans t = null)
+        public ApiResult<List<Map>> GetList(Map model, Trans t = null)
         {
-            var rst = new ReturnResult<List<Map>>() { Message = "暂无记录" };
+            var rst = new ApiResult<List<Map>>() { Message = "暂无记录" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 var sql = new StringBuilder(@"SELECT
 	                                                t1.*, t2.`name` client_name,
                                                     t2.user_id,
@@ -118,13 +118,13 @@ namespace SuperNAT.Dal
             return rst;
         }
 
-        public ReturnResult<List<Map>> GetMapList(string secret, Trans t = null)
+        public ApiResult<List<Map>> GetMapList(string secret, Trans t = null)
         {
-            var rst = new ReturnResult<List<Map>>() { Message = "暂无记录" };
+            var rst = new ApiResult<List<Map>>() { Message = "暂无记录" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 rst.Data = conn.Query<Map>(@"SELECT
 	                                            t1.*, t2.`name` client_name,
                                                 t2.user_id,

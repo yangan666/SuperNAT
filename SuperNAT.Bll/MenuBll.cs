@@ -13,7 +13,7 @@ namespace SuperNAT.Bll
     {
         private MenuDal menuDal = new MenuDal();
 
-        public ReturnResult<bool> Add(Menu model)
+        public ApiResult<bool> Add(Menu model)
         {
             using (menuDal)
             {
@@ -21,7 +21,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> Update(Menu model)
+        public ApiResult<bool> Update(Menu model)
         {
             using (menuDal)
             {
@@ -29,7 +29,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> Delete(Menu model)
+        public ApiResult<bool> Delete(Menu model)
         {
             using (menuDal)
             {
@@ -37,7 +37,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<Menu> GetOne(Menu model)
+        public ApiResult<Menu> GetOne(Menu model)
         {
             using (menuDal)
             {
@@ -45,7 +45,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<List<Menu>> GetList(string where)
+        public ApiResult<List<Menu>> GetList(string where)
         {
             using (menuDal)
             {
@@ -53,7 +53,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<List<Menu>> GetList(Menu model)
+        public ApiResult<List<Menu>> GetList(Menu model)
         {
             using (menuDal)
             {

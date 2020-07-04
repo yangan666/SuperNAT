@@ -7,10 +7,10 @@
       <relativeChildShapes />
     </useCaseShape>
     <useCaseShape Id="852ace06-aec9-4614-ad23-d80d3f41ed77" absoluteBounds="5.75, 1.5, 1.5, 0.5" customColor="238, 237, 131" heightOffset="0">
-      <useCaseMoniker Id="8792fa28-bea8-4f2d-870d-c2ed0ee5811b" LastKnownName="Http/Https穿透" />
+      <useCaseMoniker Id="8792fa28-bea8-4f2d-870d-c2ed0ee5811b" LastKnownName="HttpServer" />
       <relativeChildShapes />
     </useCaseShape>
-    <includeConnector edgePoints="[(3.85513829974836 : 3.07243085012582); (6.08397485283108 : 1.95801257358446)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black" useCaseStereotype="«包括»">
+    <includeConnector edgePoints="[(3.85513829974836 : 3.07243085012582); (6.08397485283108 : 1.95801257358446)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black" useCaseStereotype="«包括»">
       <includeMoniker Id="8a125488-cfbb-4269-a341-d658af520d83" />
       <relativeChildShapes />
       <nodes>
@@ -19,10 +19,10 @@
       </nodes>
     </includeConnector>
     <useCaseShape Id="29d8a0c8-6770-4c88-86bd-2b97d7e64d84" absoluteBounds="6.125, 2.625, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
-      <useCaseMoniker Id="31cecce7-6cb5-4aec-b206-5e064a37e553" LastKnownName="TCP穿透" />
+      <useCaseMoniker Id="31cecce7-6cb5-4aec-b206-5e064a37e553" LastKnownName="TcpServer" />
       <relativeChildShapes />
     </useCaseShape>
-    <includeConnector edgePoints="[(4.08867790715772 : 3.21642797403646); (6.14219212073967 : 2.93999336836197)]" fixedFrom="NotFixed" fixedTo="NotFixed" customColor="Black" useCaseStereotype="«包括»">
+    <includeConnector edgePoints="[(4.08867790715772 : 3.21642797403646); (6.14219212073967 : 2.93999336836197)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black" useCaseStereotype="«包括»">
       <includeMoniker Id="800f29b1-06d2-4ea8-b108-efd5b756316f" />
       <relativeChildShapes />
       <nodes>
@@ -30,11 +30,11 @@
         <useCaseShapeMoniker Id="29d8a0c8-6770-4c88-86bd-2b97d7e64d84" />
       </nodes>
     </includeConnector>
-    <useCaseShape Id="37e89d1a-84ac-424d-8ef6-f909f802efc9" absoluteBounds="6.125, 3.625, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
-      <useCaseMoniker Id="4ef1bf7c-c3ab-43c2-b80e-b53387525293" LastKnownName="UDP穿透" />
+    <useCaseShape Id="37e89d1a-84ac-424d-8ef6-f909f802efc9" absoluteBounds="6.25, 3.75, 1.125, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="4ef1bf7c-c3ab-43c2-b80e-b53387525293" LastKnownName="TcpServer" />
       <relativeChildShapes />
     </useCaseShape>
-    <includeConnector edgePoints="[(4.06762253717798 : 3.4323769775885); (6.15250696327987 : 3.79322235902921)]" fixedFrom="NotFixed" fixedTo="NotFixed" customColor="Black" useCaseStereotype="«包括»">
+    <includeConnector edgePoints="[(4.06762253717798 : 3.4323769775885); (6.28094533368985 : 3.91822235902921)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black" useCaseStereotype="«包括»">
       <includeMoniker Id="844120c0-da0e-4c4e-8a97-3c2574d4fdcc" />
       <relativeChildShapes />
       <nodes>
@@ -42,11 +42,11 @@
         <useCaseShapeMoniker Id="37e89d1a-84ac-424d-8ef6-f909f802efc9" />
       </nodes>
     </includeConnector>
-    <useCaseShape Id="08db3698-af1b-45d7-84e1-66c3efa6c5d4" absoluteBounds="5.625, 4.625, 1.375, 0.5" customColor="238, 237, 131" heightOffset="0">
-      <useCaseMoniker Id="d68eb6c6-5671-4f78-a2f7-f963dbd9cb4b" LastKnownName="Websocket穿透" />
+    <useCaseShape Id="08db3698-af1b-45d7-84e1-66c3efa6c5d4" absoluteBounds="5.75, 4.875, 1.5, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="d68eb6c6-5671-4f78-a2f7-f963dbd9cb4b" LastKnownName="WebSocketServer" />
       <relativeChildShapes />
     </useCaseShape>
-    <includeConnector edgePoints="[(3.83749648144828 : 3.55850876672781); (5.92450179575969 : 4.66861797646792)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black" useCaseStereotype="«包括»">
+    <includeConnector edgePoints="[(3.83749648144828 : 3.55850876672781); (6.07672923173784 : 4.91861797646792)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black" useCaseStereotype="«包括»">
       <includeMoniker Id="f53c5c76-fe07-4656-a3e4-b90654f17e92" />
       <relativeChildShapes />
       <nodes>

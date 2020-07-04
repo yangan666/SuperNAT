@@ -114,6 +114,24 @@ export default {
         },
         {
           type: 'input',
+          text: "登录次数",
+          value: 'login_times',
+          align: 'left',
+          width: 100,
+          sortable: false,
+          table: true
+        },
+        {
+          type: 'input',
+          text: "最后登录时间",
+          value: 'last_login_time',
+          align: 'left',
+          width: 200,
+          sortable: false,
+          table: true
+        },
+        {
+          type: 'input',
           text: "创建时间",
           value: 'create_time',
           align: 'left',

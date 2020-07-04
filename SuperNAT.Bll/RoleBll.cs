@@ -14,7 +14,7 @@ namespace SuperNAT.Bll
         private RoleDal roleDal = new RoleDal();
         private AuthorityDal authorityDal = new AuthorityDal();
 
-        public ReturnResult<bool> Add(Role model)
+        public ApiResult<bool> Add(Role model)
         {
             using (roleDal)
             {
@@ -22,7 +22,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> Update(Role model)
+        public ApiResult<bool> Update(Role model)
         {
             using (roleDal)
             {
@@ -30,7 +30,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> Delete(Role model)
+        public ApiResult<bool> Delete(Role model)
         {
             using (roleDal)
             {
@@ -38,7 +38,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<Role> GetOne(Role model)
+        public ApiResult<Role> GetOne(Role model)
         {
             using (roleDal)
             {
@@ -46,7 +46,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<List<Role>> GetList(string where)
+        public ApiResult<List<Role>> GetList(string where)
         {
             using (roleDal)
             {
@@ -54,9 +54,9 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> AddRole(Role model)
+        public ApiResult<bool> AddRole(Role model)
         {
-            var rst = new ReturnResult<bool>() { Message = "添加失败" };
+            var rst = new ApiResult<bool>() { Message = "添加失败" };
 
             try
             {
@@ -79,9 +79,9 @@ namespace SuperNAT.Bll
             return rst;
         }
 
-        public ReturnResult<bool> UpdateRole(Role model)
+        public ApiResult<bool> UpdateRole(Role model)
         {
-            var rst = new ReturnResult<bool>() { Message = "更新失败" };
+            var rst = new ApiResult<bool>() { Message = "更新失败" };
 
             try
             {
@@ -89,7 +89,7 @@ namespace SuperNAT.Bll
                 if (roleDal.Update(model, t).Result)
                 {
                     //删除替换
-                    authorityDal.DeleteList("where role_id=@role_id", new { model.role_id }, t);
+                    authorityDal.DeleteCustom("where role_id=@role_id", new { model.role_id }, t);
                     //插入角色菜单关联表
                     model.menu_ids?.ForEach(c => authorityDal.Add(new Authority() { menu_id = c, role_id = model.role_id }, t));
                     t.Commit();
@@ -106,15 +106,24 @@ namespace SuperNAT.Bll
             return rst;
         }
 
-        public ReturnResult<Role> GetRole(Role model)
+        public ApiResult<Role> GetRole(Role model)
         {
-            using (roleDal)
+            using (Trans t = new Trans())
             {
-                return roleDal.GetRole(model);
+                var rst = roleDal.GetOne(model, t);
+                if (!rst.Result)
+                    return rst;
+                //获取角色列表
+                rst.Data.menu_ids = authorityDal.GetAll("where role_id=@role_id", new { model.role_id }, t).Select(c => c.menu_id).ToList();
+                t.Commit();
+
+                rst.Result = true;
+                rst.Message = "获取成功";
+                return rst;
             }
         }
 
-        public ReturnResult<List<Role>> GetList(Role model)
+        public ApiResult<List<Role>> GetList(Role model)
         {
             using (roleDal)
             {

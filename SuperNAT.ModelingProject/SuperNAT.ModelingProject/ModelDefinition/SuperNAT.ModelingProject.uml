@@ -10,7 +10,7 @@
       <annotatedElements>
         <useCaseMoniker
           Id="19614f98-14c7-429b-8120-22bf6dc52ba4"
-          LastKnownName="HttpClient"
+          LastKnownName="HttpClientProxy"
           LastKnownLocation="SuperNAT.ModelingProject.uml" />
       </annotatedElements>
     </comment>
@@ -20,7 +20,7 @@
       <annotatedElements>
         <useCaseMoniker
           Id="f9006165-75cf-455c-9741-464f37c395ec"
-          LastKnownName="EasyClient"
+          LastKnownName="TcpClientProxy"
           LastKnownLocation="SuperNAT.ModelingProject.uml" />
       </annotatedElements>
     </comment>
@@ -30,7 +30,7 @@
       <annotatedElements>
         <useCaseMoniker
           Id="ff558dbc-a534-4a91-bb2a-d481de7760f0"
-          LastKnownName="UdpClient"
+          LastKnownName="UdpClientProxy"
           LastKnownLocation="SuperNAT.ModelingProject.uml" />
       </annotatedElements>
     </comment>
@@ -40,7 +40,7 @@
       <annotatedElements>
         <useCaseMoniker
           Id="b840aca5-d487-4728-a324-e1012a9cd580"
-          LastKnownName="Websocket4Net"
+          LastKnownName="WebSocketClientProxy"
           LastKnownLocation="SuperNAT.ModelingProject.uml" />
       </annotatedElements>
     </comment>
@@ -2003,28 +2003,28 @@
             Id="2fba4c9a-8c90-4e82-a2d1-f3cea90a9764">
             <useCaseMoniker
               Id="19614f98-14c7-429b-8120-22bf6dc52ba4"
-              LastKnownName="HttpClient"
+              LastKnownName="HttpClientProxy"
               LastKnownLocation="SuperNAT.ModelingProject.uml" />
           </include>
           <include
             Id="abfe4be5-3eca-44fa-9b26-cec0ce3c3b50">
             <useCaseMoniker
               Id="f9006165-75cf-455c-9741-464f37c395ec"
-              LastKnownName="EasyClient"
+              LastKnownName="TcpClientProxy"
               LastKnownLocation="SuperNAT.ModelingProject.uml" />
           </include>
           <include
             Id="38a60d94-d978-4673-b90b-c6b91e7a8b3a">
             <useCaseMoniker
               Id="ff558dbc-a534-4a91-bb2a-d481de7760f0"
-              LastKnownName="UdpClient"
+              LastKnownName="UdpClientProxy"
               LastKnownLocation="SuperNAT.ModelingProject.uml" />
           </include>
           <include
             Id="fc38b984-b359-479d-81ce-dfb9aef847a3">
             <useCaseMoniker
               Id="b840aca5-d487-4728-a324-e1012a9cd580"
-              LastKnownName="Websocket4Net"
+              LastKnownName="WebSocketClientProxy"
               LastKnownLocation="SuperNAT.ModelingProject.uml" />
           </include>
         </additions>
@@ -2048,28 +2048,28 @@
             Id="e0d2eef0-cb0d-430c-8cb3-a04323d5f80f">
             <useCaseMoniker
               Id="404abb1a-97e1-4261-adc0-804a97e57629"
-              LastKnownName="Http/Https穿透"
+              LastKnownName="HttpServer"
               LastKnownLocation="SuperNAT.ModelingProject.uml" />
           </include>
           <include
             Id="ad5c7bd8-55bd-474c-a6e9-6166707050e5">
             <useCaseMoniker
               Id="9a6170e6-e281-4269-980c-b9a01589207d"
-              LastKnownName="TCP穿透"
+              LastKnownName="TcpServer"
               LastKnownLocation="SuperNAT.ModelingProject.uml" />
           </include>
           <include
             Id="2bb53193-cbc2-4d8b-8238-2c36f64e238b">
             <useCaseMoniker
               Id="123f87b7-d886-44ac-8de7-caf149469414"
-              LastKnownName="UDP穿透"
+              LastKnownName="TcpServer"
               LastKnownLocation="SuperNAT.ModelingProject.uml" />
           </include>
           <include
             Id="a8e14867-4478-4e3a-b315-955b87d91c3d">
             <useCaseMoniker
               Id="b7d52e55-6081-40d0-ba4a-90815412bd9f"
-              LastKnownName="Websocket穿透"
+              LastKnownName="WebSocketServer"
               LastKnownLocation="SuperNAT.ModelingProject.uml" />
           </include>
         </additions>
@@ -2116,56 +2116,56 @@
     <packageHasNamedElement>
       <useCase
         Id="404abb1a-97e1-4261-adc0-804a97e57629"
-        name="Http/Https穿透"
+        name="HttpServer"
         isAbstract="false"
         isLeaf="false" />
     </packageHasNamedElement>
     <packageHasNamedElement>
       <useCase
         Id="9a6170e6-e281-4269-980c-b9a01589207d"
-        name="TCP穿透"
+        name="TcpServer"
         isAbstract="false"
         isLeaf="false" />
     </packageHasNamedElement>
     <packageHasNamedElement>
       <useCase
         Id="123f87b7-d886-44ac-8de7-caf149469414"
-        name="UDP穿透"
+        name="TcpServer"
         isAbstract="false"
         isLeaf="false" />
     </packageHasNamedElement>
     <packageHasNamedElement>
       <useCase
         Id="b7d52e55-6081-40d0-ba4a-90815412bd9f"
-        name="Websocket穿透"
+        name="WebSocketServer"
         isAbstract="false"
         isLeaf="false" />
     </packageHasNamedElement>
     <packageHasNamedElement>
       <useCase
         Id="19614f98-14c7-429b-8120-22bf6dc52ba4"
-        name="HttpClient"
+        name="HttpClientProxy"
         isAbstract="false"
         isLeaf="false" />
     </packageHasNamedElement>
     <packageHasNamedElement>
       <useCase
         Id="f9006165-75cf-455c-9741-464f37c395ec"
-        name="EasyClient"
+        name="TcpClientProxy"
         isAbstract="false"
         isLeaf="false" />
     </packageHasNamedElement>
     <packageHasNamedElement>
       <useCase
         Id="ff558dbc-a534-4a91-bb2a-d481de7760f0"
-        name="UdpClient"
+        name="UdpClientProxy"
         isAbstract="false"
         isLeaf="false" />
     </packageHasNamedElement>
     <packageHasNamedElement>
       <useCase
         Id="b840aca5-d487-4728-a324-e1012a9cd580"
-        name="Websocket4Net"
+        name="WebSocketClientProxy"
         isAbstract="false"
         isLeaf="false" />
     </packageHasNamedElement>

@@ -13,13 +13,13 @@ namespace SuperNAT.Dal
 {
     public class ClientDal : BaseDal<Client>
     {
-        public ReturnResult<Client> GetOne(string secret, Trans t = null)
+        public ApiResult<Client> GetOne(string secret, Trans t = null)
         {
-            var rst = new ReturnResult<Client>() { Message = "暂无记录" };
+            var rst = new ApiResult<Client>() { Message = "暂无记录" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 rst.Data = conn.QueryFirstOrDefault<Client>(@"SELECT
 	                                                                t1.*, t2.user_name
                                                                 FROM
@@ -42,13 +42,13 @@ namespace SuperNAT.Dal
             return rst;
         }
 
-        public ReturnResult<List<Client>> GetList(Client model, Trans t = null)
+        public ApiResult<List<Client>> GetList(Client model, Trans t = null)
         {
-            var rst = new ReturnResult<List<Client>>() { Message = "暂无记录" };
+            var rst = new ApiResult<List<Client>>() { Message = "暂无记录" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 var sql = new StringBuilder(@"SELECT
 	                                                t1.*, t2.user_name
                                                 FROM
@@ -89,13 +89,13 @@ namespace SuperNAT.Dal
             return rst;
         }
 
-        public ReturnResult<bool> UpdateOnlineStatus(Client model, Trans t = null)
+        public ApiResult<bool> UpdateOnlineStatus(Client model, Trans t = null)
         {
-            var rst = new ReturnResult<bool>() { Message = "更新失败" };
+            var rst = new ApiResult<bool>() { Message = "更新失败" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 if (conn.Execute($"update client set is_online=@is_online{",last_heart_time=@last_heart_time".If(model.is_online)} where secret=@secret", model, t?.DbTrans) > 0)
                 {
                     rst.Result = true;
@@ -111,14 +111,14 @@ namespace SuperNAT.Dal
             return rst;
         }
 
-        public ReturnResult<bool> UpdateOfflineClient(Trans t = null)
+        public ApiResult<bool> UpdateOfflineClient(Trans t = null)
         {
-            var rst = new ReturnResult<bool>() { Message = "更新失败" };
+            var rst = new ApiResult<bool>() { Message = "更新失败" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
-                var clients = conn.GetList<Client>("where (is_online=@is_online && last_heart_time<@last_heart_time) or last_heart_time is null", new { is_online = true, last_heart_time = DateTime.Now.AddMinutes(-1) }, t?.DbTrans).Select(c => c.id).ToList();
+                CreateMySqlConnection(t);
+                var clients = GetAll("where (is_online=@is_online && last_heart_time<@last_heart_time) or last_heart_time is null", new { is_online = true, last_heart_time = DateTime.Now.AddMinutes(-1) }, t).Select(c => c.id).ToList();
                 if (clients.Any())
                 {
                     int count = conn.Execute($"update client set is_online=0 where id in({string.Join(',', clients)})");

@@ -20,7 +20,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Add")]
         public IActionResult Add(Authority model)
         {
-            var rst = new ReturnResult<bool>();
+            var rst = new ApiResult<bool>();
 
             var bll = new AuthorityBll();
             if (model.id == 0)
@@ -51,7 +51,7 @@ namespace SuperNAT.Server.Controllers
         {
             if (model.id == 0)
             {
-                var defalut = new ReturnResult<Authority>()
+                var defalut = new ApiResult<Authority>()
                 {
                     Result = true,
                     Data = new Authority()

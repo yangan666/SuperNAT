@@ -1,4 +1,4 @@
-﻿using Dapper;
+﻿using Dapper.Contrib.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +22,15 @@ namespace SuperNAT.Model
         public bool is_admin { get; set; } = false;
         public string role_id { get; set; }
         public DateTime create_time { get; set; } = DateTime.Now;
-        [Editable(false)]
+        public int login_times { get; set; }
+        public DateTime? last_login_time { get; set; }
+        [Write(false)]
         public string is_disabled_str => is_disabled ? "禁用" : "正常";
-        [Editable(false)]
+        [Write(false)]
         public string token { get; set; }
-        [Editable(false)]
+        [Write(false)]
         public List<Menu> menu_list { get; set; }
-        [Editable(false)]
+        [Write(false)]
         public string role_name { get; set; }
     }
 }

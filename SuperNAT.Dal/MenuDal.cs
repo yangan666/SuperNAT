@@ -11,13 +11,13 @@ namespace SuperNAT.Dal
 {
     public class MenuDal : BaseDal<Menu>
     {
-        public ReturnResult<List<Menu>> GetList(Menu model, Trans t = null)
+        public ApiResult<List<Menu>> GetList(Menu model, Trans t = null)
         {
-            var rst = new ReturnResult<List<Menu>>() { Message = "暂无记录" };
+            var rst = new ApiResult<List<Menu>>() { Message = "暂无记录" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 var sql = new StringBuilder(@"SELECT
 	                                                t1.*, t2.title p_title
                                                 FROM

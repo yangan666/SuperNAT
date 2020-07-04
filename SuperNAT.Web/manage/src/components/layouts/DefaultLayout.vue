@@ -9,11 +9,12 @@
         <router-view></router-view>
       </div>
       <!-- App Footer -->
-      <v-footer height="auto" class="white pa-3 app--footer">
-        <span class="caption">©{{new Date().getFullYear()}}&nbsp;SuperNAT&nbsp;&nbsp;粤ICP备19095189号-1&nbsp;</span>
-        <v-spacer></v-spacer>
-        <!-- <span class="caption mr-1">by yangan</span>
-        <v-icon color="pink" small>favorite</v-icon> -->
+      <v-footer height="auto" class="white pa-3 app--footer my-footer">
+        <div class="flex-box">
+          <span
+            class="caption"
+          >©{{new Date().getFullYear()}}&nbsp;SuperNAT&nbsp;&nbsp;粤ICP备19095189号-1&nbsp;</span>
+        </div>
       </v-footer>
     </v-content>
     <!-- Go to top -->
@@ -52,5 +53,16 @@ export default {
 <style scoped>
 .page-wrapper {
   min-height: calc(100vh - 64px - 50px - 81px);
+}
+.my-footer {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+}
+.flex-box {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-content: center;
 }
 </style>

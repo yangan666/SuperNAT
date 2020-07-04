@@ -1,4 +1,4 @@
-﻿using Dapper;
+﻿using Dapper.Contrib.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SuperNAT.Model
 {
     [Table("request")]
-    public class Request : IModel
+    public class Request : BaseModel, IModel
     {
         [Key]
         public int id { get; set; }
@@ -19,7 +19,10 @@ namespace SuperNAT.Model
         public DateTime? response_time { get; set; }
         public DateTime? handle_time { get; set; }
         public DateTime? create_time { get; set; }
-        [Editable(false)]
+        public string requet_content { get; set; }
+        public string response_content { get; set; }
+        public int? map_id { get; set; }
+        [Write(false)]
         public bool is_admin { get; set; } = false;
     }
 }

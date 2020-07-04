@@ -15,7 +15,7 @@ namespace SuperNAT.Bll
         private ClientDal clientDal = new ClientDal();
         private MapDal mapDal = new MapDal();
 
-        public ReturnResult<bool> Add(Client model)
+        public ApiResult<bool> Add(Client model)
         {
             using (clientDal)
             {
@@ -23,7 +23,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> Update(Client model)
+        public ApiResult<bool> Update(Client model)
         {
             using (clientDal)
             {
@@ -31,20 +31,20 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> Delete(Client model)
+        public ApiResult<bool> Delete(Client model)
         {
             using var t = new Trans();
-            var res = mapDal.DeleteList("where client_id=@client_id ", new { client_id = model.id });
+            var res = mapDal.DeleteCustom("where client_id=@client_id ", new { client_id = model.id });
             if (!res.Result)
             {
-                return new ReturnResult<bool>() { Message = "删除失败" };
+                return new ApiResult<bool>() { Message = "删除失败" };
             }
             res = clientDal.Delete(model);
             t.Commit();
             return res;
         }
 
-        public ReturnResult<Client> GetOne(Client model)
+        public ApiResult<Client> GetOne(Client model)
         {
             using (clientDal)
             {
@@ -52,7 +52,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<List<Client>> GetList(string where)
+        public ApiResult<List<Client>> GetList(string where)
         {
             using (clientDal)
             {
@@ -61,7 +61,7 @@ namespace SuperNAT.Bll
         }
 
 
-        public ReturnResult<Client> GetOne(string secret)
+        public ApiResult<Client> GetOne(string secret)
         {
             using (clientDal)
             {
@@ -69,7 +69,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<List<Client>> GetList(Client model)
+        public ApiResult<List<Client>> GetList(Client model)
         {
             using (clientDal)
             {
@@ -77,7 +77,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> UpdateOnlineStatus(Client model)
+        public ApiResult<bool> UpdateOnlineStatus(Client model)
         {
             using (clientDal)
             {
@@ -85,7 +85,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> UpdateOfflineClient()
+        public ApiResult<bool> UpdateOfflineClient()
         {
             using (clientDal)
             {

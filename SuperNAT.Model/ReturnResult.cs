@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SuperNAT.Model
 {
-    public class ReturnResult<T>
+    public class ApiResult<T>
     {
-        public ReturnResult()
+        public ApiResult()
         {
             Result = false;
         }
@@ -20,6 +20,15 @@ namespace SuperNAT.Model
         public string Message { get; set; }
 
         public PageInfo PageInfo { get; set; }
+        public static ApiResult<T> Ok(T data, string message = "操作成功")
+        {
+            return new ApiResult<T>() { Result = true, Data = data, Message = message };
+        }
+
+        public static ApiResult<T> Fail(string message = "操作失败")
+        {
+            return new ApiResult<T>() { Message = message };
+        }
     }
     public class PageInfo
     {

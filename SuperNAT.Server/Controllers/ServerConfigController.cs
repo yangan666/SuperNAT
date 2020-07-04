@@ -16,7 +16,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Add")]
         public IActionResult Add(ServerConfig model)
         {
-            var rst = new ReturnResult<bool>();
+            var rst = new ApiResult<bool>();
 
             var bll = new ServerConfigBll();
             if (model.id == 0)
@@ -47,7 +47,7 @@ namespace SuperNAT.Server.Controllers
         {
             if (model.id == 0)
             {
-                var defalut = new ReturnResult<ServerConfig>()
+                var defalut = new ApiResult<ServerConfig>()
                 {
                     Result = true,
                     Data = new ServerConfig()

@@ -11,13 +11,13 @@ namespace SuperNAT.Dal
 {
     public class ServerConfigDal : BaseDal<ServerConfig>
     {
-        public ReturnResult<List<ServerConfig>> GetList(ServerConfig model, Trans t = null)
+        public ApiResult<List<ServerConfig>> GetList(ServerConfig model, Trans t = null)
         {
-            var rst = new ReturnResult<List<ServerConfig>>() { Message = "暂无记录" };
+            var rst = new ApiResult<List<ServerConfig>>() { Message = "暂无记录" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 var sql = new StringBuilder(@"SELECT * FROM `server_config` ");
                 if (model.page_index > 0)
                 {
@@ -53,9 +53,9 @@ namespace SuperNAT.Dal
             return rst;
         }
 
-        public ReturnResult<List<ServerConfig>> GetServerConfig()
+        public ApiResult<List<ServerConfig>> GetServerConfig()
         {
-            var rst = new ReturnResult<List<ServerConfig>>() { Message = "暂无记录" };
+            var rst = new ApiResult<List<ServerConfig>>() { Message = "暂无记录" };
 
             try
             {

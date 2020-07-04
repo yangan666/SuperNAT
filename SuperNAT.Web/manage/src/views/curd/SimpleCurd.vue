@@ -23,7 +23,13 @@
               <!-- 弹框 -->
               <v-dialog v-model="dialog" persistent :width="basic.dialogWith || 500">
                 <template v-slot:activator="{ on }">
-                  <v-btn color="primary" dark class="mb-2" v-on="on" @click="add">新建{{ basic.title }}</v-btn>
+                  <v-btn
+                    color="primary"
+                    dark
+                    class="mb-2"
+                    v-on="on"
+                    @click="add"
+                  >新建{{ basic.title }}</v-btn>
                 </template>
                 <v-card>
                   <v-card-title>
@@ -114,9 +120,7 @@
                               v-bind="{ [`xs${item.formRowXs || 12}`]: true }"
                               :key="index"
                             >
-                              <v-alert :value="true" type="info">
-                                {{formItem[item.value]}}
-                              </v-alert>
+                              <v-alert :value="true" type="info">{{formItem[item.value]}}</v-alert>
                             </v-flex>
                           </template>
                         </v-layout>
@@ -132,6 +136,9 @@
                 </v-card>
               </v-dialog>
             </v-toolbar>
+            <v-divider></v-divider>
+            <!-- 查询记录数信息 -->
+            <v-alert :value="true" type="info">查询结果共{{table.totalCount}}条记录</v-alert>
             <v-divider></v-divider>
             <!-- 表格数据 -->
             <v-card-text class="pa-0">
@@ -155,15 +162,16 @@
                         href
                         color="primary"
                         @click="action.handle(props.item)"
-                        >{{ action.name(props.item) }}</v-btn
-                      >
+                      >{{ action.name(props.item) }}</v-btn>
                     </td>
                     <td v-else-if="item.type == 'tag'" :key="index" class="text-xs-left">
                       <v-btn flat small :color="item.color(props.item)">{{ props.item[item.value] }}</v-btn>
                     </td>
-                    <td v-else :key="index" class="text-xs-left">
-                      {{ item.textFormat ? item.textFormat(props.item) : props.item[item.value] }}
-                    </td>
+                    <td
+                      v-else
+                      :key="index"
+                      class="text-xs-left"
+                    >{{ item.textFormat ? item.textFormat(props.item) : props.item[item.value] }}</td>
                   </template>
                 </template>
                 <!-- 分页 -->

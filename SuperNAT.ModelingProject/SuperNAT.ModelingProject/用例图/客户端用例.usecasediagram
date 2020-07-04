@@ -1,95 +1,95 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="f963234e-a5f6-4498-99fe-3e93d2a78150" name="客户端用例" linkedPackageId="6c68505d-70c2-40a8-baf6-479582787987" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm12="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner" dslVersion="1.0.0.0" Id="f963234e-a5f6-4498-99fe-3e93d2a78150" name="客户端用例" linkedPackageId="6c68505d-70c2-40a8-baf6-479582787987" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
   <ownedCommentsInternal>
     <comment Id="3d109f1b-3c04-427a-ac36-c711c2a72a0b">
       <elementDefinition Id="6e6c14a7-2b85-4628-8622-9b786fdb3c29" />
       <body>http/https客户端请求</body>
       <annotatedElements>
-        <useCaseMoniker Id="44ce0dc0-e32a-4405-bfce-00da04e74cf1" LastKnownName="HttpClient" />
+        <useCaseMoniker Id="44ce0dc0-e32a-4405-bfce-00da04e74cf1" LastKnownName="HttpClientProxy" />
       </annotatedElements>
     </comment>
     <comment Id="37f66f38-fbba-4e9b-9419-0ee81a78edaf">
       <elementDefinition Id="9b16128c-b78e-4f97-bcc8-bc2e5f39675f" />
       <body>tcp客户端类</body>
       <annotatedElements>
-        <useCaseMoniker Id="b638b8db-c5f0-483b-81bf-e96f3cec3a7d" LastKnownName="EasyClient" />
+        <useCaseMoniker Id="b638b8db-c5f0-483b-81bf-e96f3cec3a7d" LastKnownName="TcpClientProxy" />
       </annotatedElements>
     </comment>
     <comment Id="3194ff8e-d3e7-4bfb-a3ab-9ae1e5c80386">
       <elementDefinition Id="a9104c15-0546-486d-8ad6-c4e6dc64d0ca" />
       <body>udp客户端类</body>
       <annotatedElements>
-        <useCaseMoniker Id="fec5d430-ba1c-45cb-aade-9ffa6ec90ad0" LastKnownName="UdpClient" />
+        <useCaseMoniker Id="fec5d430-ba1c-45cb-aade-9ffa6ec90ad0" LastKnownName="UdpClientProxy" />
       </annotatedElements>
     </comment>
     <comment Id="7e17dc94-7a45-49d0-be09-de75491c539b">
       <elementDefinition Id="07b16d99-4403-46a7-ba1e-ef7242aad2ee" />
       <body>Websocket客户端类</body>
       <annotatedElements>
-        <useCaseMoniker Id="c7f75a29-4f80-49af-a7ad-84a02720d400" LastKnownName="Websocket4Net" />
+        <useCaseMoniker Id="c7f75a29-4f80-49af-a7ad-84a02720d400" LastKnownName="WebSocketClientProxy" />
       </annotatedElements>
     </comment>
   </ownedCommentsInternal>
-  <profileInstances>
-    <packageHasProfileInstances Id="fe79d8c6-dd1b-4438-b21e-1dfa16a426cf">
-      <profileInstance Id="73279af9-f7c7-4b25-9dbd-fd8acba4c0a7" name="StandardProfileL2">
-        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
-      </profileInstance>
-      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
-    </packageHasProfileInstances>
-    <packageHasProfileInstances Id="feb26691-76a1-4533-82bf-77f665e2ce73">
-      <profileInstance Id="60f94329-7d91-4eb8-99c1-7950e73a3355" name="StandardProfileL3">
-        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
-      </profileInstance>
-      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
-    </packageHasProfileInstances>
-  </profileInstances>
   <packagedElements>
     <useCaseModelRootHasTypes>
       <useCase Id="58263a58-84a0-49be-aa66-606c495c5495" name="SuperNAT.Client" isAbstract="false" isLeaf="false">
         <elementDefinition Id="43c6d9a3-721c-4877-a359-3c5e3f0d8747" />
         <additions>
           <include Id="90646e06-017a-4d75-b6ba-8429e789b23f">
-            <useCaseMoniker Id="44ce0dc0-e32a-4405-bfce-00da04e74cf1" LastKnownName="HttpClient" />
+            <useCaseMoniker Id="44ce0dc0-e32a-4405-bfce-00da04e74cf1" LastKnownName="HttpClientProxy" />
             <elementDefinition Id="2fba4c9a-8c90-4e82-a2d1-f3cea90a9764" />
           </include>
           <include Id="7bef5920-8f2a-4072-b44d-42f20334b575">
-            <useCaseMoniker Id="b638b8db-c5f0-483b-81bf-e96f3cec3a7d" LastKnownName="EasyClient" />
+            <useCaseMoniker Id="b638b8db-c5f0-483b-81bf-e96f3cec3a7d" LastKnownName="TcpClientProxy" />
             <elementDefinition Id="abfe4be5-3eca-44fa-9b26-cec0ce3c3b50" />
           </include>
           <include Id="e1af7ea0-099f-4041-94c6-f73c59141c79">
-            <useCaseMoniker Id="fec5d430-ba1c-45cb-aade-9ffa6ec90ad0" LastKnownName="UdpClient" />
+            <useCaseMoniker Id="fec5d430-ba1c-45cb-aade-9ffa6ec90ad0" LastKnownName="UdpClientProxy" />
             <elementDefinition Id="38a60d94-d978-4673-b90b-c6b91e7a8b3a" />
           </include>
           <include Id="d1076cb7-5b80-4897-afb9-7676f511690b">
-            <useCaseMoniker Id="c7f75a29-4f80-49af-a7ad-84a02720d400" LastKnownName="Websocket4Net" />
+            <useCaseMoniker Id="c7f75a29-4f80-49af-a7ad-84a02720d400" LastKnownName="WebSocketClientProxy" />
             <elementDefinition Id="fc38b984-b359-479d-81ce-dfb9aef847a3" />
           </include>
         </additions>
       </useCase>
     </useCaseModelRootHasTypes>
     <useCaseModelRootHasTypes>
-      <useCase Id="44ce0dc0-e32a-4405-bfce-00da04e74cf1" name="HttpClient" isAbstract="false" isLeaf="false">
+      <useCase Id="44ce0dc0-e32a-4405-bfce-00da04e74cf1" name="HttpClientProxy" isAbstract="false" isLeaf="false">
         <elementDefinition Id="19614f98-14c7-429b-8120-22bf6dc52ba4" />
       </useCase>
     </useCaseModelRootHasTypes>
     <useCaseModelRootHasTypes>
-      <useCase Id="b638b8db-c5f0-483b-81bf-e96f3cec3a7d" name="EasyClient" isAbstract="false" isLeaf="false">
+      <useCase Id="b638b8db-c5f0-483b-81bf-e96f3cec3a7d" name="TcpClientProxy" isAbstract="false" isLeaf="false">
         <elementDefinition Id="f9006165-75cf-455c-9741-464f37c395ec" />
       </useCase>
     </useCaseModelRootHasTypes>
     <useCaseModelRootHasTypes>
-      <useCase Id="fec5d430-ba1c-45cb-aade-9ffa6ec90ad0" name="UdpClient" isAbstract="false" isLeaf="false">
+      <useCase Id="fec5d430-ba1c-45cb-aade-9ffa6ec90ad0" name="UdpClientProxy" isAbstract="false" isLeaf="false">
         <elementDefinition Id="ff558dbc-a534-4a91-bb2a-d481de7760f0" />
       </useCase>
     </useCaseModelRootHasTypes>
     <useCaseModelRootHasTypes>
-      <useCase Id="c7f75a29-4f80-49af-a7ad-84a02720d400" name="Websocket4Net" isAbstract="false" isLeaf="false">
+      <useCase Id="c7f75a29-4f80-49af-a7ad-84a02720d400" name="WebSocketClientProxy" isAbstract="false" isLeaf="false">
         <elementDefinition Id="b840aca5-d487-4728-a324-e1012a9cd580" />
       </useCase>
     </useCaseModelRootHasTypes>
   </packagedElements>
   <package Id="6c68505d-70c2-40a8-baf6-479582787987" name="SuperNAT.ModelingProject">
     <elementDefinition Id="82435ad6-da3b-49a7-a14c-dafee9b0cd06" />
+    <profileInstances>
+      <packageHasProfileInstances Id="fe79d8c6-dd1b-4438-b21e-1dfa16a426cf">
+        <profileInstance Id="73279af9-f7c7-4b25-9dbd-fd8acba4c0a7" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="feb26691-76a1-4533-82bf-77f665e2ce73">
+        <profileInstance Id="60f94329-7d91-4eb8-99c1-7950e73a3355" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
   </package>
 </useCaseModelRoot>

@@ -1,4 +1,4 @@
-﻿using Dapper;
+﻿using Dapper.Contrib.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,11 +14,11 @@ namespace SuperNAT.Model
 
     public class BaseModel
     {
-        [Editable(false)]
+        [Write(false)]
         public int page_index { get; set; }
-        [Editable(false)]
+        [Write(false)]
         public int page_size { get; set; }
-        [Editable(false)]
+        [Write(false)]
         public string search { get; set; }
     }
 }

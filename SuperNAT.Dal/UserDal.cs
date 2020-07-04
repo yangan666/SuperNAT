@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using SuperNAT.Common;
 using SuperNAT.Model;
 using System;
@@ -11,13 +12,13 @@ namespace SuperNAT.Dal
 {
     public class UserDal : BaseDal<User>
     {
-        public ReturnResult<User> Login(User model, Trans t = null)
+        public ApiResult<User> Login(User model, Trans t = null)
         {
-            var rst = new ReturnResult<User>() { Message = "用户名或密码错误" };
+            var rst = new ApiResult<User>() { Message = "用户名或密码错误" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 model.password = EncryptHelper.MD5Encrypt(model.password);
                 var sql = new StringBuilder("select * from user where password=@password ");
                 if (!string.IsNullOrEmpty(model.user_id))
@@ -50,13 +51,40 @@ namespace SuperNAT.Dal
             return rst;
         }
 
-        public ReturnResult<bool> UpdateUser(User model, Trans t = null)
+        public ApiResult<bool> UpdateLastLogin(User model, Trans t = null)
         {
-            var rst = new ReturnResult<bool>() { Message = "更新失败" };
+            var rst = new ApiResult<bool>() { Message = "更新失败" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
+                var sql = new StringBuilder();
+                sql.Append("update user set ");
+                sql.Append("last_login_time=@last_login_time,");
+                sql.Append("login_times=login_times+1 ");
+                sql.Append("where user_id=@user_id ");
+                if (conn.Execute(sql.ToString(), model, t?.DbTrans) > 0)
+                {
+                    rst.Result = true;
+                    rst.Message = "更新成功";
+                }
+            }
+            catch (Exception ex)
+            {
+                rst.Message = $"更新失败：{ex.InnerException ?? ex}";
+                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+            }
+
+            return rst;
+        }
+
+        public ApiResult<bool> UpdateUser(User model, Trans t = null)
+        {
+            var rst = new ApiResult<bool>() { Message = "更新失败" };
+
+            try
+            {
+                CreateMySqlConnection(t);
                 var sql = new StringBuilder();
                 sql.Append("update user set ");
                 sql.Append("user_name=@user_name,");
@@ -81,13 +109,13 @@ namespace SuperNAT.Dal
             return rst;
         }
 
-        public ReturnResult<bool> DisableUser(User model, Trans t = null)
+        public ApiResult<bool> DisableUser(User model, Trans t = null)
         {
-            var rst = new ReturnResult<bool>() { Message = "更新失败" };
+            var rst = new ApiResult<bool>() { Message = "更新失败" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 var sql = new StringBuilder();
                 sql.Append("update user set ");
                 sql.Append("is_disabled=@is_disabled ");
@@ -107,18 +135,18 @@ namespace SuperNAT.Dal
             return rst;
         }
 
-        public ReturnResult<User> GetUserInfo(string user_id, Trans t = null)
+        public ApiResult<User> GetUserInfo(string user_id, Trans t = null)
         {
-            var rst = new ReturnResult<User>() { Message = "用户名或密码错误" };
+            var rst = new ApiResult<User>() { Message = "用户名或密码错误" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 rst.Data = conn.QueryFirstOrDefault<User>("select * from user where user_id=@user_id ", new { user_id }, t?.DbTrans);
                 if (rst.Data != null)
                 {
                     //获取权限菜单
-                    var menus = conn.GetList<Menu>();
+                    var menus = conn.GetAll<Menu>();
                     var auths = conn.Query<Menu>(@"SELECT
 	                                                    t2.*
                                                     FROM
@@ -156,13 +184,13 @@ namespace SuperNAT.Dal
             return rst;
         }
 
-        public ReturnResult<List<User>> GetList(User model, Trans t = null)
+        public ApiResult<List<User>> GetList(User model, Trans t = null)
         {
-            var rst = new ReturnResult<List<User>>() { Message = "暂无记录" };
+            var rst = new ApiResult<List<User>>() { Message = "暂无记录" };
 
             try
             {
-                conn = CreateMySqlConnection(t);
+                CreateMySqlConnection(t);
                 var sql = new StringBuilder(@"SELECT
 	                                                t1.*,t2.name role_name
                                                 FROM
@@ -172,7 +200,7 @@ namespace SuperNAT.Dal
                 {
                     sql.Append($"where {"t1.user_name,t1.wechat,t1.email,t1.tel".ToLikeString("or", "search")} ".If(!string.IsNullOrWhiteSpace(model.search)));
                     model.search = $"%{model.search}%";
-                    rst.Data = conn.GetListPaged<User>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t?.DbTrans).ToList();
+                    rst.Data = conn.GetListPaged<User>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id desc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,
@@ -182,7 +210,7 @@ namespace SuperNAT.Dal
                 }
                 else
                 {
-                    rst.Data = conn.GetList<User>("", model, t?.DbTrans).ToList();
+                    rst.Data = GetAll("", null, t).ToList();
                 }
                 if (rst.Data != null)
                 {

@@ -1,46 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="0dbe2af8-735c-4f54-92db-104eac5976b6" name="服务端用例" linkedPackageId="045518d1-63c3-4eba-bf87-3dd828246325" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm12="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner" dslVersion="1.0.0.0" Id="0dbe2af8-735c-4f54-92db-104eac5976b6" name="服务端用例" linkedPackageId="045518d1-63c3-4eba-bf87-3dd828246325" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
   <packagedElements>
     <useCaseModelRootHasTypes>
       <useCase Id="3784b574-ae23-4223-b5ca-ec552a9263da" name="SuperNAT.Server" isAbstract="false" isLeaf="false">
         <elementDefinition Id="5db8e069-e8d7-48d6-97f9-a92cc44d1a39" />
         <additions>
           <include Id="8a125488-cfbb-4269-a341-d658af520d83">
-            <useCaseMoniker Id="8792fa28-bea8-4f2d-870d-c2ed0ee5811b" LastKnownName="Http/Https穿透" />
+            <useCaseMoniker Id="8792fa28-bea8-4f2d-870d-c2ed0ee5811b" LastKnownName="HttpServer" />
             <elementDefinition Id="e0d2eef0-cb0d-430c-8cb3-a04323d5f80f" />
           </include>
           <include Id="800f29b1-06d2-4ea8-b108-efd5b756316f">
-            <useCaseMoniker Id="31cecce7-6cb5-4aec-b206-5e064a37e553" LastKnownName="TCP穿透" />
+            <useCaseMoniker Id="31cecce7-6cb5-4aec-b206-5e064a37e553" LastKnownName="TcpServer" />
             <elementDefinition Id="ad5c7bd8-55bd-474c-a6e9-6166707050e5" />
           </include>
           <include Id="844120c0-da0e-4c4e-8a97-3c2574d4fdcc">
-            <useCaseMoniker Id="4ef1bf7c-c3ab-43c2-b80e-b53387525293" LastKnownName="UDP穿透" />
+            <useCaseMoniker Id="4ef1bf7c-c3ab-43c2-b80e-b53387525293" LastKnownName="TcpServer" />
             <elementDefinition Id="2bb53193-cbc2-4d8b-8238-2c36f64e238b" />
           </include>
           <include Id="f53c5c76-fe07-4656-a3e4-b90654f17e92">
-            <useCaseMoniker Id="d68eb6c6-5671-4f78-a2f7-f963dbd9cb4b" LastKnownName="Websocket穿透" />
+            <useCaseMoniker Id="d68eb6c6-5671-4f78-a2f7-f963dbd9cb4b" LastKnownName="WebSocketServer" />
             <elementDefinition Id="a8e14867-4478-4e3a-b315-955b87d91c3d" />
           </include>
         </additions>
       </useCase>
     </useCaseModelRootHasTypes>
     <useCaseModelRootHasTypes>
-      <useCase Id="8792fa28-bea8-4f2d-870d-c2ed0ee5811b" name="Http/Https穿透" isAbstract="false" isLeaf="false">
+      <useCase Id="8792fa28-bea8-4f2d-870d-c2ed0ee5811b" name="HttpServer" isAbstract="false" isLeaf="false">
         <elementDefinition Id="404abb1a-97e1-4261-adc0-804a97e57629" />
       </useCase>
     </useCaseModelRootHasTypes>
     <useCaseModelRootHasTypes>
-      <useCase Id="31cecce7-6cb5-4aec-b206-5e064a37e553" name="TCP穿透" isAbstract="false" isLeaf="false">
+      <useCase Id="31cecce7-6cb5-4aec-b206-5e064a37e553" name="TcpServer" isAbstract="false" isLeaf="false">
         <elementDefinition Id="9a6170e6-e281-4269-980c-b9a01589207d" />
       </useCase>
     </useCaseModelRootHasTypes>
     <useCaseModelRootHasTypes>
-      <useCase Id="4ef1bf7c-c3ab-43c2-b80e-b53387525293" name="UDP穿透" isAbstract="false" isLeaf="false">
+      <useCase Id="4ef1bf7c-c3ab-43c2-b80e-b53387525293" name="TcpServer" isAbstract="false" isLeaf="false">
         <elementDefinition Id="123f87b7-d886-44ac-8de7-caf149469414" />
       </useCase>
     </useCaseModelRootHasTypes>
     <useCaseModelRootHasTypes>
-      <useCase Id="d68eb6c6-5671-4f78-a2f7-f963dbd9cb4b" name="Websocket穿透" isAbstract="false" isLeaf="false">
+      <useCase Id="d68eb6c6-5671-4f78-a2f7-f963dbd9cb4b" name="WebSocketServer" isAbstract="false" isLeaf="false">
         <elementDefinition Id="b7d52e55-6081-40d0-ba4a-90815412bd9f" />
       </useCase>
     </useCaseModelRootHasTypes>

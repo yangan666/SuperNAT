@@ -17,7 +17,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Add")]
         public IActionResult Add(Menu model)
         {
-            var rst = new ReturnResult<bool>();
+            var rst = new ApiResult<bool>();
 
             var bll = new MenuBll();
             if (model.id == 0)
@@ -49,7 +49,7 @@ namespace SuperNAT.Server.Controllers
         {
             if (model.id == 0)
             {
-                var defalut = new ReturnResult<Menu>()
+                var defalut = new ApiResult<Menu>()
                 {
                     Result = true,
                     Data = new Menu()

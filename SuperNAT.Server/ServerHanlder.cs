@@ -31,7 +31,6 @@ namespace SuperNAT.Server
 
         public void Start(string[] args)
         {
-            Dapper.SimpleCRUD.SetDialect(Dapper.SimpleCRUD.Dialect.MySQL);
             Startup.Init();
 
             //开启内网TCP服务

@@ -17,7 +17,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Add")]
         public IActionResult Add(Map model)
         {
-            var rst = new ReturnResult<bool>();
+            var rst = new ApiResult<bool>();
 
             var bll = new MapBll();
             if (model.id == 0)
@@ -70,7 +70,7 @@ namespace SuperNAT.Server.Controllers
         {
             if (model.id == 0)
             {
-                var defalut = new ReturnResult<Map>()
+                var defalut = new ApiResult<Map>()
                 {
                     Result = true,
                     Data = new Map() { remote = GlobalConfig.DefaultUrl, proxy_type = (int)proxy_type.反向代理 }

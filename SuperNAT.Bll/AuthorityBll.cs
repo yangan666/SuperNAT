@@ -13,7 +13,7 @@ namespace SuperNAT.Bll
     {
         private AuthorityDal authorityDal = new AuthorityDal();
 
-        public ReturnResult<bool> Add(Authority model)
+        public ApiResult<bool> Add(Authority model)
         {
             using (authorityDal)
             {
@@ -21,7 +21,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> Update(Authority model)
+        public ApiResult<bool> Update(Authority model)
         {
             using (authorityDal)
             {
@@ -29,7 +29,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> Delete(Authority model)
+        public ApiResult<bool> Delete(Authority model)
         {
             using (authorityDal)
             {
@@ -37,7 +37,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<Authority> GetOne(Authority model)
+        public ApiResult<Authority> GetOne(Authority model)
         {
             using (authorityDal)
             {
@@ -45,7 +45,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<List<Authority>> GetList(string where)
+        public ApiResult<List<Authority>> GetList(string where)
         {
             using (authorityDal)
             {

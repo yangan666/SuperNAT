@@ -13,9 +13,9 @@ namespace SuperNAT.Bll
     {
         private MapDal mapDal = new MapDal();
 
-        public ReturnResult<bool> Add(Map model)
+        public ApiResult<bool> Add(Map model)
         {
-            var rst = new ReturnResult<bool>();
+            var rst = new ApiResult<bool>();
 
             try
             {
@@ -38,9 +38,9 @@ namespace SuperNAT.Bll
             return rst;
         }
 
-        public ReturnResult<bool> Update(Map model)
+        public ApiResult<bool> Update(Map model)
         {
-            var rst = new ReturnResult<bool>();
+            var rst = new ApiResult<bool>();
 
             try
             {
@@ -63,7 +63,7 @@ namespace SuperNAT.Bll
             return rst;
         }
 
-        public ReturnResult<bool> Delete(Map model)
+        public ApiResult<bool> Delete(Map model)
         {
             using (mapDal)
             {
@@ -71,7 +71,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<Map> GetOne(Map model)
+        public ApiResult<Map> GetOne(Map model)
         {
             using (mapDal)
             {
@@ -79,7 +79,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<List<Map>> GetList(string where)
+        public ApiResult<List<Map>> GetList(string where)
         {
             using (mapDal)
             {
@@ -87,7 +87,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<List<Map>> GetList(Map model)
+        public ApiResult<List<Map>> GetList(Map model)
         {
             using (mapDal)
             {
@@ -95,7 +95,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<List<Map>> GetMapList(string secret)
+        public ApiResult<List<Map>> GetMapList(string secret)
         {
             using (mapDal)
             {

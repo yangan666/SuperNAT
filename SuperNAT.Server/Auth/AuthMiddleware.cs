@@ -28,7 +28,7 @@ namespace SuperNAT.Server.Auth
 
         public async Task Invoke(HttpContext httpContext)
         {
-            var rst = new ReturnResult<bool>();
+            var rst = new ApiResult<bool>();
 
             try
             {

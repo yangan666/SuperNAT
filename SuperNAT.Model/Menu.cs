@@ -1,4 +1,4 @@
-﻿using Dapper;
+﻿using Dapper.Contrib.Extensions;
 
 namespace SuperNAT.Model
 {
@@ -17,15 +17,15 @@ namespace SuperNAT.Model
         public bool hidden { get; set; }
         public bool always_show { get; set; }
         public string menu_id { get; set; }
-        [Editable(false)]
+        [Write(false)]
         public string p_title { get; set; }
-        [Editable(false)]
+        [Write(false)]
         public string hidden_str => hidden ? "√" : "";
-        [Editable(false)]
+        [Write(false)]
         public string always_show_str => always_show ? "√" : "";
-        [Editable(false)]
+        [Write(false)]
         public string user_id { get; set; }
-        [Editable(false)]
+        [Write(false)]
         public bool is_admin { get; set; } = false;
     }
 }

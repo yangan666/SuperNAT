@@ -16,7 +16,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Add")]
         public IActionResult Add(Client model)
         {
-            var rst = new ReturnResult<bool>();
+            var rst = new ApiResult<bool>();
 
             var bll = new ClientBll();
             if (model.id == 0)
@@ -50,7 +50,7 @@ namespace SuperNAT.Server.Controllers
         {
             if (model.id == 0)
             {
-                var defalut = new ReturnResult<Client>()
+                var defalut = new ApiResult<Client>()
                 {
                     Result = true,
                     Data = new Client()

@@ -28,7 +28,7 @@ namespace SuperNAT.Server.Controllers
         {
             ReflectionLesson reflectionLesson = new ReflectionLesson(AppDomain.CurrentDomain.BaseDirectory + "SuperNAT.Model.dll", "SuperNAT.Model", type);
             Type t = reflectionLesson.ReflectionType();
-            var rst = new ReturnResult<List<KeyValue>>
+            var rst = new ApiResult<List<KeyValue>>
             {
                 Result = true,
                 Data = EnumHelper.EnumToList(t),
@@ -43,7 +43,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Upload")]
         public IActionResult Upload(IFormFile file)
         {
-            var rst = new ReturnResult<string>();
+            var rst = new ApiResult<string>();
 
             try
             {

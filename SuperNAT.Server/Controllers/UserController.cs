@@ -41,14 +41,14 @@ namespace SuperNAT.Server.Controllers
         public IActionResult GetUserInfo()
         {
             //AuthMiddleware处理了
-            return Json(new ReturnResult<User>());
+            return Json(new ApiResult<User>());
         }
 
         [HttpPost]
         [Route("Add")]
         public IActionResult Add(User model)
         {
-            var rst = new ReturnResult<bool>();
+            var rst = new ApiResult<bool>();
 
             var bll = new UserBll();
             if (model.id == 0)
@@ -77,7 +77,7 @@ namespace SuperNAT.Server.Controllers
         [Route("Register")]
         public IActionResult Register(User model)
         {
-            var rst = new ReturnResult<bool>();
+            var rst = new ApiResult<bool>();
 
             var bll = new UserBll();
             model.user_id = EncryptHelper.CreateGuid();
@@ -121,7 +121,7 @@ namespace SuperNAT.Server.Controllers
         {
             if (model.id == 0)
             {
-                var defalut = new ReturnResult<User>()
+                var defalut = new ApiResult<User>()
                 {
                     Result = true,
                     Data = new User()

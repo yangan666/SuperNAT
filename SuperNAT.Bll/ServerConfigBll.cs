@@ -14,7 +14,7 @@ namespace SuperNAT.Bll
     {
         private ServerConfigDal serverConfigDal = new ServerConfigDal();
 
-        public ReturnResult<bool> Add(ServerConfig model)
+        public ApiResult<bool> Add(ServerConfig model)
         {
             using (serverConfigDal)
             {
@@ -22,7 +22,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> Update(ServerConfig model)
+        public ApiResult<bool> Update(ServerConfig model)
         {
             using (serverConfigDal)
             {
@@ -30,7 +30,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<bool> Delete(ServerConfig model)
+        public ApiResult<bool> Delete(ServerConfig model)
         {
             using (serverConfigDal)
             {
@@ -38,7 +38,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<ServerConfig> GetOne(ServerConfig model)
+        public ApiResult<ServerConfig> GetOne(ServerConfig model)
         {
             using (serverConfigDal)
             {
@@ -46,7 +46,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<List<ServerConfig>> GetList(string where)
+        public ApiResult<List<ServerConfig>> GetList(string where)
         {
             using (serverConfigDal)
             {
@@ -54,7 +54,7 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<List<ServerConfig>> GetList(ServerConfig model)
+        public ApiResult<List<ServerConfig>> GetList(ServerConfig model)
         {
             using (serverConfigDal)
             {
@@ -62,9 +62,9 @@ namespace SuperNAT.Bll
             }
         }
 
-        public ReturnResult<string> GetServerConfig()
+        public ApiResult<string> GetServerConfig()
         {
-            var rst = new ReturnResult<string>() { Message = "暂无开放的端口" };
+            var rst = new ApiResult<string>() { Message = "暂无开放的端口" };
             try
             {
                 using (serverConfigDal)

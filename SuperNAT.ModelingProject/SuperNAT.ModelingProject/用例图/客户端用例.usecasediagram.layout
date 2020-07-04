@@ -6,11 +6,11 @@
       <useCaseMoniker Id="58263a58-84a0-49be-aa66-606c495c5495" LastKnownName="SuperNAT.Client" />
       <relativeChildShapes />
     </useCaseShape>
-    <useCaseShape Id="74645d2e-23f6-46bf-8928-5eb5cc62715a" absoluteBounds="4.375, 1.625, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
-      <useCaseMoniker Id="44ce0dc0-e32a-4405-bfce-00da04e74cf1" LastKnownName="HttpClient" />
+    <useCaseShape Id="74645d2e-23f6-46bf-8928-5eb5cc62715a" absoluteBounds="4.375, 1.625, 1.375, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="44ce0dc0-e32a-4405-bfce-00da04e74cf1" LastKnownName="HttpClientProxy" />
       <relativeChildShapes />
     </useCaseShape>
-    <includeConnector edgePoints="[(2.81078112158494 : 3.40993198651377); (4.59600120514012 : 2.08246064233171)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black" useCaseStereotype="«包括»">
+    <includeConnector edgePoints="[(2.81078112158494 : 3.40993198651377); (4.67887665706767 : 2.08246064233171)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black" useCaseStereotype="«包括»">
       <includeMoniker Id="90646e06-017a-4d75-b6ba-8429e789b23f" />
       <relativeChildShapes />
       <nodes>
@@ -18,11 +18,11 @@
         <useCaseShapeMoniker Id="74645d2e-23f6-46bf-8928-5eb5cc62715a" />
       </nodes>
     </includeConnector>
-    <useCaseShape Id="d24bfca7-5b79-4268-9dc9-643c7bf3fe75" absoluteBounds="4.875, 2.875, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
-      <useCaseMoniker Id="b638b8db-c5f0-483b-81bf-e96f3cec3a7d" LastKnownName="EasyClient" />
+    <useCaseShape Id="d24bfca7-5b79-4268-9dc9-643c7bf3fe75" absoluteBounds="4.875, 2.875, 1.25, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="b638b8db-c5f0-483b-81bf-e96f3cec3a7d" LastKnownName="TcpClientProxy" />
       <relativeChildShapes />
     </useCaseShape>
-    <includeConnector edgePoints="[(3.16484005096122 : 3.54822211790104); (4.90807162415192 : 3.21441181665176)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black" useCaseStereotype="«包括»">
+    <includeConnector edgePoints="[(3.16484005096122 : 3.54822211790104); (4.9163395301899 : 3.21441181665176)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black" useCaseStereotype="«包括»">
       <includeMoniker Id="7bef5920-8f2a-4072-b44d-42f20334b575" />
       <relativeChildShapes />
       <nodes>
@@ -30,11 +30,11 @@
         <useCaseShapeMoniker Id="d24bfca7-5b79-4268-9dc9-643c7bf3fe75" />
       </nodes>
     </includeConnector>
-    <useCaseShape Id="10e3e56f-cafa-4e61-9a3e-9da9a527e592" absoluteBounds="4.75, 4.125, 1, 0.5" customColor="238, 237, 131" heightOffset="0">
-      <useCaseMoniker Id="fec5d430-ba1c-45cb-aade-9ffa6ec90ad0" LastKnownName="UdpClient" />
+    <useCaseShape Id="10e3e56f-cafa-4e61-9a3e-9da9a527e592" absoluteBounds="4.75, 4.125, 1.5, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="fec5d430-ba1c-45cb-aade-9ffa6ec90ad0" LastKnownName="UdpClientProxy" />
       <relativeChildShapes />
     </useCaseShape>
-    <includeConnector edgePoints="[(3.12322582993482 : 3.85512186953962); (4.8008078195404 : 4.26519746699876)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black" useCaseStereotype="«包括»">
+    <includeConnector edgePoints="[(3.12322582993482 : 3.85512186953962); (4.8262117293106 : 4.26519746699876)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black" useCaseStereotype="«包括»">
       <includeMoniker Id="e1af7ea0-099f-4041-94c6-f73c59141c79" />
       <relativeChildShapes />
       <nodes>
@@ -42,11 +42,11 @@
         <useCaseShapeMoniker Id="10e3e56f-cafa-4e61-9a3e-9da9a527e592" />
       </nodes>
     </includeConnector>
-    <useCaseShape Id="76e00372-2841-49db-8779-ac25285e6ed1" absoluteBounds="4.375, 5.375, 1.375, 0.5" customColor="238, 237, 131" heightOffset="0">
-      <useCaseMoniker Id="c7f75a29-4f80-49af-a7ad-84a02720d400" LastKnownName="Websocket4Net" />
+    <useCaseShape Id="76e00372-2841-49db-8779-ac25285e6ed1" absoluteBounds="4.375, 5.375, 2, 0.5" customColor="238, 237, 131" heightOffset="0">
+      <useCaseMoniker Id="c7f75a29-4f80-49af-a7ad-84a02720d400" LastKnownName="WebSocketClientProxy" />
       <relativeChildShapes />
     </useCaseShape>
-    <includeConnector edgePoints="[(2.81296821028892 : 3.9646312980704); (4.75866307852958 : 5.40073941510517)]" fixedFrom="Algorithm" fixedTo="Algorithm" customColor="Black" useCaseStereotype="«包括»">
+    <includeConnector edgePoints="[(2.81296821028892 : 3.9646312980704); (4.93305538695212 : 5.40073941510517)]" fixedFrom="Caller" fixedTo="Caller" customColor="Black" useCaseStereotype="«包括»">
       <includeMoniker Id="d1076cb7-5b80-4897-afb9-7676f511690b" />
       <relativeChildShapes />
       <nodes>
@@ -58,7 +58,7 @@
       <commentMoniker Id="3d109f1b-3c04-427a-ac36-c711c2a72a0b" />
       <relativeChildShapes />
     </commentShape>
-    <commentConnector edgePoints="[(6.25 : 1.5); (5.13009922976325 : 1.65998582431954)]" fixedFrom="NotFixed" fixedTo="NotFixed" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
+    <commentConnector edgePoints="[(6.25 : 1.5); (5.5096241205099 : 1.68509396987253)]" fixedFrom="NotFixed" fixedTo="NotFixed" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
       <relativeChildShapes />
       <nodes>
         <commentShapeMoniker Id="43fc8205-3cdd-4723-ae22-5c1241081371" />
@@ -69,7 +69,7 @@
       <commentMoniker Id="37f66f38-fbba-4e9b-9419-0ee81a78edaf" />
       <relativeChildShapes />
     </commentShape>
-    <commentConnector edgePoints="[(6.75 : 3.0625); (5.85912291827593 : 3.0625)]" fixedFrom="Algorithm" fixedTo="Algorithm" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
+    <commentConnector edgePoints="[(6.75 : 3.0625); (6.10515364784491 : 3.0625)]" fixedFrom="Algorithm" fixedTo="Algorithm" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
       <relativeChildShapes />
       <nodes>
         <commentShapeMoniker Id="ac54cb10-5c2a-497d-b90d-67d654f0ebc0" />
@@ -80,7 +80,7 @@
       <commentMoniker Id="3194ff8e-d3e7-4bfb-a3ab-9ae1e5c80386" />
       <relativeChildShapes />
     </commentShape>
-    <commentConnector edgePoints="[(6.75 : 4.3125); (5.73412291827593 : 4.3125)]" fixedFrom="Algorithm" fixedTo="Algorithm" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
+    <commentConnector edgePoints="[(6.75 : 4.3125); (6.22618437741389 : 4.3125)]" fixedFrom="Algorithm" fixedTo="Algorithm" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
       <relativeChildShapes />
       <nodes>
         <commentShapeMoniker Id="0c67df79-7c94-4a1d-82d4-8caf613da048" />
@@ -91,7 +91,7 @@
       <commentMoniker Id="7e17dc94-7a45-49d0-be09-de75491c539b" />
       <relativeChildShapes />
     </commentShape>
-    <commentConnector edgePoints="[(7 : 5.5625); (5.7281690126294 : 5.5625)]" fixedFrom="Algorithm" fixedTo="Algorithm" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
+    <commentConnector edgePoints="[(7 : 5.5625); (6.34324583655185 : 5.5625)]" fixedFrom="Algorithm" fixedTo="Algorithm" TargetRelationshipDomainClassId="217d6bd0-42ed-4e7f-ad2b-af3ef5142428" customColor="Black">
       <relativeChildShapes />
       <nodes>
         <commentShapeMoniker Id="accb5f95-f46b-494d-ad0e-812cd0ec438f" />
