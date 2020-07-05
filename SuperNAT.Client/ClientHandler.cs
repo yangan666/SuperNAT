@@ -80,6 +80,7 @@ namespace SuperNAT.Client
             NatClient = null;
         }
 
+        static bool isLock = false;
         static async void ConnectNatServer()
         {
             try
@@ -88,6 +89,7 @@ namespace SuperNAT.Client
                 {
                     return;
                 }
+                isLock = true;
                 HandleLog.WriteLine($"正在连接服务器...");
                 //解析主机名
                 IPHostEntry ipInfo = Dns.GetHostEntry(ServerUrl);
@@ -116,9 +118,9 @@ namespace SuperNAT.Client
             catch (Exception ex)
             {
                 HandleLog.WriteLine($"连接服务器失败：{ex}");
-                Thread.Sleep(1000);
-                ConnectNatServer();
             }
+
+            isLock = false;
         }
 
         static void ReConnect()
@@ -126,7 +128,7 @@ namespace SuperNAT.Client
             while (IsReConnect)
             {
                 Thread.Sleep(3000);
-                if (!NatClient.IsConnected)
+                if (!NatClient.IsConnected && !isLock)
                 {
                     //重连
                     HandleLog.WriteLine("尝试重新连接服务器...");
@@ -183,7 +185,7 @@ namespace SuperNAT.Client
                             int waitTimes = 50;
                             var tcpModel = packageInfo.Body.Data.FromJson<TcpModel>();
                             TcpClientProxy clientProxy = null;
-                            mark:
+                        mark:
                             clientProxy = TcpClientProxyList.Find(c => c.RemoteSession.SessionId == tcpModel.SessionId);
                             if (packageInfo.Body.Action == (int)TcpAction.TransferData)
                             {

@@ -10,6 +10,7 @@ namespace SuperNAT.Server
     {
         public Map Map { get; set; }
         public NatSession NatSession { get; set; }
+        public HttpRequestInfo RequestInfo { get; set; }
 
         public override void Close()
         {

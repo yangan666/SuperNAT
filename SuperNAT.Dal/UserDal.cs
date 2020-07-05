@@ -21,6 +21,8 @@ namespace SuperNAT.Dal
                 CreateMySqlConnection(t);
                 model.password = EncryptHelper.MD5Encrypt(model.password);
                 var sql = new StringBuilder("select * from user where password=@password ");
+                if (string.IsNullOrEmpty(model.user_name) && string.IsNullOrEmpty(model.user_id))
+                    throw new Exception("用户名或用户ID两者不能全为空");
                 if (!string.IsNullOrEmpty(model.user_id))
                 {
                     sql.Append("and user_id=@user_id");
@@ -38,13 +40,19 @@ namespace SuperNAT.Dal
                 rst.Data = conn.QueryFirstOrDefault<User>(sql.ToString(), model, t?.DbTrans);
                 if (rst.Data != null)
                 {
+                    if (rst.Data.is_disabled)
+                    {
+                        rst.Result = false;
+                        rst.Message = "您的帐号已被禁用，请联系管理员解除禁用！";
+                        return rst;
+                    }
                     rst.Result = true;
                     rst.Message = "登录成功";
                 }
             }
             catch (Exception ex)
             {
-                rst.Message = $"服务异常：{ex.InnerException ?? ex}";
+                rst.Message = $"{ex.InnerException ?? ex}";
                 Log4netUtil.Error($"{ex.InnerException ?? ex}");
             }
 

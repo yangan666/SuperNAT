@@ -41,7 +41,7 @@ namespace SuperNAT.Client
                             {
                                 var body = DataHelper.Decompress(httpModel.Content);//解压
                                 bodyStr = body.ToUTF8String();
-                                httpRequest.Content = new StringContent(bodyStr, Encoding.UTF8, httpModel.ContentType.Split(";")[0]);
+                                httpRequest.Content = httpModel.ContentType == null ? new StringContent(bodyStr, Encoding.UTF8) : new StringContent(bodyStr, Encoding.UTF8, httpModel.ContentType.Split(";")[0]);
                             }
                             HandleLog.WriteLine($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri}{Environment.NewLine}【Header】{httpModel.Headers.ToJson()}{$"{Environment.NewLine}【Body】{bodyStr}".If(httpModel.Content?.Length < 1024)}{Environment.NewLine}");
                             using HttpClient _httpClient = new HttpClient();

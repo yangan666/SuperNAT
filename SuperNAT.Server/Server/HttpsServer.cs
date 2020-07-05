@@ -1,8 +1,11 @@
 ﻿using SuperNAT.AsyncSocket;
+using SuperNAT.Bll;
 using SuperNAT.Common;
 using SuperNAT.Model;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -14,9 +17,11 @@ namespace SuperNAT.Server
 {
     public class HttpsServer : SocketServer<HttpSession, HttpRequestInfo>
     {
+        public ConcurrentQueue<Request> RequestQueue = new ConcurrentQueue<Request>();
         public HttpsServer(ServerOption serverOption) : base(serverOption)
         {
             ReceiveFilter = new HttpReceiveFilter();
+            WriteRequest();
         }
 
         public override bool Start()
@@ -145,6 +150,7 @@ namespace SuperNAT.Server
                     };
                     var filter = ReceiveFilter as HttpReceiveFilter;
                     filter.DecodePackage(ref httpModel);
+                    session.RequestInfo = requestInfo;
                     var map = ServerHanlder.MapList.Find(c => c.remote_endpoint == httpModel.Host || (c.remote == httpModel.Host && c.remote_port == 80));
                     if (map == null)
                     {
@@ -226,11 +232,32 @@ namespace SuperNAT.Server
                             }
                             //把处理信息返回到客户端
                             context.Send(httpResponse.Write());
-
-                            var timeSpan = (DateTime.Now - httpModel.RequestTime);
+                            var response_time = DateTime.Now;
+                            var timeSpan = (response_time - httpModel.RequestTime);
                             var totalSize = (httpResponse.Body?.Length ?? 0) * 1.00 / 1024;
                             var map = session.MapList.Find(c => c.remote_endpoint == httpModel.Host);
                             HandleLog.WriteLine($"{session.Client.user_name} {session.Client.name} {map?.name} {httpModel.Method} {httpModel.Path} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(totalSize, 1)}KB {timeSpan.TotalMilliseconds}ms");
+
+                            var request = new Request
+                            {
+                                request_url = $"{map.protocol}://{map.remote_endpoint}{httpModel.Path}",
+                                request_method = httpModel.Method,
+                                client_ip = session.Remote,
+                                user_id = session.Client.user_id,
+                                request_time = httpModel.RequestTime,
+                                response_time = response_time,
+                                handle_time = Convert.ToInt64(timeSpan.TotalMilliseconds),//ms
+                                create_time = DateTime.Now,
+                                requet_content = context.RequestInfo.Body == null ? null : Encoding.UTF8.GetString(context.RequestInfo.Body),
+                                response_content = httpResponse.Body.Length <= 1024 ? Encoding.UTF8.GetString(httpResponse.Body) : "",
+                                status_code = httpModel.StatusCode,
+                                status_message = httpModel.StatusMessage,
+                                total_size = httpResponse.Body?.Length ?? 0,
+                                speed = Math.Round(totalSize / (timeSpan.TotalMilliseconds / 1000), 2),//KB/s
+                                map_id = map.id
+                            };
+                            lock (RequestQueue)
+                                RequestQueue.Enqueue(request);
                         }
                         break;
                 }
@@ -239,6 +266,33 @@ namespace SuperNAT.Server
             {
                 HandleLog.WriteLine($"HttpsServer ProcessData穿透处理异常，{ex}");
             }
+        }
+
+        public void WriteRequest()
+        {
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        List<Request> requestList = new List<Request>();
+                        while (requestList.Count <= 10 && RequestQueue.TryDequeue(out Request request))
+                        {
+                            requestList.Add(request);
+                        }
+                        if (requestList.Any())
+                        {
+                            new RequestBll().AddList(requestList);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log4netUtil.Error($"写请求失败：{ex}");
+                    }
+                    Thread.Sleep(10000);
+                }
+            });
         }
     }
 }
