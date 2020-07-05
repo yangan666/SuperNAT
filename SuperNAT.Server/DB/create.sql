@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 127.0.0.1
+Source Server         : 139.155.104.69
 Source Server Version : 50505
-Source Host           : 127.0.0.1:3306
+Source Host           : 139.155.104.69:3306
 Source Database       : supernat
 
 Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2020-03-08 19:10:19
+Date: 2020-07-05 12:16:57
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -42,7 +42,7 @@ CREATE TABLE `client` (
   `user_id` varchar(50) DEFAULT '',
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT='主机客户端';
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8 COMMENT='主机客户端';
 
 -- ----------------------------
 -- Table structure for map
@@ -64,7 +64,7 @@ CREATE TABLE `map` (
   `client_id` int(11) NOT NULL,
   `is_disabled` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for menu
@@ -91,15 +91,23 @@ CREATE TABLE `menu` (
 DROP TABLE IF EXISTS `request`;
 CREATE TABLE `request` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `request_url` varchar(500) DEFAULT NULL,
-  `client_ip` varchar(100) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `request_time` datetime DEFAULT NULL,
-  `response_time` datetime DEFAULT NULL,
-  `handle_time` datetime DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL,
+  `request_url` varchar(500) NOT NULL DEFAULT '',
+  `request_method` varchar(20) NOT NULL,
+  `status_code` int(11) NOT NULL,
+  `status_message` varchar(100) NOT NULL,
+  `client_ip` varchar(100) NOT NULL DEFAULT '',
+  `user_id` varchar(50) NOT NULL,
+  `request_time` datetime NOT NULL,
+  `response_time` datetime NOT NULL,
+  `handle_time` bigint(20) NOT NULL,
+  `create_time` datetime NOT NULL,
+  `requet_content` varchar(5000) DEFAULT NULL,
+  `response_content` varchar(5000) DEFAULT NULL,
+  `total_size` int(11) NOT NULL,
+  `speed` double NOT NULL,
+  `map_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for role
@@ -145,5 +153,7 @@ CREATE TABLE `user` (
   `is_admin` bit(1) NOT NULL DEFAULT b'0',
   `role_id` varchar(50) DEFAULT '',
   `create_time` datetime NOT NULL,
+  `login_times` int(11) NOT NULL,
+  `last_login_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
