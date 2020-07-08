@@ -127,12 +127,19 @@ namespace SuperNAT.Client
         {
             while (IsReConnect)
             {
-                Thread.Sleep(3000);
-                if (!NatClient.IsConnected && !isLock)
+                try
                 {
-                    //重连
-                    HandleLog.WriteLine("尝试重新连接服务器...");
-                    ConnectNatServer();
+                    Thread.Sleep(3000);
+                    if (!isLock && (NatClient == null || !NatClient.IsConnected))
+                    {
+                        //重连
+                        HandleLog.WriteLine("尝试重新连接服务器...");
+                        ConnectNatServer();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    HandleLog.WriteLine($"尝试重新连接服务器失败：{ex}");
                 }
             }
         }
