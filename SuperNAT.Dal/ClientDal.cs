@@ -59,7 +59,7 @@ namespace SuperNAT.Dal
                 {
                     sql.Append($"where ({"t1.name,t1.remark,t2.user_name".ToLikeString("or", "search")}) {"and t2.user_id = @user_id ".If(not_admin)}".If(!string.IsNullOrWhiteSpace(model.search), "where t2.user_id = @user_id ".If(not_admin)));
                     model.search = $"%{model.search}%";
-                    rst.Data = conn.GetListPaged<Client>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id asc", model, t?.DbTrans).ToList();
+                    rst.Data = conn.GetListPaged<Client>(model.page_index, model.page_size, sql.ToString(), out int totalCount, "id desc", model, t?.DbTrans).ToList();
                     rst.PageInfo = new PageInfo()
                     {
                         PageIndex = model.page_index,
