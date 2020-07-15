@@ -16,9 +16,18 @@ namespace SuperNAT.Bll
 
         public ApiResult<bool> Add(User model)
         {
-            using (userDal)
+            using (Trans t = new Trans())
             {
-                return userDal.Add(model);
+                var user = userDal.GetAll("where user_name=@user_name", model, t);
+                if (user.Any())
+                    return ApiResult<bool>.Fail("用户名已存在！");
+                var add = userDal.Add(model, t);
+                if (!add.Result)
+                    return add;
+
+                t.Commit();
+                add.Message = "注册成功";
+                return add;
             }
         }
 

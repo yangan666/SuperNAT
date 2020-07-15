@@ -131,11 +131,11 @@ export default {
             if (data.Result) {
               this.model = {}
               this.register = false
-              this.$dialog.message.success('注册成功', {
+              this.$dialog.message.success(data.Message, {
                 position: "top"
               })
             } else {
-              this.$dialog.message.error('注册失败', {
+              this.$dialog.message.error(data.Message, {
                 position: "top"
               })
             }

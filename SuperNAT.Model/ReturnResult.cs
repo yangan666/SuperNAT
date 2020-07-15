@@ -20,12 +20,12 @@ namespace SuperNAT.Model
         public string Message { get; set; }
 
         public PageInfo PageInfo { get; set; }
-        public static ApiResult<T> Ok(T data, string message = "操作成功")
+        public static ApiResult<T> Ok(T data, string message = "业务成功")
         {
             return new ApiResult<T>() { Result = true, Data = data, Message = message };
         }
 
-        public static ApiResult<T> Fail(string message = "操作失败")
+        public static ApiResult<T> Fail(string message = "业务失败")
         {
             return new ApiResult<T>() { Message = message };
         }
