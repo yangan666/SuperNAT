@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.IO.Pipelines" Version="4.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SuperNAT.Common\SuperNAT.Common.csproj" />
     <ProjectReference Include="..\SuperNAT.Model\SuperNAT.Model.csproj" />
   </ItemGroup>
