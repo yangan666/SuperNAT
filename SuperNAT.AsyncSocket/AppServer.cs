@@ -93,7 +93,7 @@ namespace SuperNAT.AsyncSocket
                                         {
                                             if (t.IsCanceled)
                                                 HandleLog.Log($"连接{session.RemouteEndPoint}证书验证超时，关闭连接");
-                                            session.Close();
+                                            Close(session);
                                         }
                                     });
                                 }
@@ -210,7 +210,7 @@ namespace SuperNAT.AsyncSocket
                 finally
                 {
                     //接收完毕或者出错后直接关闭连接
-                    session.Close();
+                    Close(session);
                 }
             });
         }
@@ -252,7 +252,7 @@ namespace SuperNAT.AsyncSocket
                     {
                         HandleLog.Log($"数据长度不能超过{maxPackageLength}个字节");
                         //直接关闭连接
-                        session.Close();
+                        Close(session);
                         return false;
                     }
 
@@ -332,6 +332,19 @@ namespace SuperNAT.AsyncSocket
             session.Socket.BeginReceiveFrom(nextSession.Data, 0, nextSession.Data.Length, SocketFlags.None, ref remouteEP, UdpReceiveCallback, nextSession);
         }
         #endregion
+
+        private void Close(TSession session)
+        {
+            try
+            {
+                OnClosed?.Invoke(session);
+                session.Close();
+            }
+            catch (Exception ex)
+            {
+                HandleLog.Log($"关闭连接出错，{ex.Message}");
+            }
+        }
 
         private bool SSLValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {

@@ -162,6 +162,8 @@ namespace SuperNAT.AsyncSocket
         {
             try
             {
+                if (!IsConnected)
+                    return;
                 IsConnected = false;
                 OnClosed?.Invoke(Socket);
                 Socket?.Close();

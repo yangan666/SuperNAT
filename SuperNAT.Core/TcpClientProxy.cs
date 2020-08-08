@@ -14,6 +14,7 @@ namespace SuperNAT.Core
         /// 连接到外网服务器的客户端信息
         /// </summary>
         public TcpModel RemoteSession { get; set; }
+        public Map Map { get; set; }
         public NatClient NatClient { get; set; }
         public TcpClientProxy()
         {
@@ -35,7 +36,7 @@ namespace SuperNAT.Core
         private void OnClientConnected(object o)
         {
             ClientManager.TcpClientProxyList.Add(this);
-            HandleLog.Log($"【{RemoteSession.SessionId},{LocalEndPoint}】已连接到服务器【{RemouteEndPoint}】");
+            HandleLog.Log($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 客户端已连接到内网服务器");
         }
 
         private void OnPackageReceived(object o, TcpRequestInfo tcpRequestInfo)
@@ -60,13 +61,13 @@ namespace SuperNAT.Core
                 });
                 //转发给服务器
                 NatClient.Send(pack);
-                HandleLog.Log($"<---- {RemoteSession.SessionId} 收到报文{tcpRequestInfo.Raw.Length}字节");
+                HandleLog.Log($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 收到报文{tcpRequestInfo.Raw.Length}字节");
             });
         }
 
         private void OnClientClosed(object o)
         {
-            HandleLog.Log($"TcpClientProxy {LocalEndPoint}已关闭");
+            HandleLog.Log($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 客户端已关闭");
         }
 
         public void ProcessData(NatClient natClient, NatRequestInfo natRequestInfo)
@@ -80,6 +81,9 @@ namespace SuperNAT.Core
                         {
                             //tcp注册包  发起连接到内网服务器
                             RemoteSession = tcpModel;
+                            Map = natClient.Client.MapList.Find(c => c.remote_endpoint == tcpModel.Host);
+                            if (Map == null)
+                                throw new Exception($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 映射不存在");
                             ConectLocalServerAsync();
                         }
                         break;
@@ -89,14 +93,13 @@ namespace SuperNAT.Core
                             var request = DataHelper.Decompress(tcpModel.Content);
                             //发送原始包
                             Send(request);
-                            HandleLog.Log($"----> {RemoteSession.SessionId} 发送报文{request.Length}字节");
+                            HandleLog.Log($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 发送报文{request.Length}字节");
                         }
                         break;
                     case (int)TcpAction.Close:
                         {
                             //tcp连接关闭包
                             ClientManager.TcpClientProxyList.Remove(this);
-                            HandleLog.Log($"本地连接【{RemoteSession.SessionId},{LocalEndPoint}】关闭成功");
                             Close();
                         }
                         break;
@@ -104,7 +107,7 @@ namespace SuperNAT.Core
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"客户端处理TCP穿透业务异常，{ex}");
+                HandleLog.Log($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 客户端处理TCP穿透业务异常，{ex}");
             }
         }
     }
