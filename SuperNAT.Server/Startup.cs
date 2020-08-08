@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
-using SuperNAT.Server.Extions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.Builder;
@@ -22,6 +20,7 @@ using SuperNAT.Common;
 using SuperNAT.Bll;
 using System.Threading.Tasks;
 using System.Threading;
+using SuperNAT.AsyncSocket;
 
 namespace SuperNAT.Server
 {
@@ -150,7 +149,7 @@ namespace SuperNAT.Server
                     //更新假在线的主机
                     var bll = new ClientBll();
                     var res = bll.UpdateOfflineClient();
-                    HandleLog.WriteLine(res.Message, false);
+                    HandleLog.Log(res.Message, false);
                     Thread.Sleep(60000);
                 }
             });
@@ -167,7 +166,7 @@ namespace SuperNAT.Server
             var ex = e.ExceptionObject as Exception;
             var oldColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
-            HandleLog.WriteLine(ex.Message);
+            HandleLog.Log(ex.Message);
             Console.ForegroundColor = oldColor;
         }
     }

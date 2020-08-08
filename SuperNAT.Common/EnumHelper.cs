@@ -26,7 +26,7 @@ namespace SuperNAT.Common
             }
             catch (Exception ex)
             {
-                
+                Log4netUtil.Error(ex.Message);
             }
 
             return rst;

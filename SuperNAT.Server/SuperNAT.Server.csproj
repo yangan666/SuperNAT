@@ -11,6 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Server\**" />
+    <EmbeddedResource Remove="Server\**" />
+    <None Remove="Server\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="ServerHanlder.cs~RF548498.TMP" />
   </ItemGroup>
 
@@ -29,6 +35,7 @@
     <ProjectReference Include="..\SuperNAT.AsyncSocket\SuperNAT.AsyncSocket.csproj" />
     <ProjectReference Include="..\SuperNAT.Bll\SuperNAT.Bll.csproj" />
     <ProjectReference Include="..\SuperNAT.Common\SuperNAT.Common.csproj" />
+    <ProjectReference Include="..\SuperNAT.Core\SuperNAT.Core.csproj" />
     <ProjectReference Include="..\SuperNAT.Model\SuperNAT.Model.csproj" />
   </ItemGroup>
 

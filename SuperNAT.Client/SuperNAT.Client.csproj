@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SuperNAT.AsyncSocket\SuperNAT.AsyncSocket.csproj" />
     <ProjectReference Include="..\SuperNAT.Common\SuperNAT.Common.csproj" />
+    <ProjectReference Include="..\SuperNAT.Core\SuperNAT.Core.csproj" />
     <ProjectReference Include="..\SuperNAT.Model\SuperNAT.Model.csproj" />
   </ItemGroup>
 
@@ -40,6 +41,6 @@
     </None>
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://json.schemastore.org/bowerrc" /></VisualStudio></ProjectExtensions>
 
 </Project>

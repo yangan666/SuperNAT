@@ -8,6 +8,7 @@ using System.Reflection;
 using Topshelf;
 using SuperNAT.AsyncSocket;
 using System.Net;
+using SuperNAT.Core;
 
 namespace SuperNAT.Server
 {

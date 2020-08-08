@@ -9,6 +9,7 @@ using SuperNAT.Common;
 using SuperNAT.Bll;
 using SuperNAT.Model;
 using System.Linq;
+using SuperNAT.Core;
 
 namespace SuperNAT.Server.Controllers
 {
@@ -85,38 +86,36 @@ namespace SuperNAT.Server.Controllers
             switch (name)
             {
                 case "nat":
-                    result = Json(ServerHanlder.NATServer.GetAll().Select(s => new
+                    result = Json(ServerManager.NATServer.GetSessionList().Select(s => new
                     {
                         s.Client,
                         s.ConnectTime,
-                        s.Local,
+                        s.LocalEndPoint,
                         s.MapList,
-                        s.Remote,
+                        s.RemouteEndPoint,
                         s.SessionId
                     }));
                     break;
                 case "http":
-                    result = Json(ServerHanlder.HttpServerList.SelectMany(s => s.ContextDict));
-                    break;
                 case "https":
-                    result = Json(ServerHanlder.HttpsServerList.SelectMany(s => s.GetAll()).Select(s => new
+                    result = Json(ServerManager.HttpServerList.SelectMany(s => s.GetSessionList()).Select(s => new
                     {
                         s.NatSession.Client.name,
                         s.ConnectTime,
-                        s.Local,
+                        s.LocalEndPoint,
                         s.Map,
-                        s.Remote,
+                        s.RemouteEndPoint,
                         s.SessionId
                     }));
                     break;
                 case "tcp":
-                    result = Json(ServerHanlder.TcpServerList.SelectMany(s => s.GetAll()).Select(s => new
+                    result = Json(ServerManager.TcpServerList.SelectMany(s => s.GetSessionList()).Select(s => new
                     {
                         s.NatSession.Client.name,
                         s.ConnectTime,
-                        s.Local,
+                        s.LocalEndPoint,
                         s.Map,
-                        s.Remote,
+                        s.RemouteEndPoint,
                         s.SessionId
                     }));
                     break;

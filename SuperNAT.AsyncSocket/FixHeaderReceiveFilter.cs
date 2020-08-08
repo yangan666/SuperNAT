@@ -1,26 +1,49 @@
-﻿using SuperNAT.Common;
-using System;
+﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SuperNAT.AsyncSocket
 {
-    public abstract class FixHeaderReceiveFilter<TRequestInfo> : IReceiveFilter<TRequestInfo>
-        where TRequestInfo : IRequestInfo, new()
+    public abstract class FixHeaderReceiveFilter<TRequestInfo> : IReceiveFilter<TRequestInfo> where TRequestInfo : IRequestInfo, new()
     {
-        public bool FoundHeader { get; private set; }
-        public int HeaderSize { get; private set; }
-        public long BodySize { get; private set; }
-        private long TotalSize { get; set; }
-
         public FixHeaderReceiveFilter(int headerSize)
         {
             HeaderSize = headerSize;
         }
 
+        /// <summary>
+        /// 是否找到头部
+        /// </summary>
+        public bool FoundHeader { get; private set; }
+
+        /// <summary>
+        /// 头部长度
+        /// </summary>
+        public int HeaderSize { get; private set; }
+
+        /// <summary>
+        /// 数据长度
+        /// </summary>
+        public long BodySize { get; private set; }
+
+        /// <summary>
+        /// 总长度
+        /// </summary>
+        public long TotalSize { get; set; }
+
+        /// <summary>
+        /// 计算数据长度
+        /// </summary>
+        /// <param name="header"></param>
+        /// <returns></returns>
         public abstract long GetBodyLengthFromHeader(ReadOnlySequence<byte> header);
 
+        /// <summary>
+        /// 解析数据
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         public TRequestInfo Filter(ref SequenceReader<byte> reader)
         {
             if (!FoundHeader)
@@ -32,7 +55,7 @@ namespace SuperNAT.AsyncSocket
                 BodySize = GetBodyLengthFromHeader(header);
 
                 if (BodySize < 0)
-                    throw new Exception("Failed to get body length from the package header.");
+                    throw new Exception("正文长度不能小于0");
 
                 if (BodySize == 0)
                     return DecodePackage(header);
@@ -59,8 +82,16 @@ namespace SuperNAT.AsyncSocket
             }
         }
 
+        /// <summary>
+        /// 解析为实体
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public abstract TRequestInfo DecodePackage(ReadOnlySequence<byte> data);
 
+        /// <summary>
+        /// 重置变量
+        /// </summary>
         public void Reset()
         {
             FoundHeader = false;

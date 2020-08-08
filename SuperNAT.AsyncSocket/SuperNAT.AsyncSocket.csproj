@@ -5,12 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.IO.Pipelines" Version="4.7.2" />
+    <Compile Remove="Custom\**" />
+    <Compile Remove="Interface\**" />
+    <EmbeddedResource Remove="Custom\**" />
+    <EmbeddedResource Remove="Interface\**" />
+    <None Remove="Custom\**" />
+    <None Remove="Interface\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SuperNAT.Common\SuperNAT.Common.csproj" />
-    <ProjectReference Include="..\SuperNAT.Model\SuperNAT.Model.csproj" />
+    <Compile Remove="SessionManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Pipelines" Version="4.7.2" />
   </ItemGroup>
 
 </Project>

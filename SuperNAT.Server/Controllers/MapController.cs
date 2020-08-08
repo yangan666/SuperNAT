@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SuperNAT.Common;
 using SuperNAT.Bll;
 using SuperNAT.Model;
+using SuperNAT.Core;
 
 namespace SuperNAT.Server.Controllers
 {
@@ -25,7 +26,7 @@ namespace SuperNAT.Server.Controllers
                 rst = bll.Add(model);
                 if (rst.Result)
                 {
-                    ServerHanlder.ChangeMap((int)ChangeMapType.新增, model);
+                    ServerManager.ChangeMap((int)ChangeMapType.新增, model);
                 }
             }
             else
@@ -37,12 +38,12 @@ namespace SuperNAT.Server.Controllers
                     if (model.client_id != map.Data.client_id)
                     {
                         //改了所属主机  删掉原来的  新增修改后的
-                        ServerHanlder.ChangeMap((int)ChangeMapType.删除, map.Data);
-                        ServerHanlder.ChangeMap((int)ChangeMapType.新增, model);
+                        ServerManager.ChangeMap((int)ChangeMapType.删除, map.Data);
+                        ServerManager.ChangeMap((int)ChangeMapType.新增, model);
                     }
                     else
                     {
-                        ServerHanlder.ChangeMap((int)ChangeMapType.修改, model);
+                        ServerManager.ChangeMap((int)ChangeMapType.修改, model);
                     }
                 }
             }
@@ -58,7 +59,7 @@ namespace SuperNAT.Server.Controllers
             var rst = bll.Delete(model);
             if (rst.Result)
             {
-                ServerHanlder.ChangeMap((int)ChangeMapType.删除, model);
+                ServerManager.ChangeMap((int)ChangeMapType.删除, model);
             }
 
             return Json(rst);
