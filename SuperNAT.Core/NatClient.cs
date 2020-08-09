@@ -26,9 +26,9 @@ namespace SuperNAT.Core
         {
 
         }
-        public NatClient(ClientOption clientOptions) : base(new NatReceiveFilter())
+        public NatClient(ClientOption clientOption) : base(new NatReceiveFilter())
         {
-            InitOption(clientOptions);
+            InitOption(clientOption);
         }
 
         public void ProcessData(NatRequestInfo natRequestInfo)

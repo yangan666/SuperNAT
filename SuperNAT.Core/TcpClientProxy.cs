@@ -20,9 +20,9 @@ namespace SuperNAT.Core
         {
 
         }
-        public TcpClientProxy(ClientOption clientOptions) : base(null)//不需要过滤器，原样转发
+        public TcpClientProxy(ClientOption clientOption) : base(null)//不需要过滤器，原样转发
         {
-            InitOption(clientOptions);
+            InitOption(clientOption);
         }
 
         public async void ConectLocalServerAsync()

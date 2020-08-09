@@ -29,10 +29,6 @@ namespace SuperNAT.AsyncSocket
         public void InitOption(ClientOption clientOption)
         {
             ClientOption = clientOption;
-            Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
-            {
-                NoDelay = ClientOption.NoDelay
-            };
         }
         public ClientOption ClientOption { get; private set; }
         public Socket Socket { get; set; }
@@ -65,6 +61,10 @@ namespace SuperNAT.AsyncSocket
         {
             try
             {
+                Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
+                {
+                    NoDelay = ClientOption.NoDelay
+                };
                 await Socket.ConnectAsync(new IPEndPoint(IPAddress.Parse(ClientOption.Ip), ClientOption.Port));
                 RemouteEndPoint = Socket.RemoteEndPoint;
                 LocalEndPoint = Socket.LocalEndPoint;

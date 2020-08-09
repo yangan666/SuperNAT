@@ -104,10 +104,7 @@ namespace SuperNAT.AsyncSocket
                     else if (ServerOption.ProtocolType == ProtocolType.Udp)
                     {
                         #region UDP
-                        Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp)
-                        {
-                            NoDelay = ServerOption.NoDelay
-                        };
+                        Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                         Socket.Bind(iPEndPoint);
                         EndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
                         var session = new TSession
