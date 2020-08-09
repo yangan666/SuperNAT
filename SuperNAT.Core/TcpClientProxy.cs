@@ -89,7 +89,7 @@ namespace SuperNAT.Core
                         break;
                     case (int)TcpAction.TransferData:
                         {
-                            //先讲16进制字符串转为byte数组  再gzip解压
+                            //gzip解压
                             var request = DataHelper.Decompress(tcpModel.Content);
                             //发送原始包
                             Send(request);

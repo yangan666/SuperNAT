@@ -63,7 +63,7 @@ namespace SuperNAT.Core
                             }
                             var response = await _httpClient.SendAsync(httpRequest);
                             //回传给服务器
-                            httpModel.HttpVersion = $"{map.protocol.ToUpper()}/{response.Version.ToString()}";
+                            httpModel.HttpVersion = $"{map.protocol.ToUpper()}/{response.Version}";
                             httpModel.StatusCode = (int)response.StatusCode;
                             httpModel.StatusMessage = response.StatusCode.ToString();
                             httpModel.Local = map.local_endpoint;

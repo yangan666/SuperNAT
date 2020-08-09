@@ -76,7 +76,7 @@ namespace SuperNAT.AsyncSocket
 
                     IsConnected = true;
                     HandleLog.Log($"连接服务器[{ClientOption.Ip}:{ClientOption.Port}]成功");
-                    OnConnected?.Invoke(Socket);
+                    OnConnected?.Invoke(this);
                     ProcessReadAsync();
 
                     return true;
@@ -97,7 +97,7 @@ namespace SuperNAT.AsyncSocket
 
                             IsConnected = true;
                             HandleLog.Log($"连接服务器[{ClientOption.Ip}:{ClientOption.Port}]成功");
-                            OnConnected?.Invoke(Socket);
+                            OnConnected?.Invoke(this);
                             ProcessReadAsync();
 
                             return true;
@@ -165,7 +165,7 @@ namespace SuperNAT.AsyncSocket
                 if (!IsConnected)
                     return;
                 IsConnected = false;
-                OnClosed?.Invoke(Socket);
+                OnClosed?.Invoke(this);
                 Socket?.Close();
             }
             catch (Exception ex)

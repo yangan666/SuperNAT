@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace SuperNAT.Core
 {
     /// <summary>
-    /// Nat穿透过滤器
+    /// Nat穿透过滤器：帧头（01）+数据长度（7）+正文数据（json字符串）+帧尾（04）
     /// </summary>
     public class NatReceiveFilter : FixHeaderReceiveFilter<NatRequestInfo>
     {

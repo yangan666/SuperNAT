@@ -147,7 +147,7 @@ namespace SuperNAT.Core
             }
         }
 
-        static void OnClientConnected(object o)
+        static void OnClientConnected(object sender)
         {
             //发送注册包给服务端
             var pack = PackHelper.CreatePack(new JsonData()
@@ -159,7 +159,7 @@ namespace SuperNAT.Core
             NatClient?.Send(pack);
         }
 
-        static void OnPackageReceived(object o, NatRequestInfo natRequestInfo)
+        static void OnPackageReceived(object sender, NatRequestInfo natRequestInfo)
         {
             Task.Run(() =>
             {
@@ -211,7 +211,7 @@ namespace SuperNAT.Core
             });
         }
 
-        static void OnClientClosed(object o)
+        static void OnClientClosed(object sender)
         {
             HandleLog.Log($"NatClient{NatClient.LocalEndPoint}已关闭");
         }
