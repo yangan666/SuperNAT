@@ -33,13 +33,13 @@ namespace SuperNAT.Core
             await ConnectAsync();
         }
 
-        private void OnClientConnected(object o)
+        private void OnClientConnected(object sender)
         {
             ClientManager.TcpClientProxyList.Add(this);
             HandleLog.Log($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 客户端已连接到内网服务器");
         }
 
-        private void OnPackageReceived(object o, TcpRequestInfo tcpRequestInfo)
+        private void OnPackageReceived(object sender, TcpRequestInfo tcpRequestInfo)
         {
             Task.Run(() =>
             {
@@ -65,7 +65,7 @@ namespace SuperNAT.Core
             });
         }
 
-        private void OnClientClosed(object o)
+        private void OnClientClosed(object sender)
         {
             HandleLog.Log($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 客户端已关闭");
         }
