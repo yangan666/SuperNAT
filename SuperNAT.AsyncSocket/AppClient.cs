@@ -165,6 +165,7 @@ namespace SuperNAT.AsyncSocket
                 if (!IsConnected)
                     return;
                 IsConnected = false;
+                SessionContainer.Remove(SessionId);
                 OnClosed?.Invoke(this);
                 Socket?.Close();
             }

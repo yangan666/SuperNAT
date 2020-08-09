@@ -26,5 +26,13 @@ namespace SuperNAT.AsyncSocket
                 SessionList.RemoveAll(c => c.SessionId == session.SessionId);
             }
         }
+
+        public void Remove(string sessionId)
+        {
+            lock (lockObj)
+            {
+                SessionList.RemoveAll(c => c.SessionId == sessionId);
+            }
+        }
     }
 }

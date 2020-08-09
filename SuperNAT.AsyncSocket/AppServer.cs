@@ -337,6 +337,7 @@ namespace SuperNAT.AsyncSocket
         {
             try
             {
+                SessionContainer.Remove(session);
                 OnClosed?.Invoke(session);
                 session.Close();
             }
