@@ -6,7 +6,7 @@ import store from "../store"
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.NODE_ENV === "production" ? "http://www.supernat.cn:8088" : "http://localhost:8088", // api的base_url  http://www.supernat.cn:8088  http://localhost:8088
+  baseURL: process.env.NODE_ENV === "production" ? "http://119.3.154.119:61812" : "http://119.3.154.119:61812", // api的base_url  http://www.supernat.cn:8088  http://localhost:8088
   timeout: -1 // request timeout
   // withCredentials: true // 允许携带cookie
 })
