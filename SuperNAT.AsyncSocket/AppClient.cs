@@ -24,7 +24,7 @@ namespace SuperNAT.AsyncSocket
         }
         public AppClient(IReceiveFilter<TRequestInfo> receiveFilter)
         {
-            ReceiveFilter = receiveFilter;
+            NextReceiveFilter = receiveFilter;
         }
         public void InitOption(ClientOption clientOption)
         {
@@ -46,7 +46,7 @@ namespace SuperNAT.AsyncSocket
         public Action<object> OnClosed { get; set; }
 
         public SessionContainer<TSession> SessionContainer { get; set; } = new SessionContainer<TSession>();
-        public IReceiveFilter<TRequestInfo> ReceiveFilter { get; set; }
+        public IReceiveFilter<TRequestInfo> NextReceiveFilter { get; set; }
         public List<TSession> GetSessionList(Predicate<TSession> predicate = null)
         {
             return predicate == null ? SessionContainer.SessionList : SessionContainer.SessionList.FindAll(predicate);
@@ -263,10 +263,14 @@ namespace SuperNAT.AsyncSocket
 
             while (true)
             {
+                mark:
                 //过滤解析
-                if (ReceiveFilter != null)
+                if (NextReceiveFilter != null)
                 {
-                    var packageInfo = ReceiveFilter.Filter(ref seqReader);
+                    if (NextReceiveFilter.NextReceiveFilter != null)
+                        NextReceiveFilter = NextReceiveFilter.NextReceiveFilter;
+
+                    var packageInfo = NextReceiveFilter.Filter(ref seqReader);
                     var bytesConsumed = seqReader.Consumed;
                     bytesConsumedTotal += bytesConsumed;
 
@@ -287,6 +291,8 @@ namespace SuperNAT.AsyncSocket
                     //继续接收
                     if (packageInfo == null)
                     {
+                        if (NextReceiveFilter.NextReceiveFilter != NextReceiveFilter)
+                            goto mark;
                         consumed = buffer.GetPosition(bytesConsumedTotal);
                         return true;
                     }

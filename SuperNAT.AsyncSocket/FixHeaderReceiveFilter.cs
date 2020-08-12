@@ -12,6 +12,8 @@ namespace SuperNAT.AsyncSocket
             HeaderSize = headerSize;
         }
 
+        public IReceiveFilter<TRequestInfo> NextReceiveFilter { get; }
+
         /// <summary>
         /// 是否找到头部
         /// </summary>

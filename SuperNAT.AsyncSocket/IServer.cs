@@ -20,7 +20,7 @@ namespace SuperNAT.AsyncSocket
         Task<bool> StartAysnc();
         void Stop();
         SessionContainer<TSession> SessionContainer { get; set; }
-        IReceiveFilter<TRequestInfo> ReceiveFilter { get; set; }
+        IReceiveFilter<TRequestInfo> NextReceiveFilter { get; set; }
         List<TSession> GetSessionList(Predicate<TSession> predicate = null);
         TSession GetSingleSession(Predicate<TSession> predicate);
         long SessionCount { get; }

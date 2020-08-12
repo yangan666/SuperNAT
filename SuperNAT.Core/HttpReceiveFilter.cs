@@ -13,6 +13,7 @@ namespace SuperNAT.Core
         private List<byte> raw;
         private HttpRequestInfo _httpRequestInfo;
         private static object lockObj = new object();
+        public IReceiveFilter<HttpRequestInfo> NextReceiveFilter { get; }
         public HttpRequestInfo Filter(ref SequenceReader<byte> reader)
         {
             lock (lockObj)
