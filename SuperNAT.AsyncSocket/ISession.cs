@@ -16,7 +16,7 @@ namespace SuperNAT.AsyncSocket
         PipeReader Reader { get; set; }
         PipeWriter Writer { get; set; }
         EndPoint LocalEndPoint { get; set; }
-        EndPoint RemouteEndPoint { get; set; }
+        EndPoint RemoteEndPoint { get; set; }
         byte[] Data { get; set; }
         string SessionId { get; set; }
         DateTime ConnectTime { get; set; }

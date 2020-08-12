@@ -30,7 +30,7 @@ namespace SuperNAT.Core
 
         private void Connected(HttpSession session)
         {
-            HandleLog.Log($"HTTP客户端【{session.SessionId},{session.RemouteEndPoint}】已连接【{session.LocalEndPoint}】", false);
+            HandleLog.Log($"HTTP客户端【{session.SessionId},{session.RemoteEndPoint}】已连接【{session.LocalEndPoint}】", false);
         }
 
         private async void ForwardProxy(HttpSession session, HttpModel httpModel, Map map)
@@ -134,7 +134,7 @@ namespace SuperNAT.Core
                 {
                     if (!requestInfo.Success)
                     {
-                        HandleLog.Log($"http请求解析异常，ip地址：{session.RemouteEndPoint}");
+                        HandleLog.Log($"http请求解析异常，ip地址：{session.RemoteEndPoint}");
                         session.Write("request parse error");
                         return;
                     }
@@ -200,7 +200,7 @@ namespace SuperNAT.Core
 
         private void Closed(HttpSession session)
         {
-            HandleLog.Log($"HTTP客户端【{session.SessionId},{session.RemouteEndPoint}】已下线", false);
+            HandleLog.Log($"HTTP客户端【{session.SessionId},{session.RemoteEndPoint}】已下线", false);
         }
 
         public void ProcessData(NatSession session, NatRequestInfo requestInfo, HttpModel httpModel)
@@ -243,7 +243,7 @@ namespace SuperNAT.Core
                             {
                                 request_url = $"{map.protocol}://{map.remote_endpoint}{httpModel.Path}",
                                 request_method = httpModel.Method,
-                                client_ip = session.RemouteEndPoint.ToString(),
+                                client_ip = session.RemoteEndPoint.ToString(),
                                 user_id = session.Client.user_id,
                                 request_time = httpModel.RequestTime,
                                 response_time = response_time,

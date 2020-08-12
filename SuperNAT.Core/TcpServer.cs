@@ -56,11 +56,11 @@ namespace SuperNAT.Core
                 natSession.Send(PackHelper.CreatePack(pack));
 
                 session.NatSession = natSession;
-                HandleLog.Log($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 客户端【{session.RemouteEndPoint}】已连接到服务器");
+                HandleLog.Log($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 客户端【{session.RemoteEndPoint}】已连接到服务器");
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"连接【{session.SessionId},{session.RemouteEndPoint},{session.LocalEndPoint}】发生异常：{ex}");
+                HandleLog.Log($"连接【{session.SessionId},{session.RemoteEndPoint},{session.LocalEndPoint}】发生异常：{ex}");
             }
         }
 
@@ -105,7 +105,7 @@ namespace SuperNAT.Core
             try
             {
                 CloseLocalClient(session);
-                HandleLog.Log($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 客户端【{session.RemouteEndPoint}】已下线");
+                HandleLog.Log($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 客户端【{session.RemoteEndPoint}】已下线");
             }
             catch (Exception ex)
             {
@@ -167,7 +167,7 @@ namespace SuperNAT.Core
                             if (tcpSession != null)
                             {
                                 tcpSession.Close();
-                                HandleLog.Log($"连接【{tcpSession.SessionId},{tcpSession.RemouteEndPoint}】关闭成功");
+                                HandleLog.Log($"连接【{tcpSession.SessionId},{tcpSession.RemoteEndPoint}】关闭成功");
                             }
                         }
                         break;

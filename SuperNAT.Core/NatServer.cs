@@ -41,12 +41,12 @@ namespace SuperNAT.Core
                         {
                             //注册包
                             var secret = requestInfo.Body.Data.ToString();
-                            HandleLog.Log($"收到连接{session.RemouteEndPoint}的注册包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
+                            HandleLog.Log($"收到连接{session.RemoteEndPoint}的注册包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
                             var bll = new ClientBll();
                             var client = bll.GetOne(secret).Data;
                             if (client == null)
                             {
-                                HandleLog.Log($"主机【{session.RemouteEndPoint}】密钥不正确！！");
+                                HandleLog.Log($"主机【{session.RemoteEndPoint}】密钥不正确！！");
                                 SendServerMessage(session, new ServerMessage() { Message = "主机密钥不正确，请确认是否填写正确！" });
                                 return;
                             }
@@ -81,7 +81,7 @@ namespace SuperNAT.Core
                         {
                             //心跳包
                             var secret = requestInfo.Body.Data.ToString();
-                            HandleLog.Log($"收到连接{session.RemouteEndPoint}的心跳包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
+                            HandleLog.Log($"收到连接{session.RemoteEndPoint}的心跳包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
                             Task.Run(() =>
                             {
                                 //更新在线状态

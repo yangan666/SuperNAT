@@ -37,7 +37,7 @@ namespace SuperNAT.AsyncSocket
         public PipeReader Reader { get; set; }
         public PipeWriter Writer { get; set; }
         public EndPoint LocalEndPoint { get; set; }
-        public EndPoint RemouteEndPoint { get; set; }
+        public EndPoint RemoteEndPoint { get; set; }
         public string SessionId { get; set; } = Guid.NewGuid().ToString();
         public DateTime ConnectTime { get; set; } = DateTime.Now;
         public byte[] Data { get; set; } = new byte[2 * 1024 * 1024];//2M缓冲区
@@ -66,7 +66,7 @@ namespace SuperNAT.AsyncSocket
                     NoDelay = ClientOption.NoDelay
                 };
                 await Socket.ConnectAsync(new IPEndPoint(IPAddress.Parse(ClientOption.Ip), ClientOption.Port));
-                RemouteEndPoint = Socket.RemoteEndPoint;
+                RemoteEndPoint = Socket.RemoteEndPoint;
                 LocalEndPoint = Socket.LocalEndPoint;
                 if (ClientOption.Security == SslProtocols.None)
                 {
@@ -105,7 +105,7 @@ namespace SuperNAT.AsyncSocket
                         else
                         {
                             if (t.IsCanceled)
-                                HandleLog.Log($"连接{RemouteEndPoint}证书验证超时，关闭连接");
+                                HandleLog.Log($"连接{RemoteEndPoint}证书验证超时，关闭连接");
                             Close();
                             return false;
                         }
@@ -334,12 +334,12 @@ namespace SuperNAT.AsyncSocket
             //接收到的数据长度
             var length = session.Socket.EndReceiveFrom(asyncResult, ref remouteEP);
             //记录远程主机
-            session.RemouteEndPoint = remouteEP;
+            session.RemoteEndPoint = remouteEP;
             //查找客户端集合是否已存在该远程主机，存在的话直接用缓存的Session
-            var querySession = GetSingleSession(c => c.RemouteEndPoint.ToString() == session.RemouteEndPoint.ToString());
+            var querySession = GetSingleSession(c => c.RemoteEndPoint.ToString() == session.RemoteEndPoint.ToString());
             if (querySession != null)
             {
-                querySession.RemouteEndPoint = remouteEP;
+                querySession.RemoteEndPoint = remouteEP;
                 session = querySession;
             }
             else

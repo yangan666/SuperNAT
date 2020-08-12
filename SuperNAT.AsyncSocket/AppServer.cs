@@ -59,7 +59,7 @@ namespace SuperNAT.AsyncSocket
                                 {
                                     Socket = client,
                                     LocalEndPoint = client.LocalEndPoint,
-                                    RemouteEndPoint = client.RemoteEndPoint
+                                    RemoteEndPoint = client.RemoteEndPoint
                                 };
                                 if (ServerOption.Security == SslProtocols.None)
                                 {
@@ -92,7 +92,7 @@ namespace SuperNAT.AsyncSocket
                                         else
                                         {
                                             if (t.IsCanceled)
-                                                HandleLog.Log($"连接{session.RemouteEndPoint}证书验证超时，关闭连接");
+                                                HandleLog.Log($"连接{session.RemoteEndPoint}证书验证超时，关闭连接");
                                             Close(session);
                                         }
                                     });
@@ -303,12 +303,12 @@ namespace SuperNAT.AsyncSocket
             //接收到的数据长度
             var length = session.Socket.EndReceiveFrom(asyncResult, ref remouteEP);
             //记录远程主机
-            session.RemouteEndPoint = remouteEP;
+            session.RemoteEndPoint = remouteEP;
             //查找客户端集合是否已存在该远程主机，存在的话直接用缓存的Session
-            var querySession = GetSingleSession(c => c.RemouteEndPoint.ToString() == session.RemouteEndPoint.ToString());
+            var querySession = GetSingleSession(c => c.RemoteEndPoint.ToString() == session.RemoteEndPoint.ToString());
             if (querySession != null)
             {
-                querySession.RemouteEndPoint = remouteEP;
+                querySession.RemoteEndPoint = remouteEP;
                 session = querySession;
             }
             else

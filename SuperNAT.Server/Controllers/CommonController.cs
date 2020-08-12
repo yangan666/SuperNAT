@@ -92,7 +92,7 @@ namespace SuperNAT.Server.Controllers
                         s.ConnectTime,
                         s.LocalEndPoint,
                         s.MapList,
-                        s.RemouteEndPoint,
+                        s.RemoteEndPoint,
                         s.SessionId
                     }));
                     break;
@@ -104,7 +104,7 @@ namespace SuperNAT.Server.Controllers
                         s.ConnectTime,
                         s.LocalEndPoint,
                         s.Map,
-                        s.RemouteEndPoint,
+                        s.RemoteEndPoint,
                         s.SessionId
                     }));
                     break;
@@ -115,7 +115,7 @@ namespace SuperNAT.Server.Controllers
                         s.ConnectTime,
                         s.LocalEndPoint,
                         s.Map,
-                        s.RemouteEndPoint,
+                        s.RemoteEndPoint,
                         s.SessionId
                     }));
                     break;

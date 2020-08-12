@@ -20,7 +20,7 @@ namespace SuperNAT.AsyncSocket
         public PipeReader Reader { get; set; }
         public PipeWriter Writer { get; set; }
         public EndPoint LocalEndPoint { get; set; }
-        public EndPoint RemouteEndPoint { get; set; }
+        public EndPoint RemoteEndPoint { get; set; }
         public string SessionId { get; set; } = Guid.NewGuid().ToString();
         public DateTime ConnectTime { get; set; }
         public byte[] Data { get; set; } = new byte[2 * 1024 * 1024];//2M缓冲区
@@ -37,7 +37,7 @@ namespace SuperNAT.AsyncSocket
                 else
                 {
                     lock (Socket)
-                        Socket.SendTo(data, RemouteEndPoint);
+                        Socket.SendTo(data, RemoteEndPoint);
                 }
             }
             catch (Exception ex)

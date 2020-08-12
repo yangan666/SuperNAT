@@ -178,7 +178,7 @@ namespace SuperNAT.Core
 
         private static void Connected(NatSession session)
         {
-            HandleLog.Log($"内网客户端【{session.RemouteEndPoint}】已连接");
+            HandleLog.Log($"内网客户端【{session.RemoteEndPoint}】已连接");
         }
 
         private static void Received(NatSession session, NatRequestInfo requestInfo)
@@ -213,14 +213,14 @@ namespace SuperNAT.Core
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.Log($"穿透传输连接【{session.RemouteEndPoint},{session.Client?.name}】响应请求异常：{ex}");
+                    HandleLog.Log($"穿透传输连接【{session.RemoteEndPoint},{session.Client?.name}】响应请求异常：{ex}");
                 }
             });
         }
 
         private static void Closed(NatSession session)
         {
-            HandleLog.Log($"内网客户端【{session.RemouteEndPoint}】已下线");
+            HandleLog.Log($"内网客户端【{session.RemoteEndPoint}】已下线");
             if (session.Client != null)
             {
                 Task.Run(() =>
