@@ -49,6 +49,9 @@
     <None Update="DB\data.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="iot3rd.p12">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
