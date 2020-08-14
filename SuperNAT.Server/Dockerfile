@@ -12,7 +12,7 @@ WORKDIR /publish
 
 #设置Docker容器对外暴露5000端口，防火墙需要开放此端口，必须和 dotnet xx.dll运行时的端口保持一致
 
-EXPOSE 8080
+EXPOSE 8088
 
 #使用`dotnet xx.dll`来运行应用程序
 ENTRYPOINT ["dotnet", "SuperNAT.Server.dll"]
