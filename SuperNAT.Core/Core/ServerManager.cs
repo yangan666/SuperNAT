@@ -109,8 +109,6 @@ namespace SuperNAT.Core
             }
         }
 
-
-
         public static void StartAllServer()
         {
             try
@@ -141,7 +139,7 @@ namespace SuperNAT.Core
             }
         }
 
-        #region 内网TCP服务
+        #region NAT传输服务
         private static void StartNATServer(int port)
         {
             Task.Run(() =>

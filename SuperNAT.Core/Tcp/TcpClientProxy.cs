@@ -89,6 +89,8 @@ namespace SuperNAT.Core
                         break;
                     case (int)TcpAction.TransferData:
                         {
+                            if (RemoteSession == null)
+                                return;
                             //gzip解压
                             var request = DataHelper.Decompress(tcpModel.Content);
                             //发送原始包

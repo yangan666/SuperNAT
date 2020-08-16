@@ -236,6 +236,7 @@ namespace SuperNAT.AsyncSocket
                 //过滤解析
                 if (NextReceiveFilter != null)
                 {
+                    //如果修改了下一个过滤器则使用下一个过滤器
                     if (NextReceiveFilter.NextReceiveFilter != null)
                         NextReceiveFilter = NextReceiveFilter.NextReceiveFilter;
 
@@ -260,7 +261,8 @@ namespace SuperNAT.AsyncSocket
                     //继续接收
                     if (packageInfo == null)
                     {
-                        if (NextReceiveFilter.NextReceiveFilter != NextReceiveFilter)
+                        //如果修下一个过滤器不为BULL切设置了，说明使用了多过滤器，packageInfo返回null表示需要重走过滤器
+                        if (NextReceiveFilter.NextReceiveFilter != null && NextReceiveFilter.NextReceiveFilter != NextReceiveFilter)
                             goto mark;
                         consumed = buffer.GetPosition(bytesConsumedTotal);
                         return true;

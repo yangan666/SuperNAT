@@ -48,7 +48,7 @@ namespace SuperNAT.Core
                             {
                                 foreach (var item in Client.MapList)
                                 {
-                                    HandleLog.Log($"【{item.name}】映射成功：{item.local_endpoint} --> {item.remote_endpoint}");
+                                    HandleLog.Log($"【{item.name},{item.protocol.ToUpper()}】映射成功：{item.local_endpoint} --> {item.remote_endpoint}");
                                 }
                             }
                             else
