@@ -9,6 +9,7 @@ using Topshelf;
 using SuperNAT.AsyncSocket;
 using System.Net;
 using SuperNAT.Core;
+using System.Runtime.InteropServices;
 
 namespace SuperNAT.Server
 {
@@ -27,20 +28,29 @@ namespace SuperNAT.Server
             }
             #endregion
 
-            HostFactory.Run(x =>
+            //Windows系统采用Topshelf
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                x.Service<ServerHanlder>(s =>
+                HostFactory.Run(x =>
                 {
-                    s.ConstructUsing(name => new ServerHanlder());
-                    s.WhenStarted(tc => tc.Start(args));
-                    s.WhenStopped(tc => tc.Stop());
-                });
-                x.RunAsLocalSystem();
+                    x.Service<ServerHanlder>(s =>
+                    {
+                        s.ConstructUsing(name => new ServerHanlder());
+                        s.WhenStarted(tc => tc.Start(args));
+                        s.WhenStopped(tc => tc.Stop());
+                    });
+                    x.RunAsLocalSystem();
 
-                x.SetDescription("SuperNATServer");
-                x.SetDisplayName("SuperNATServer");
-                x.SetServiceName("SuperNATServer");
-            });
+                    x.SetDescription("SuperNATServer");
+                    x.SetDisplayName("SuperNATServer");
+                    x.SetServiceName("SuperNATServer");
+                });
+            }
+            else
+            {
+                //其它系统不支持Topshelf
+                new ServerHanlder().Start(args);
+            }
 
             Console.ReadKey();
         }
