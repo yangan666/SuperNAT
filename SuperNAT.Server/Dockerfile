@@ -1,6 +1,8 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1-buster-slim AS base
+FROM registry.cn-hangzhou.aliyuncs.com/newbe36524/runtime-deps:3.1
+
+FROM registry.cn-hangzhou.aliyuncs.com/newbe36524/aspnet:3.1
 
 #拷贝项目publish文件夹中的所有文件到 docker容器中的publish文件夹中 , publish 可自行更改名称
 
