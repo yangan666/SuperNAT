@@ -13,23 +13,29 @@ SuperNAT.Server服务端部署：<br/>
 控制台程序可以一键安装为系统服务，解压安装包后找到 安装.bat 点击后第一步会先安装为系统服务，完成出现提示后按回车启动，使用 卸载.bat 卸载服务<br/><br/>
 （2）Linux docker部署教程：<br/>
 #拉取镜像<br/>
-docker pull yangan666/supernat<br/>
-#上传你自己的配置文件到/mnt/supernat/appsettings.json覆盖容器的配置，使用以下命令运行容器，注意mysql需要自行安装<br/>
-docker run --name supernat -v /mnt/supernat/appsettings.json:/supernat/appsettings.json -itd --restart=always --network=host --log-opt max-size=50m --log-opt max-file=3 yangan666/supernat<br/>
+docker pull yangan666/supernat-server<br/>
+#上传你自己的配置文件到/mnt/supernat/server/appsettings.json覆盖容器的配置（挂载配置文件位置可自定义），使用以下命令运行容器，注意mysql需要自行安装<br/>
+docker run --name supernat-server -v /mnt/supernat/server/appsettings.json:/supernat/server/appsettings.json -itd --restart=always --network=host --log-opt max-size=50m --log-opt max-file=3 yangan666/supernat-server<br/>
 #打开管理后台，新建服务配置，重启服务，创建你的映射，步骤同Windows教程<br/>
 
 SuperNAT.Client客户端部署：<br/>
+（1）window部署教程：<br/>
 第一步：先下载安装net core 3.1最新版运行时到内网电脑<br/><br/>
 第二步：下载源码生成SuperNAT.Client或者到release下载最新的安装包，修改配置文件appsettings.json的配置，启动SuperNAT.Client即可完成内网映射<br/><br/>
 
 控制台程序可以一键安装为系统服务，解压安装包后找到 安装.bat 点击后第一步会先安装为系统服务，完成出现提示后按回车启动，使用 卸载.bat 卸载服务<br/><br/>
+（2）Linux docker部署教程：<br/>
+#拉取镜像<br/>
+docker pull yangan666/supernat-client<br/>
+#上传你自己的配置文件到/mnt/supernat/client/appsettings.json覆盖容器的配置（挂载配置文件位置可自定义），使用以下命令运行容器<br/>
+docker run --name supernat-client -v /mnt/supernat/client/appsettings.json:/supernat/client/appsettings.json -itd --restart=always --network=host --log-opt max-size=50m --log-opt max-file=3 yangan666/supernat-client<br/>
+#打开管理后台，新建服务配置，重启服务，创建你的映射，步骤同Windows教程<br/>
 
 已发布测试版，大家可到release下载体验，客户端可使用SuperNAT服务器的配置：<br/>
 {<br/>
   "Secret": "您的主机密钥",<br/>
-  "ServerUrl": "www.supernat.cn",<br/>
-  "ServerPort": "8088",<br/>
-  "NatPort": "10006"//报文传输监听端口<br/>
+  "ServerUrl": "www.supernat.cn",//服务器域名或IP地址<br/>
+  "NatPort": "10006"//服务端报文传输监听端口<br/>
 }<br/>
 服务器开放的端口有：<br/>http 211,2020,10001-10004,60009<br/>https 10005<br/>tcp 10007-10020<br/><br/>
 QQ交流群：854594944<br/>
