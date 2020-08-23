@@ -15,7 +15,7 @@ SuperNAT.Server服务端部署：<br/>
 #拉取镜像<br/>
 docker pull yangan666/supernat<br/>
 #上传你自己的配置文件到/mnt/supernat/appsettings.json覆盖容器的配置，使用以下命令运行容器，注意mysql需要自行安装<br/>
-docker run --name supernat -v /mnt/supernat/appsettings.json:/supernat/appsettings.json -itd --restart=always --network=host --log-opt max-size=50m --log-opt max-file=3 supernat<br/>
+docker run --name supernat -v /mnt/supernat/appsettings.json:/supernat/appsettings.json -itd --restart=always --network=host --log-opt max-size=50m --log-opt max-file=3 yangan666/supernat<br/>
 #打开管理后台，新建服务配置，重启服务，创建你的映射，步骤同Windows教程<br/>
 
 SuperNAT.Client客户端部署：<br/>
