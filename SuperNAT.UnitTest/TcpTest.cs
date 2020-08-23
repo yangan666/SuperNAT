@@ -14,7 +14,7 @@ namespace SuperNAT.UnitTest
         [TestMethod]
         public void TestTcp()
         {
-            HandleLog.WriteLog = (s, p) =>
+            LogHelper.WriteLog = (s, p) =>
             {
                 Console.WriteLine(s);
             };
@@ -34,11 +34,11 @@ namespace SuperNAT.UnitTest
             };
             socketClient.OnReceived += (s, r) =>
             {
-                HandleLog.Log($"【{socketClient.LocalEndPoint}】收到数据:{r.Raw.ToHexWithSpace()}");
+                LogHelper.Info($"【{socketClient.LocalEndPoint}】收到数据:{r.Raw.ToHexWithSpace()}");
             };
             socketClient.OnClosed += (s) =>
             {
-                HandleLog.Log($"【{socketClient.LocalEndPoint}】断开连接");
+                LogHelper.Info($"【{socketClient.LocalEndPoint}】断开连接");
             };
 
             Task.Run(async () =>

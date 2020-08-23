@@ -21,12 +21,12 @@ using SuperNAT.Bll;
 using System.Threading.Tasks;
 using System.Threading;
 using SuperNAT.AsyncSocket;
+using Microsoft.Extensions.Logging;
 
 namespace SuperNAT.Server
 {
     public class Startup
     {
-        public static ILoggerRepository Repository { get; set; }
         public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
         {
@@ -35,6 +35,12 @@ namespace SuperNAT.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging(logging =>
+           {
+               logging.AddConsole();
+               logging.AddDebug();
+           });
+
             services.AddHttpContextAccessor();
             services.AddScoped<IIdentityService, IdentityService>();
 
@@ -116,6 +122,7 @@ namespace SuperNAT.Server
             app.UseStaticFiles();
         }
 
+        static object lockLog = new object();//日志锁
         public static void Init()
         {
             var builder = new ConfigurationBuilder()
@@ -130,16 +137,46 @@ namespace SuperNAT.Server
             GlobalConfig.DefaultUrl = configuration.GetValue<string>("ServerConfig:DefaultUrl");
             GlobalConfig.RegRoleId = configuration.GetValue<string>("ServerConfig:RegRoleId");
 
-            Repository = LogManager.CreateRepository("NETCoreRepository");
-            XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
-            Log4netUtil.LogRepository = Repository;//类库中定义的静态变量
-            HandleLog.WriteLog += (log, isPrint) =>
+            var repository = LogManager.CreateRepository("NETCoreRepository");
+            XmlConfigurator.Configure(repository, new FileInfo("log4net.config"));
+            Log4netUtil.LogRepository = repository;//类库中定义的静态变量
+            LogHelper.WriteLog += (level, log, isPrint) =>
             {
-                if (isPrint)
+                lock (lockLog)
                 {
-                    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
+                    switch (level)
+                    {
+                        case LogLevel.Debug:
+                            Log4netUtil.Debug(log);
+                            break;
+                        case LogLevel.Information:
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Log4netUtil.Info(log);
+                            break;
+                        case LogLevel.Warning:
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Log4netUtil.Warn(log);
+                            break;
+                        case LogLevel.Error:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Log4netUtil.Error(log);
+                            break;
+                        case LogLevel.Critical:
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                            Log4netUtil.Fatal(log);
+                            break;
+                        default:
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Log4netUtil.Info(log);
+                            break;
+                    }
+                    if (isPrint)
+                    {
+                        Console.Write(LogHelper.GetString(level));
+                        Console.ResetColor();
+                        Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
+                    }
                 }
-                Log4netUtil.Info(log);
             };
 
             Task.Run(() =>
@@ -149,7 +186,7 @@ namespace SuperNAT.Server
                     //更新假在线的主机
                     var bll = new ClientBll();
                     var res = bll.UpdateOfflineClient();
-                    HandleLog.Log(res.Message, false);
+                    LogHelper.Info(res.Message, false);
                     Thread.Sleep(60000);
                 }
             });
@@ -166,7 +203,7 @@ namespace SuperNAT.Server
             var ex = e.ExceptionObject as Exception;
             var oldColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
-            HandleLog.Log(ex.Message);
+            LogHelper.Info(ex.Message);
             Console.ForegroundColor = oldColor;
         }
     }

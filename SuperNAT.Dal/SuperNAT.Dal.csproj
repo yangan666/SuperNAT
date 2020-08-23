@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SuperNAT.Common\SuperNAT.Common.csproj" />
+    <ProjectReference Include="..\SuperNAT.Logger\SuperNAT.Logger.csproj" />
     <ProjectReference Include="..\SuperNAT.Model\SuperNAT.Model.csproj" />
   </ItemGroup>
 

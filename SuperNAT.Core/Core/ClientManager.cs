@@ -1,6 +1,7 @@
 ﻿using log4net;
 using log4net.Config;
 using log4net.Repository;
+using Microsoft.Extensions.Logging;
 using SuperNAT.AsyncSocket;
 using SuperNAT.Common;
 using SuperNAT.Model;
@@ -32,16 +33,9 @@ namespace SuperNAT.Core
         public static ILoggerRepository Repository { get; set; }
         public static Thread reConnectThread, heartThread;
         public static bool IsReConnect = true;
+        static object lockLog = new object();//日志锁
         public static void Start()
         {
-            HandleLog.WriteLog += (log, isPrint) =>
-            {
-                if (isPrint)
-                {
-                    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
-                }
-                Log4netUtil.Info(log);
-            };
             Task.Run(() =>
             {
                 try
@@ -49,6 +43,50 @@ namespace SuperNAT.Core
                     Repository = LogManager.CreateRepository("NETCoreRepository");
                     XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
                     Log4netUtil.LogRepository = Repository;//类库中定义的静态变量
+                    LogHelper.WriteLog += (level, log, isPrint) =>
+                    {
+                        lock (lockLog)
+                        {
+                            switch (level)
+                            {
+                                case LogLevel.Debug:
+                                    Log4netUtil.Debug(log);
+                                    break;
+                                case LogLevel.Information:
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Log4netUtil.Info(log);
+                                    break;
+                                case LogLevel.Warning:
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                    Log4netUtil.Warn(log);
+                                    break;
+                                case LogLevel.Error:
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Log4netUtil.Error(log);
+                                    break;
+                                case LogLevel.Critical:
+                                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                                    Log4netUtil.Fatal(log);
+                                    break;
+                                default:
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Log4netUtil.Info(log);
+                                    break;
+                            }
+                            if (isPrint)
+                            {
+                                Console.Write(LogHelper.GetString(level));
+                                Console.ResetColor();
+                                Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,ffff} {log}");
+                            }
+                        }
+                    };
+                    LogHelper.Debug("Debug测试日志");
+                    LogHelper.Info("Info测试日志");
+                    LogHelper.Warning("Warning测试日志");
+                    LogHelper.Error("Error测试日志");
+                    LogHelper.Fatal("Fatal测试日志");
+
                     //连接服务器
                     ConnectNatServer();
                     //开启重连线程
@@ -60,7 +98,7 @@ namespace SuperNAT.Core
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.Log($"Start Error:{ex}");
+                    LogHelper.Info($"Start Error:{ex}");
                 }
             });
         }
@@ -75,10 +113,14 @@ namespace SuperNAT.Core
                     return;
                 }
                 isLock = true;
-                HandleLog.Log($"正在连接服务器...");
+                LogHelper.Info($"正在连接服务器...");
                 //解析主机名
-                IPHostEntry ipInfo = Dns.GetHostEntry(ServerUrl);
-                var serverIp = ipInfo.AddressList.Any() ? ipInfo.AddressList[0].ToString() : throw new Exception($"域名【{ServerUrl}】无法解析");
+                var serverIp = ServerUrl;
+                if (UtilityTools.IsDomain(ServerUrl))
+                {
+                    IPHostEntry ipInfo = Dns.GetHostEntry(ServerUrl);
+                    serverIp = ipInfo.AddressList.Any() ? ipInfo.AddressList[0].ToString() : throw new Exception($"域名【{ServerUrl}】无法解析");
+                }
                 NatClient = new NatClient(new ClientOption()
                 {
                     Ip = serverIp,
@@ -101,7 +143,7 @@ namespace SuperNAT.Core
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"连接服务器失败：{ex}");
+                LogHelper.Error($"连接服务器失败：{ex}");
             }
 
             isLock = false;
@@ -117,13 +159,13 @@ namespace SuperNAT.Core
                     if (!isLock && (NatClient == null || !NatClient.IsConnected))
                     {
                         //重连
-                        HandleLog.Log("尝试重新连接服务器...");
+                        LogHelper.Error("尝试重新连接服务器...");
                         ConnectNatServer();
                     }
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.Log($"尝试重新连接服务器失败：{ex}");
+                    LogHelper.Error($"尝试重新连接服务器失败：{ex}");
                 }
             }
         }
@@ -182,7 +224,7 @@ namespace SuperNAT.Core
                             {
                                 if ((clientProxy == null || !clientProxy.IsConnected) && waitTimes >= 0)
                                 {
-                                    HandleLog.Log($"----> {tcpModel.SessionId} 未连接  IsConnected={clientProxy?.IsConnected.ToString() ?? "NULL"} ProxyCount={TcpClientProxyList.Count}");
+                                    LogHelper.Warning($"----> {tcpModel.SessionId} 未连接  IsConnected={clientProxy?.IsConnected.ToString() ?? "NULL"} ProxyCount={TcpClientProxyList.Count}");
                                     Thread.Sleep(100);
                                     waitTimes--;
                                     goto mark;
@@ -213,7 +255,7 @@ namespace SuperNAT.Core
 
         static void OnClientClosed(object sender)
         {
-            HandleLog.Log($"NatClient{NatClient.LocalEndPoint}已关闭");
+            LogHelper.Error($"NatClient{NatClient.LocalEndPoint}已关闭");
         }
 
         public static void Stop()

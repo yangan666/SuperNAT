@@ -75,7 +75,7 @@ namespace SuperNAT.AsyncSocket
                     Writer = PipeWriter.Create(Stream);
 
                     IsConnected = true;
-                    HandleLog.Log($"连接服务器[{ClientOption.Ip}:{ClientOption.Port}]成功");
+                    LogHelper.Info($"连接服务器[{ClientOption.Ip}:{ClientOption.Port}]成功");
                     OnConnected?.Invoke(this);
                     ProcessReadAsync();
 
@@ -96,7 +96,7 @@ namespace SuperNAT.AsyncSocket
                             Writer = PipeWriter.Create(Stream);
 
                             IsConnected = true;
-                            HandleLog.Log($"连接服务器[{ClientOption.Ip}:{ClientOption.Port}]成功");
+                            LogHelper.Info($"连接服务器[{ClientOption.Ip}:{ClientOption.Port}]成功");
                             OnConnected?.Invoke(this);
                             ProcessReadAsync();
 
@@ -105,7 +105,7 @@ namespace SuperNAT.AsyncSocket
                         else
                         {
                             if (t.IsCanceled)
-                                HandleLog.Log($"连接{RemoteEndPoint}证书验证超时，关闭连接");
+                                LogHelper.Error($"连接{RemoteEndPoint}证书验证超时，关闭连接");
                             Close();
                             return false;
                         }
@@ -119,7 +119,7 @@ namespace SuperNAT.AsyncSocket
                     Close();
                 }
                 IsConnected = false;
-                HandleLog.Log($"客户端异常：{ex}");
+                LogHelper.Error($"客户端异常：{ex}");
 
                 return false;
             }
@@ -154,7 +154,7 @@ namespace SuperNAT.AsyncSocket
             catch (Exception ex)
             {
                 Close();
-                HandleLog.Log($"发送数据出错,{ex}");
+                LogHelper.Error($"发送数据出错,{ex}");
             }
         }
 
@@ -171,7 +171,7 @@ namespace SuperNAT.AsyncSocket
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"关闭连接出错,{ex}");
+                LogHelper.Error($"关闭连接出错,{ex}");
             }
         }
 
@@ -219,7 +219,7 @@ namespace SuperNAT.AsyncSocket
                         }
                         catch (Exception e)
                         {
-                            HandleLog.Log($"接收数据出错，{e.Message}");
+                            LogHelper.Error($"接收数据出错，{e.Message}");
                             break;
                         }
                         finally
@@ -233,7 +233,7 @@ namespace SuperNAT.AsyncSocket
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.Log($"接收数据出错，{ex.Message}");
+                    LogHelper.Error($"接收数据出错，{ex.Message}");
                 }
                 finally
                 {
@@ -283,7 +283,7 @@ namespace SuperNAT.AsyncSocket
 
                     if (maxPackageLength > 0 && len > maxPackageLength)
                     {
-                        HandleLog.Log($"数据长度不能超过{maxPackageLength}个字节");
+                        LogHelper.Error($"数据长度不能超过{maxPackageLength}个字节");
                         //直接关闭连接
                         Close();
                         return false;
@@ -300,7 +300,7 @@ namespace SuperNAT.AsyncSocket
                     }
                     if (!packageInfo.Success)
                     {
-                        HandleLog.Log(packageInfo.Message);
+                        LogHelper.Info(packageInfo.Message);
                     }
                     else
                     {

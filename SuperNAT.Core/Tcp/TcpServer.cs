@@ -29,14 +29,14 @@ namespace SuperNAT.Core
                 if (natSession == null)
                 {
                     session?.Close();
-                    HandleLog.Log($"请求：{session.LocalEndPoint}失败，Nat客户端连接不在线！");
+                    LogHelper.Error($"请求：{session.LocalEndPoint}失败，Nat客户端连接不在线！");
                     return;
                 }
                 var map = natSession.MapList?.Find(c => c.remote_port == ServerOption.Port);
                 if (map == null)
                 {
                     session?.Close();
-                    HandleLog.Log($"请求：{session.LocalEndPoint}失败，映射{session.LocalEndPoint}不存在！");
+                    LogHelper.Error($"请求：{session.LocalEndPoint}失败，映射{session.LocalEndPoint}不存在！");
                     return;
                 }
                 session.Map = map;
@@ -56,11 +56,11 @@ namespace SuperNAT.Core
                 natSession.Send(PackHelper.CreatePack(pack));
 
                 session.NatSession = natSession;
-                HandleLog.Log($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 客户端【{session.RemoteEndPoint}】已连接到服务器");
+                LogHelper.Info($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 客户端【{session.RemoteEndPoint}】已连接到服务器");
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"连接【{session.SessionId},{session.RemoteEndPoint},{session.LocalEndPoint}】发生异常：{ex}");
+                LogHelper.Error($"连接【{session.SessionId},{session.RemoteEndPoint},{session.LocalEndPoint}】发生异常：{ex}");
             }
         }
 
@@ -91,11 +91,11 @@ namespace SuperNAT.Core
                         }.ToJson()
                     };
                     session.NatSession.Send(PackHelper.CreatePack(pack));
-                    HandleLog.Log($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 收到报文{body.Length}字节");
+                    LogHelper.Info($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 收到报文{body.Length}字节");
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.Log($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 请求参数：{requestInfo.Raw.ToHexWithSpace()}，处理发生异常：{ex}");
+                    LogHelper.Error($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 请求参数：{requestInfo.Raw.ToHexWithSpace()}，处理发生异常：{ex}");
                 }
             });
         }
@@ -105,11 +105,11 @@ namespace SuperNAT.Core
             try
             {
                 CloseLocalClient(session);
-                HandleLog.Log($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 客户端【{session.RemoteEndPoint}】已下线");
+                LogHelper.Info($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 客户端【{session.RemoteEndPoint}】已下线");
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 关闭连接【{session.LocalEndPoint}】发生异常：{ex}");
+                LogHelper.Error($"{session.Map.name} {session.Map.protocol} {session.Map.remote_endpoint} --> {session.Map.local_endpoint} 关闭连接【{session.LocalEndPoint}】发生异常：{ex}");
             }
         }
 
@@ -151,13 +151,13 @@ namespace SuperNAT.Core
                                 {
                                     goto mark;
                                 }
-                                HandleLog.Log($"tcpSession【{tcpModel.SessionId}】不存在");
+                                LogHelper.Warning($"tcpSession【{tcpModel.SessionId}】不存在");
                                 return;
                             }
                             //先讲16进制字符串转为byte数组  再gzip解压
                             var response = DataHelper.Decompress(tcpModel.Content);
                             tcpSession.Send(response);
-                            HandleLog.Log($"{tcpSession.Map.name} {tcpSession.Map.protocol} {tcpSession.Map.remote_endpoint} --> {tcpSession.Map.local_endpoint} 发送报文{response.Length}字节");
+                            LogHelper.Info($"{tcpSession.Map.name} {tcpSession.Map.protocol} {tcpSession.Map.remote_endpoint} --> {tcpSession.Map.local_endpoint} 发送报文{response.Length}字节");
                         }
                         break;
                     case (int)TcpAction.Close:
@@ -167,7 +167,7 @@ namespace SuperNAT.Core
                             if (tcpSession != null)
                             {
                                 tcpSession.Close();
-                                HandleLog.Log($"连接【{tcpSession.SessionId},{tcpSession.RemoteEndPoint}】关闭成功");
+                                LogHelper.Info($"连接【{tcpSession.SessionId},{tcpSession.RemoteEndPoint}】关闭成功");
                             }
                         }
                         break;
@@ -175,7 +175,7 @@ namespace SuperNAT.Core
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"TcpServer穿透处理异常，{ex}");
+                LogHelper.Error($"TcpServer穿透处理异常，{ex}");
             }
         }
     }

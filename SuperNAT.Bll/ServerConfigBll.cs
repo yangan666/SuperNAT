@@ -80,7 +80,7 @@ namespace SuperNAT.Bll
             }
             catch (Exception ex)
             {
-                Log4netUtil.Error($"获取失败：{ex}");
+                LogHelper.Error($"获取失败：{ex}");
             }
 
             return rst;

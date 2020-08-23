@@ -43,7 +43,7 @@ namespace SuperNAT.AsyncSocket
             catch (Exception ex)
             {
                 Close();
-                HandleLog.Log($"发送数据出错,{ex}");
+                LogHelper.Error($"发送数据出错,{ex}");
             }
         }
 

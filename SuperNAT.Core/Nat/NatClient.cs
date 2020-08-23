@@ -43,17 +43,17 @@ namespace SuperNAT.Core
                             Client = natRequestInfo.Body.Data.FromJson<Client>();
                             if (Client.MapList == null)
                                 Client.MapList = new List<Map>();
-                            HandleLog.Log($"【{Client.user_name},{Client.name}】主机密钥验证成功！");
+                            LogHelper.Info($"【{Client.user_name},{Client.name}】主机密钥验证成功！");
                             if (Client.MapList.Any())
                             {
                                 foreach (var item in Client.MapList)
                                 {
-                                    HandleLog.Log($"【{item.name},{item.protocol.ToUpper()}】映射成功：{item.local_endpoint} --> {item.remote_endpoint}");
+                                    LogHelper.Info($"【{item.name},{item.protocol.ToUpper()}】映射成功：{item.local_endpoint} --> {item.remote_endpoint}");
                                 }
                             }
                             else
                             {
-                                HandleLog.Log($"端口映射列表为空,请到管理后台创建映射！");
+                                LogHelper.Info($"端口映射列表为空,请到管理后台创建映射！");
                             }
                         }
                         break;
@@ -69,14 +69,14 @@ namespace SuperNAT.Core
                             //服务端消息
                             var msg = natRequestInfo.Body.Data.FromJson<ServerMessage>();
                             ClientManager.IsReConnect = msg.ReConnect;
-                            HandleLog.Log(msg.Message);
+                            LogHelper.Info(msg.Message);
                         }
                         break;
                 }
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"客户端处理穿透业务异常，{ex}");
+                LogHelper.Error($"客户端处理穿透业务异常，{ex}");
             }
         }
 
@@ -99,8 +99,8 @@ namespace SuperNAT.Core
                     Client.MapList.RemoveAll(c => c.id == map.id);
                     break;
             }
-            HandleLog.Log($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
-            HandleLog.Log($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
+            LogHelper.Info($"映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
+            LogHelper.Info($"【{map.name}】映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
         }
     }
 }

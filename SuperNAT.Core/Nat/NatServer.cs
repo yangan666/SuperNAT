@@ -20,7 +20,7 @@ namespace SuperNAT.Core
 
         public void SendServerMessage(NatSession session, ServerMessage serverMessage)
         {
-            HandleLog.Log(serverMessage.Message);
+            LogHelper.Info(serverMessage.Message);
             var pack = new JsonData()
             {
                 Type = (int)JsonType.NAT,
@@ -41,12 +41,12 @@ namespace SuperNAT.Core
                         {
                             //注册包
                             var secret = requestInfo.Body.Data.ToString();
-                            HandleLog.Log($"收到连接{session.RemoteEndPoint}的注册包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
+                            LogHelper.Info($"收到连接{session.RemoteEndPoint}的注册包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
                             var bll = new ClientBll();
                             var client = bll.GetOne(secret).Data;
                             if (client == null)
                             {
-                                HandleLog.Log($"主机【{session.RemoteEndPoint}】密钥不正确！！");
+                                LogHelper.Error($"主机【{session.RemoteEndPoint}】密钥不正确！！");
                                 SendServerMessage(session, new ServerMessage() { Message = "主机密钥不正确，请确认是否填写正确！" });
                                 return;
                             }
@@ -73,7 +73,7 @@ namespace SuperNAT.Core
                                 //更新在线状态
                                 var bll = new ClientBll();
                                 var updateRst = bll.UpdateOnlineStatus(new Client() { secret = session.Client.secret, is_online = true, last_heart_time = DateTime.Now });
-                                HandleLog.Log($"更新主机【{session.Client.name}】在线状态结果：{updateRst.Message}", false);
+                                LogHelper.Info($"更新主机【{session.Client.name}】在线状态结果：{updateRst.Message}", false);
                             });
                         }
                         break;
@@ -81,13 +81,13 @@ namespace SuperNAT.Core
                         {
                             //心跳包
                             var secret = requestInfo.Body.Data.ToString();
-                            HandleLog.Log($"收到连接{session.RemoteEndPoint}的心跳包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
+                            LogHelper.Info($"收到连接{session.RemoteEndPoint}的心跳包，密钥为：{secret}，当前映射个数：{session.MapList.Count}", false);
                             Task.Run(() =>
                             {
                                 //更新在线状态
                                 var bll = new ClientBll();
                                 var updateRst = bll.UpdateOnlineStatus(new Client() { secret = session.Client.secret, is_online = true, last_heart_time = DateTime.Now });
-                                HandleLog.Log($"更新主机【{session.Client.name}】在线状态结果：{updateRst.Message}", false);
+                                LogHelper.Info($"更新主机【{session.Client.name}】在线状态结果：{updateRst.Message}", false);
                             });
                         }
                         break;
@@ -95,7 +95,7 @@ namespace SuperNAT.Core
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"穿透处理异常，{ex}");
+                LogHelper.Error($"穿透处理异常，{ex}");
             }
         }
     }

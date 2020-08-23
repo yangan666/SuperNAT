@@ -43,7 +43,7 @@ namespace SuperNAT.Core
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.Log($"http解析异常：{ex}");
+                    LogHelper.Error($"http解析异常：{ex}");
                     _httpRequestInfo.FilterStatus = FilterStatus.Completed;
                     return new HttpRequestInfo() { Success = false, Message = ex.Message };
                 }

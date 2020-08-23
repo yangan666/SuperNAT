@@ -51,7 +51,7 @@ namespace SuperNAT.Dal
             catch (Exception ex)
             {
                 rst.Message = $"获取失败：{ex.InnerException ?? ex}";
-                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+                LogHelper.Error($"{ex.InnerException ?? ex}");
             }
 
             return rst;

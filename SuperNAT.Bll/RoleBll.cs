@@ -73,7 +73,7 @@ namespace SuperNAT.Bll
             catch (Exception ex)
             {
                 rst.Message = $"添加失败：{ex.InnerException ?? ex}";
-                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+                LogHelper.Error($"{ex.InnerException ?? ex}");
             }
 
             return rst;
@@ -100,7 +100,7 @@ namespace SuperNAT.Bll
             catch (Exception ex)
             {
                 rst.Message = $"更新失败：{ex.InnerException ?? ex}";
-                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+                LogHelper.Error($"{ex.InnerException ?? ex}");
             }
 
             return rst;

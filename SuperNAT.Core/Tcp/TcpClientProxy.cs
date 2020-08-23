@@ -36,7 +36,7 @@ namespace SuperNAT.Core
         private void OnClientConnected(object sender)
         {
             ClientManager.TcpClientProxyList.Add(this);
-            HandleLog.Log($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 客户端已连接到内网服务器");
+            LogHelper.Info($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 客户端已连接到内网服务器");
         }
 
         private void OnPackageReceived(object sender, TcpRequestInfo tcpRequestInfo)
@@ -61,13 +61,13 @@ namespace SuperNAT.Core
                 });
                 //转发给服务器
                 NatClient.Send(pack);
-                HandleLog.Log($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 收到报文{tcpRequestInfo.Raw.Length}字节");
+                LogHelper.Info($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 收到报文{tcpRequestInfo.Raw.Length}字节");
             });
         }
 
         private void OnClientClosed(object sender)
         {
-            HandleLog.Log($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 客户端已关闭");
+            LogHelper.Info($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 客户端已关闭");
         }
 
         public void ProcessData(NatClient natClient, NatRequestInfo natRequestInfo)
@@ -95,7 +95,7 @@ namespace SuperNAT.Core
                             var request = DataHelper.Decompress(tcpModel.Content);
                             //发送原始包
                             Send(request);
-                            HandleLog.Log($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 发送报文{request.Length}字节");
+                            LogHelper.Info($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 发送报文{request.Length}字节");
                         }
                         break;
                     case (int)TcpAction.Close:
@@ -109,7 +109,7 @@ namespace SuperNAT.Core
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 客户端处理TCP穿透业务异常，{ex}");
+                LogHelper.Error($"{Map.name} {Map.protocol} {Map.remote_endpoint} --> {Map.local_endpoint} 客户端处理TCP穿透业务异常，{ex}");
             }
         }
     }

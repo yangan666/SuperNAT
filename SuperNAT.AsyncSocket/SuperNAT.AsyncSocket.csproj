@@ -21,4 +21,8 @@
     <PackageReference Include="System.IO.Pipelines" Version="4.7.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SuperNAT.Logger\SuperNAT.Logger.csproj" />
+  </ItemGroup>
+
 </Project>

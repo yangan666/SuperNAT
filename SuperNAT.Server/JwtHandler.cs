@@ -79,7 +79,7 @@ namespace SuperNAT.Server
             }
             catch (Exception ex)
             {
-                Log4netUtil.Error($"授权验证失败：{ex}");
+                LogHelper.Error($"授权验证失败：{ex}");
                 code = 10003;
                 error = "授权验证失败";
                 payLoad = null;

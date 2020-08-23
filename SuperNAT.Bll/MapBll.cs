@@ -32,7 +32,7 @@ namespace SuperNAT.Bll
             }
             catch (Exception ex)
             {
-                Log4netUtil.Error($"添加映射失败：{ex}");
+                LogHelper.Error($"添加映射失败：{ex}");
             }
 
             return rst;
@@ -57,7 +57,7 @@ namespace SuperNAT.Bll
             }
             catch (Exception ex)
             {
-                Log4netUtil.Error($"更新映射失败：{ex}");
+                LogHelper.Error($"更新映射失败：{ex}");
             }
 
             return rst;

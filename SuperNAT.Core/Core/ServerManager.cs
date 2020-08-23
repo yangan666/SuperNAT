@@ -1,4 +1,5 @@
-﻿using SuperNAT.AsyncSocket;
+﻿using Microsoft.Extensions.Logging;
+using SuperNAT.AsyncSocket;
 using SuperNAT.Bll;
 using SuperNAT.Common;
 using SuperNAT.Model;
@@ -55,7 +56,7 @@ namespace SuperNAT.Core
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"映射更新异常：{ex}，参数为：{map.ToJson()}");
+                LogHelper.Error($"映射更新异常：{ex}，参数为：{map.ToJson()}");
             }
         }
         private static void ChangeMap(Map map, NatSession session)
@@ -75,8 +76,8 @@ namespace SuperNAT.Core
                         session.MapList.RemoveAll(c => c.id == map.id);
                         break;
                 }
-                HandleLog.Log($"Session映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
-                HandleLog.Log($"【{map.name}】Session映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
+                LogHelper.Info($"Session映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{JsonHelper.Instance.Serialize(map)}", false);
+                LogHelper.Info($"【{map.name}】Session映射{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
             }
             catch (Exception ex)
             {
@@ -100,8 +101,8 @@ namespace SuperNAT.Core
                         MapList.RemoveAll(c => c.id == map.id);
                         break;
                 }
-                HandleLog.Log($"服务映射缓存{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.ToJson()}", false);
-                HandleLog.Log($"【{map.name}】服务映射缓存{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
+                LogHelper.Info($"服务映射缓存{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.ToJson()}", false);
+                LogHelper.Info($"【{map.name}】服务映射缓存{Enum.GetName(typeof(ChangeMapType), map.ChangeType)}成功：{map.local_endpoint} --> {map.remote_endpoint}");
             }
             catch (Exception ex)
             {
@@ -135,7 +136,7 @@ namespace SuperNAT.Core
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"启动服务失败：{ex}");
+                LogHelper.Error($"启动服务失败：{ex}");
             }
         }
 
@@ -165,18 +166,18 @@ namespace SuperNAT.Core
                     NATServer.OnReceived += Received;
                     NATServer.OnClosed += Closed;
                     NATServer.StartAysnc();
-                    HandleLog.Log($"NAT服务启动成功，监听端口：{port}");
+                    LogHelper.Info($"NAT服务启动成功，监听端口：{port}");
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.Log($"NAT服务启动失败，端口：{port}，{ex}");
+                    LogHelper.Error($"NAT服务启动失败，端口：{port}，{ex}");
                 }
             });
         }
 
         private static void Connected(NatSession session)
         {
-            HandleLog.Log($"内网客户端【{session.RemoteEndPoint}】已连接");
+            LogHelper.Info($"内网客户端【{session.RemoteEndPoint}】已连接");
         }
 
         private static void Received(NatSession session, NatRequestInfo requestInfo)
@@ -189,7 +190,7 @@ namespace SuperNAT.Core
                     {
                         case (byte)JsonType.NAT:
                             {
-                                HandleLog.Log($"NAT收到数据：{requestInfo.Raw.ToHexWithSpace()},正文内容: {requestInfo.Body.ToJson()}", false);
+                                LogHelper.Info($"NAT收到数据：{requestInfo.Raw.ToHexWithSpace()},正文内容: {requestInfo.Body.ToJson()}", false);
                                 NATServer.ProcessData(session, requestInfo);
                                 break;
                             }
@@ -211,14 +212,14 @@ namespace SuperNAT.Core
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.Log($"穿透传输连接【{session.RemoteEndPoint},{session.Client?.name}】响应请求异常：{ex}");
+                    LogHelper.Error($"穿透传输连接【{session.RemoteEndPoint},{session.Client?.name}】响应请求异常：{ex}");
                 }
             });
         }
 
         private static void Closed(NatSession session)
         {
-            HandleLog.Log($"内网客户端【{session.RemoteEndPoint}】已下线");
+            LogHelper.Info($"内网客户端【{session.RemoteEndPoint}】已下线");
             if (session.Client != null)
             {
                 Task.Run(() =>
@@ -226,7 +227,7 @@ namespace SuperNAT.Core
                     //更新在线状态
                     var bll = new ClientBll();
                     var updateRst = bll.UpdateOnlineStatus(new Client() { secret = session.Client.secret, is_online = false });
-                    HandleLog.Log($"更新主机【{session.Client.name}】离线状态结果：{updateRst.Message}");
+                    LogHelper.Info($"更新主机【{session.Client.name}】离线状态结果：{updateRst.Message}");
                 });
             }
         }
@@ -260,14 +261,18 @@ namespace SuperNAT.Core
                         if (res)
                         {
                             HttpServerList.Add(server);
+                            LogHelper.Info($"{serverConfig.protocol}服务启动成功，监听端口：{port}");
                         }
-                        HandleLog.Log($"{serverConfig.protocol}服务启动{"成功".If(res, "失败")}，监听端口：{port}");
+                        else
+                        {
+                            LogHelper.Error($"{serverConfig.protocol}服务启动失败，监听端口：{port}");
+                        }
                     });
                 }
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"{serverConfig.protocol}服务初始化失败，端口：{serverConfig.port}，{ex}");
+                LogHelper.Error($"{serverConfig.protocol}服务初始化失败，端口：{serverConfig.port}，{ex}");
             }
         }
         #endregion
@@ -300,14 +305,18 @@ namespace SuperNAT.Core
                         if (res)
                         {
                             TcpServerList.Add(server);
+                            LogHelper.Info($"{serverConfig.protocol}服务启动成功，监听端口：{port}");
                         }
-                        HandleLog.Log($"{serverConfig.protocol}服务启动{"成功".If(res, "失败")}，监听端口：{port}");
+                        else
+                        {
+                            LogHelper.Error($"{serverConfig.protocol}服务启动失败，监听端口：{port}");
+                        }
                     });
                 }
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"{serverConfig.protocol}服务初始化失败，端口：{serverConfig.port}，{ex}");
+                LogHelper.Info($"{serverConfig.protocol}服务初始化失败，端口：{serverConfig.port}，{ex}");
             }
         }
         #endregion

@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SuperNAT.AsyncSocket\SuperNAT.AsyncSocket.csproj" />
+    <ProjectReference Include="..\SuperNAT.Logger\SuperNAT.Logger.csproj" />
   </ItemGroup>
 
 </Project>

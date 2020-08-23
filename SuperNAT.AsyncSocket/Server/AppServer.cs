@@ -92,7 +92,7 @@ namespace SuperNAT.AsyncSocket
                                         else
                                         {
                                             if (t.IsCanceled)
-                                                HandleLog.Log($"连接{session.RemoteEndPoint}证书验证超时，关闭连接");
+                                                LogHelper.Error($"连接{session.RemoteEndPoint}证书验证超时，关闭连接");
                                             Close(session);
                                         }
                                     });
@@ -122,7 +122,7 @@ namespace SuperNAT.AsyncSocket
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.Log($"【{ServerOption.Port}】端口启动监听异常：{ex}");
+                    LogHelper.Error($"【{ServerOption.Port}】端口启动监听异常：{ex}");
                 }
 
                 return isSuccess;
@@ -188,7 +188,7 @@ namespace SuperNAT.AsyncSocket
                         }
                         catch (Exception e)
                         {
-                            HandleLog.Log($"接收数据出错，{e.Message}");
+                            LogHelper.Error($"接收数据出错，{e.Message}");
                             break;
                         }
                         finally
@@ -202,7 +202,7 @@ namespace SuperNAT.AsyncSocket
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.Log($"接收数据出错，{ex.Message}");
+                    LogHelper.Error($"接收数据出错，{ex.Message}");
                 }
                 finally
                 {
@@ -252,7 +252,7 @@ namespace SuperNAT.AsyncSocket
 
                     if (maxPackageLength > 0 && len > maxPackageLength)
                     {
-                        HandleLog.Log($"数据长度不能超过{maxPackageLength}个字节");
+                        LogHelper.Error($"数据长度不能超过{maxPackageLength}个字节");
                         //直接关闭连接
                         Close(session);
                         return false;
@@ -269,7 +269,7 @@ namespace SuperNAT.AsyncSocket
                     }
                     if (!packageInfo.Success)
                     {
-                        HandleLog.Log(packageInfo.Message);
+                        LogHelper.Info(packageInfo.Message);
                     }
                     else
                     {
@@ -348,7 +348,7 @@ namespace SuperNAT.AsyncSocket
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"关闭连接出错，{ex.Message}");
+                LogHelper.Error($"关闭连接出错，{ex.Message}");
             }
         }
 

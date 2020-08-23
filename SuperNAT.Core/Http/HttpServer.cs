@@ -30,7 +30,7 @@ namespace SuperNAT.Core
 
         private void Connected(HttpSession session)
         {
-            HandleLog.Log($"HTTP客户端【{session.SessionId},{session.RemoteEndPoint}】已连接【{session.LocalEndPoint}】", false);
+            LogHelper.Info($"HTTP客户端【{session.SessionId},{session.RemoteEndPoint}】已连接【{session.LocalEndPoint}】", false);
         }
 
         private async void ForwardProxy(HttpSession session, HttpModel httpModel, Map map)
@@ -42,7 +42,7 @@ namespace SuperNAT.Core
                     Method = new HttpMethod(httpModel.Method),
                     RequestUri = new Uri($"{map.protocol}://{map.local_endpoint}{httpModel.Path}")
                 };
-                HandleLog.Log($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {httpModel.Headers.ToJson()}");
+                LogHelper.Info($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {httpModel.Headers.ToJson()}");
                 if (httpRequest.Method != HttpMethod.Get && httpModel.Content?.Length > 0)
                 {
                     var body = httpModel.Content;
@@ -50,7 +50,7 @@ namespace SuperNAT.Core
                     //记录请求小于1kb的参数
                     if (httpModel.Content.Length < 1024)
                     {
-                        HandleLog.Log($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {bodyStr}");
+                        LogHelper.Info($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {bodyStr}");
                     }
                     httpRequest.Content = new StringContent(bodyStr, Encoding.UTF8, httpModel.ContentType.Split(";")[0]);
                 }
@@ -115,12 +115,12 @@ namespace SuperNAT.Core
 
                 var timeSpan = (DateTime.Now - httpModel.RequestTime);
                 var totalSize = (httpResponse.Body?.Length ?? 0) * 1.00 / 1024;
-                HandleLog.Log($"{map.user_name} {map.client_name} {map?.name} {httpModel.Method} {httpModel.Path} {respHttpModel.StatusCode} {respHttpModel.StatusMessage} {Math.Round(totalSize, 1)}KB {timeSpan.TotalMilliseconds}ms");
+                LogHelper.Info($"{map.user_name} {map.client_name} {map?.name} {httpModel.Method} {httpModel.Path} {respHttpModel.StatusCode} {respHttpModel.StatusMessage} {Math.Round(totalSize, 1)}KB {timeSpan.TotalMilliseconds}ms");
 
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"【{session.LocalEndPoint}】请求地址：{map.protocol}://{httpModel.Host}{httpModel.Path}，正向代理异常：{ex}");
+                LogHelper.Error($"【{session.LocalEndPoint}】请求地址：{map.protocol}://{httpModel.Host}{httpModel.Path}，正向代理异常：{ex}");
                 //把处理信息返回到客户端
                 session.Write("server error");
             }
@@ -134,7 +134,7 @@ namespace SuperNAT.Core
                 {
                     if (!requestInfo.Success)
                     {
-                        HandleLog.Log($"http请求解析异常，ip地址：{session.RemoteEndPoint}");
+                        LogHelper.Error($"http请求解析异常，ip地址：{session.RemoteEndPoint}");
                         session.Write("request parse error");
                         return;
                     }
@@ -155,7 +155,7 @@ namespace SuperNAT.Core
                     var map = ServerManager.MapList.Find(c => c.remote_endpoint == httpModel.Host || (c.remote == httpModel.Host && c.remote_port == 80));
                     if (map == null)
                     {
-                        HandleLog.Log($"映射不存在，请求：{httpModel.Host}{httpModel.Path} {httpModel.Headers.ToJson()} {httpModel.Content.ToUTF8String()}");
+                        LogHelper.Error($"映射不存在，请求：{httpModel.Host}{httpModel.Path} {httpModel.Headers.ToJson()} {httpModel.Content.ToUTF8String()}");
                         //把处理信息返回到客户端
                         session.Write("map not found");
                         return;
@@ -170,7 +170,7 @@ namespace SuperNAT.Core
                     var natSession = ServerManager.NATServer.GetSingleSession(c => c.MapList.Any(c => c.remote_endpoint == httpModel.Host || (c.remote == httpModel.Host && c.remote_port == 80)));
                     if (natSession == null)
                     {
-                        HandleLog.Log($"穿透客户端未连接到服务器，请求地址：{httpModel.Host}{httpModel.Path}");
+                        LogHelper.Error($"穿透客户端未连接到服务器，请求地址：{httpModel.Host}{httpModel.Path}");
                         //把处理信息返回到客户端
                         session.Write("nat client not found");
                     }
@@ -191,7 +191,7 @@ namespace SuperNAT.Core
                 }
                 catch (Exception ex)
                 {
-                    HandleLog.Log($"【{session.LocalEndPoint}】请求地址：{requestInfo.BaseUrl}{requestInfo.Path}，处理发生异常：{ex}");
+                    LogHelper.Error($"【{session.LocalEndPoint}】请求地址：{requestInfo.BaseUrl}{requestInfo.Path}，处理发生异常：{ex}");
                     //把处理信息返回到客户端
                     session.Write("server error");
                 }
@@ -200,7 +200,7 @@ namespace SuperNAT.Core
 
         private void Closed(HttpSession session)
         {
-            HandleLog.Log($"HTTP客户端【{session.SessionId},{session.RemoteEndPoint}】已下线", false);
+            LogHelper.Debug($"HTTP客户端【{session.SessionId},{session.RemoteEndPoint}】已下线", false);
         }
 
         public void ProcessData(NatSession session, NatRequestInfo requestInfo, HttpModel httpModel)
@@ -214,7 +214,7 @@ namespace SuperNAT.Core
                             var context = GetSingleSession(c => c.SessionId == httpModel.SessionId);
                             if (context == null)
                             {
-                                HandleLog.Log($"未找到上下文context，SessionId={httpModel.SessionId}");
+                                LogHelper.Error($"未找到上下文context，SessionId={httpModel.SessionId}");
                                 return;
                             }
                             HttpResponse httpResponse = new HttpResponse()
@@ -237,7 +237,7 @@ namespace SuperNAT.Core
                             var timeSpan = (response_time - httpModel.RequestTime);
                             var totalSize = (httpResponse.Body?.Length ?? 0) * 1.00 / 1024;
                             var map = session.MapList.Find(c => c.remote_endpoint == httpModel.Host);
-                            HandleLog.Log($"{session.Client.user_name} {session.Client.name} {map?.name} {httpModel.Method} {httpModel.Path} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(totalSize, 1)}KB {timeSpan.TotalMilliseconds}ms");
+                            LogHelper.Info($"{session.Client.user_name} {session.Client.name} {map?.name} {httpModel.Method} {httpModel.Path} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(totalSize, 1)}KB {timeSpan.TotalMilliseconds}ms");
 
                             var request = new Request
                             {
@@ -265,7 +265,7 @@ namespace SuperNAT.Core
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"HttpsServer ProcessData穿透处理异常，{ex}");
+                LogHelper.Error($"HttpsServer ProcessData穿透处理异常，{ex}");
             }
         }
 
@@ -289,7 +289,7 @@ namespace SuperNAT.Core
                     }
                     catch (Exception ex)
                     {
-                        Log4netUtil.Error($"写请求失败：{ex}");
+                        LogHelper.Error($"写请求失败：{ex}");
                     }
                     Thread.Sleep(10000);
                 }

@@ -27,7 +27,7 @@ namespace SuperNAT.Core
                             var map = natClient.Client.MapList.Find(c => c.remote_endpoint == httpModel.Host || (c.remote == httpModel.Host && c.remote_port == 80));
                             if (map == null)
                             {
-                                HandleLog.Log($"映射不存在，外网访问地址：{httpModel.Host}");
+                                LogHelper.Error($"映射不存在，外网访问地址：{httpModel.Host}");
                                 return;
                             }
                             using HttpRequestMessage httpRequest = new HttpRequestMessage()
@@ -35,7 +35,7 @@ namespace SuperNAT.Core
                                 Method = new HttpMethod(httpModel.Method),
                                 RequestUri = new Uri($"{map.protocol}://{map.local_endpoint}{httpModel.Path}")
                             };
-                            HandleLog.Log($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {httpModel.Headers.ToJson()}{Environment.NewLine}");
+                            LogHelper.Info($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri} {httpModel.Headers.ToJson()}{Environment.NewLine}");
                             string bodyStr = string.Empty;
                             if (httpRequest.Method != HttpMethod.Get && httpModel.Content?.Length > 0)
                             {
@@ -43,7 +43,7 @@ namespace SuperNAT.Core
                                 bodyStr = body.ToUTF8String();
                                 httpRequest.Content = httpModel.ContentType == null ? new StringContent(bodyStr, Encoding.UTF8) : new StringContent(bodyStr, Encoding.UTF8, httpModel.ContentType.Split(";")[0]);
                             }
-                            HandleLog.Log($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri}{Environment.NewLine}【Header】{httpModel.Headers.ToJson()}{$"{Environment.NewLine}【Body】{bodyStr}".If(httpModel.Content?.Length < 1024)}{Environment.NewLine}");
+                            LogHelper.Info($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri}{Environment.NewLine}【Header】{httpModel.Headers.ToJson()}{$"{Environment.NewLine}【Body】{bodyStr}".If(httpModel.Content?.Length < 1024)}{Environment.NewLine}");
                             using HttpClient _httpClient = new HttpClient();
                             //替换Host 不然400 Bad Request
                             httpModel.Headers["Host"] = map.local_endpoint;
@@ -93,14 +93,14 @@ namespace SuperNAT.Core
                                 Data = httpModel.ToJson()
                             });
                             natClient?.Send(pack);
-                            HandleLog.Log($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri}{$"{returnContent.ToUTF8String()}".If(returnContent.Length < 1024)} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(returnContent.Length * 1.00 / 1024, 1)}KB{Environment.NewLine}");
+                            LogHelper.Info($"{map.name} {httpModel.Method} {httpRequest.RequestUri.AbsoluteUri}{$"{returnContent.ToUTF8String()}".If(returnContent.Length < 1024)} {httpModel.StatusCode} {httpModel.StatusMessage} {Math.Round(returnContent.Length * 1.00 / 1024, 1)}KB{Environment.NewLine}");
                             break;
                         }
                 }
             }
             catch (Exception ex)
             {
-                HandleLog.Log($"处理请求异常：{ex}");
+                LogHelper.Error($"处理请求异常：{ex}");
 
                 var pack = PackHelper.CreatePack(new JsonData()
                 {

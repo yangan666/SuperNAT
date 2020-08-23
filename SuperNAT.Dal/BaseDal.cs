@@ -65,7 +65,7 @@ namespace SuperNAT.Dal
             catch (Exception ex)
             {
                 rst.Message = $"添加失败：{ex.InnerException ?? ex}";
-                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+                LogHelper.Error($"{ex.InnerException ?? ex}");
             }
 
             return rst;
@@ -85,7 +85,7 @@ namespace SuperNAT.Dal
             catch (Exception ex)
             {
                 rst.Message = $"添加失败：{ex.InnerException ?? ex}";
-                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+                LogHelper.Error($"{ex.InnerException ?? ex}");
             }
 
             return rst;
@@ -107,7 +107,7 @@ namespace SuperNAT.Dal
             catch (Exception ex)
             {
                 rst.Message = $"更新失败：{ex.InnerException ?? ex}";
-                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+                LogHelper.Error($"{ex.InnerException ?? ex}");
             }
 
             return rst;
@@ -129,7 +129,7 @@ namespace SuperNAT.Dal
             catch (Exception ex)
             {
                 rst.Message = $"删除失败：{ex.InnerException ?? ex}";
-                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+                LogHelper.Error($"{ex.InnerException ?? ex}");
             }
 
             return rst;
@@ -149,7 +149,7 @@ namespace SuperNAT.Dal
             catch (Exception ex)
             {
                 rst.Message = $"批量删除失败：{ex.InnerException ?? ex}";
-                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+                LogHelper.Error($"{ex.InnerException ?? ex}");
             }
 
             return rst;
@@ -172,7 +172,7 @@ namespace SuperNAT.Dal
             catch (Exception ex)
             {
                 rst.Message = $"获取失败：{ex.InnerException ?? ex}";
-                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+                LogHelper.Error($"{ex.InnerException ?? ex}");
             }
 
             return rst;
@@ -209,7 +209,7 @@ namespace SuperNAT.Dal
             catch (Exception ex)
             {
                 rst.Message = $"获取失败：{ex.InnerException ?? ex}";
-                Log4netUtil.Error($"{ex.InnerException ?? ex}");
+                LogHelper.Error($"{ex.InnerException ?? ex}");
             }
 
             return rst;
@@ -233,7 +233,7 @@ namespace SuperNAT.Dal
             }
             catch (Exception ex)
             {
-                Log4netUtil.Error("在BaseDal中关闭连接时出错：" + ex);
+                LogHelper.Error("在BaseDal中关闭连接时出错：" + ex);
             }
         }
     }

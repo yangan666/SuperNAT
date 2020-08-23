@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "SuperNAT.Client": {
+      "commandName": "Project"
+    }
+  }
+}
