@@ -86,29 +86,5 @@ namespace SuperNAT.Common
 
             return localIp;
         }
-
-        /// <summary>
-        /// 验证字符串是否是域名
-        /// </summary>
-        /// <param name="str">指定字符串</param>
-        /// <returns></returns>
-        public static bool IsDomain(string str)
-        {
-            string pattern = @"^[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$";
-            return IsMatch(pattern, str);
-        }
-        /// <summary>
-        /// 判断一个字符串，是否匹配指定的表达式(区分大小写的情况下)
-        /// </summary>
-        /// <param name="expression">正则表达式</param>
-        /// <param name="str">要匹配的字符串</param>
-        /// <returns></returns>
-        public static bool IsMatch(string expression, string str)
-        {
-            Regex reg = new Regex(expression);
-            if (string.IsNullOrEmpty(str))
-                return false;
-            return reg.IsMatch(str);
-        }
     }
 }

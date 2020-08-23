@@ -1,6 +1,7 @@
 ﻿using log4net;
 using log4net.Config;
 using log4net.Repository;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SuperNAT.AsyncSocket;
 using SuperNAT.Common;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
+using System.Runtime.InteropServices.ComTypes;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -26,11 +28,10 @@ namespace SuperNAT.Core
         public static string CertPassword = "IoM@1234";
         public static NatClient NatClient { get; set; }
         public static List<TcpClientProxy> TcpClientProxyList { get; set; } = new List<TcpClientProxy>();
-        public static string Secret { get; set; } = AppConfig.GetSetting("Secret");
-        public static string ServerUrl { get; set; } = AppConfig.GetSetting("ServerUrl");
-        public static int ServerPort { get; set; } = Convert.ToInt32(AppConfig.GetSetting("ServerPort"));
-        public static int NatPort { get; set; } = Convert.ToInt32(AppConfig.GetSetting("NatPort"));
-        public static ILoggerRepository Repository { get; set; }
+        public static string Secret { get; set; }
+        public static string ServerUrl { get; set; }
+        public static int ServerPort { get; set; }
+        public static int NatPort { get; set; }
         public static Thread reConnectThread, heartThread;
         public static bool IsReConnect = true;
         static object lockLog = new object();//日志锁
@@ -40,9 +41,20 @@ namespace SuperNAT.Core
             {
                 try
                 {
-                    Repository = LogManager.CreateRepository("NETCoreRepository");
-                    XmlConfigurator.Configure(Repository, new FileInfo("log4net.config"));
-                    Log4netUtil.LogRepository = Repository;//类库中定义的静态变量
+                    //初始化配置
+                    var builder = new ConfigurationBuilder()
+                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                    .AddJsonFile("appsettings.json", false);
+                    var configuration = builder.Build();
+
+                    Secret = configuration.GetValue<string>("Secret");
+                    ServerUrl = configuration.GetValue<string>("ServerUrl");
+                    ServerPort = configuration.GetValue<int>("ServerPort");
+                    NatPort = configuration.GetValue<int>("NatPort");
+
+                    var repository = LogManager.CreateRepository("NETCoreRepository");
+                    XmlConfigurator.Configure(repository, new FileInfo("log4net.config"));
+                    Log4netUtil.LogRepository = repository;//类库中定义的静态变量
                     LogHelper.WriteLog += (level, log, isPrint) =>
                     {
                         lock (lockLog)
@@ -81,11 +93,6 @@ namespace SuperNAT.Core
                             }
                         }
                     };
-                    LogHelper.Debug("Debug测试日志");
-                    LogHelper.Info("Info测试日志");
-                    LogHelper.Warning("Warning测试日志");
-                    LogHelper.Error("Error测试日志");
-                    LogHelper.Fatal("Fatal测试日志");
 
                     //连接服务器
                     ConnectNatServer();
@@ -116,7 +123,9 @@ namespace SuperNAT.Core
                 LogHelper.Info($"正在连接服务器...");
                 //解析主机名
                 var serverIp = ServerUrl;
-                if (UtilityTools.IsDomain(ServerUrl))
+                var ipArr = ServerUrl.Split('.');
+                //先判断是不是IP，不是IP就尝试解析域名
+                if (ipArr.Where(c => int.TryParse(c, out int i) && i > 0 && i <= 255).Count() != 4)
                 {
                     IPHostEntry ipInfo = Dns.GetHostEntry(ServerUrl);
                     serverIp = ipInfo.AddressList.Any() ? ipInfo.AddressList[0].ToString() : throw new Exception($"域名【{ServerUrl}】无法解析");
