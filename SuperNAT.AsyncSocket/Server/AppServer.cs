@@ -55,6 +55,7 @@ namespace SuperNAT.AsyncSocket
                             while (true)
                             {
                                 var client = await Socket.AcceptAsync();
+                                LogHelper.Info($"【{ServerOption.Port}】服务端接受到连接{client.RemoteEndPoint}");
                                 var session = new TSession
                                 {
                                     Socket = client,
@@ -76,7 +77,7 @@ namespace SuperNAT.AsyncSocket
                                     ServerOption.SslServerAuthenticationOptions.RemoteCertificateValidationCallback = SSLValidationCallback;
                                     var sslStream = new SslStream(new NetworkStream(session.Socket, true), false);
                                     var cancelTokenSource = new CancellationTokenSource();
-                                    cancelTokenSource.CancelAfter(5000);
+                                    cancelTokenSource.CancelAfter(10000);
                                     await sslStream.AuthenticateAsServerAsync(ServerOption.SslServerAuthenticationOptions, cancelTokenSource.Token).ContinueWith(t =>
                                     {
                                         if (sslStream.IsAuthenticated)

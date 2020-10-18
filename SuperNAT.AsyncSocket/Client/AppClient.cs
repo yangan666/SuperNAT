@@ -86,7 +86,7 @@ namespace SuperNAT.AsyncSocket
                     ClientOption.SslClientAuthenticationOptions.RemoteCertificateValidationCallback = SSLValidationCallback;
                     var sslStream = new SslStream(new NetworkStream(Socket, true), false);
                     var cancelTokenSource = new CancellationTokenSource();
-                    cancelTokenSource.CancelAfter(5000);
+                    cancelTokenSource.CancelAfter(10000);
                     return await sslStream.AuthenticateAsClientAsync(ClientOption.SslClientAuthenticationOptions, cancelTokenSource.Token).ContinueWith(t =>
                     {
                         if (sslStream.IsAuthenticated)
