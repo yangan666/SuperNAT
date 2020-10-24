@@ -5,14 +5,24 @@ using System.Text;
 
 namespace SuperNAT.AsyncSocket
 {
+    /// <summary>
+    /// 固定头协议
+    /// </summary>
+    /// <typeparam name="TRequestInfo"></typeparam>
     public abstract class FixHeaderReceiveFilter<TRequestInfo> : IReceiveFilter<TRequestInfo> where TRequestInfo : IRequestInfo, new()
     {
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="headerSize">头部长度（字节）</param>
         public FixHeaderReceiveFilter(int headerSize)
         {
             HeaderSize = headerSize;
         }
-
-        public IReceiveFilter<TRequestInfo> NextReceiveFilter { get; }
+        /// <summary>
+        /// 下一个过滤器
+        /// </summary>
+        public IReceiveFilter<TRequestInfo> NextReceiveFilter { get; set; }
 
         /// <summary>
         /// 是否找到头部
@@ -27,19 +37,19 @@ namespace SuperNAT.AsyncSocket
         /// <summary>
         /// 数据长度
         /// </summary>
-        public long BodySize { get; private set; }
+        public int BodySize { get; private set; }
 
         /// <summary>
         /// 总长度
         /// </summary>
-        public long TotalSize { get; set; }
+        public int TotalSize { get; set; }
 
         /// <summary>
         /// 计算数据长度
         /// </summary>
         /// <param name="header"></param>
         /// <returns></returns>
-        public abstract long GetBodyLengthFromHeader(ReadOnlySequence<byte> header);
+        public abstract int GetBodyLengthFromHeader(ReadOnlySequence<byte> header);
 
         /// <summary>
         /// 解析数据
@@ -94,7 +104,7 @@ namespace SuperNAT.AsyncSocket
         /// <summary>
         /// 重置变量
         /// </summary>
-        public void Reset()
+        public virtual void Reset()
         {
             FoundHeader = false;
             BodySize = 0;

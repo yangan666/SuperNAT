@@ -43,9 +43,10 @@ namespace SuperNAT.Core
                 }
                 catch (Exception ex)
                 {
-                    LogHelper.Error($"http解析异常：{ex}");
+                    var data = raw.ToArray();
+                    LogHelper.Error($"http解析异常：请求数据：{Encoding.UTF8.GetString(data)}，{ex}");
                     _httpRequestInfo.FilterStatus = FilterStatus.Completed;
-                    return new HttpRequestInfo() { Success = false, Message = ex.Message };
+                    return new HttpRequestInfo() { Success = false, Raw = data, Message = ex.Message };
                 }
                 finally
                 {

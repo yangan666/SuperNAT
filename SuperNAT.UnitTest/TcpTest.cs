@@ -14,7 +14,7 @@ namespace SuperNAT.UnitTest
         [TestMethod]
         public void TestTcp()
         {
-            LogHelper.WriteLog = (s, p) =>
+            LogHelper.WriteLog = (l, s, p) =>
             {
                 Console.WriteLine(s);
             };

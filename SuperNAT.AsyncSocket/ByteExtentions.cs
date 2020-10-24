@@ -23,9 +23,25 @@ namespace SuperNAT.AsyncSocket
             return CloneRange(source.ToArray(), offset, len);
         }
 
+        public static byte[] CloneRange(this IEnumerable<byte> source, int offset, int len)
+        {
+            return CloneRange(source.ToArray(), offset, len);
+        }
+
         public static string ToHex(this byte[] source)
         {
             return ToHexWithSpace(source).Replace(" ", "");
+        }
+
+        public static byte[] AddZeroBefore(this byte[] source, int len)
+        {
+            var bytes = source.ToList();
+            while (bytes.Count < len)
+            {
+                bytes.Insert(0, 0x00);
+            }
+
+            return bytes.ToArray();
         }
 
         public static string ToHexWithSpace(this byte[] source)

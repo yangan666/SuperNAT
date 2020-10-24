@@ -13,25 +13,67 @@ using System.Threading.Tasks;
 
 namespace SuperNAT.AsyncSocket
 {
+    /// <summary>
+    /// Socket服务
+    /// </summary>
+    /// <typeparam name="TSession"></typeparam>
+    /// <typeparam name="TRequestInfo"></typeparam>
     public abstract class AppServer<TSession, TRequestInfo> : IServer<TSession, TRequestInfo>
         where TSession : ISession, new()
         where TRequestInfo : IRequestInfo, new()
     {
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="receiveFilter">过滤器</param>
         public AppServer(IReceiveFilter<TRequestInfo> receiveFilter)
         {
             NextReceiveFilter = receiveFilter;
         }
+        /// <summary>
+        /// 初始化服务端配置
+        /// </summary>
+        /// <param name="serverOption">服务端配置</param>
         public void InitOption(ServerOption serverOption)
         {
             ServerOption = serverOption;
         }
+        /// <summary>
+        /// 服务端配置
+        /// </summary>
         public ServerOption ServerOption { get; set; }
+        /// <summary>
+        /// 传输协议
+        /// </summary>
+        public string ProtocolTypeString => ServerOption?.ProtocolType.ToString().ToUpper();
+        /// <summary>
+        /// 服务端Socket
+        /// </summary>
         public Socket Socket { get; set; }
-        public DateTime StartTime { get; set; } = DateTime.Now;
+        /// <summary>
+        /// 服务启动时间
+        /// </summary>
+        public DateTime StartTime { get; set; } = DateTime.UtcNow;
+        /// <summary>
+        /// 服务ID
+        /// </summary>
         public string ServerId { get; set; } = Guid.NewGuid().ToString();
+        /// <summary>
+        /// 连接事件
+        /// </summary>
         public Action<TSession> OnConnected { get; set; }
+        /// <summary>
+        /// 接收数据事件
+        /// </summary>
         public Action<TSession, TRequestInfo> OnReceived { get; set; }
+        /// <summary>
+        /// 关闭事件
+        /// </summary>
         public Action<TSession> OnClosed { get; set; }
+        /// <summary>
+        /// 启动服务
+        /// </summary>
+        /// <returns></returns>
         public virtual Task<bool> StartAysnc()
         {
             return Task.Run(() =>
@@ -39,55 +81,69 @@ namespace SuperNAT.AsyncSocket
                 bool isSuccess = false;
                 try
                 {
+                    if (ServerOption == null) throw new ArgumentException("ServerOption服务配置尚未配置");
                     IPEndPoint iPEndPoint = new IPEndPoint(ServerOption.Ip == "Any" ? IPAddress.Any : IPAddress.Parse(ServerOption.Ip), ServerOption.Port);
                     if (ServerOption.ProtocolType == ProtocolType.Tcp)
                     {
                         #region TCP
-                        if (ServerOption == null) throw new ArgumentException("ServerOption服务配置尚未配置");
                         Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
                         {
                             NoDelay = ServerOption.NoDelay
                         };
                         Socket.Bind(iPEndPoint);
+                        //开始监听
                         Socket.Listen(ServerOption.BackLog);
+                        //开启一个线程接收客户端连接
                         Task.Run(async () =>
                         {
                             while (true)
                             {
                                 var client = await Socket.AcceptAsync();
-                                LogHelper.Info($"【{ServerOption.Port}】服务端接受到连接{client.RemoteEndPoint}");
+                                //构造客户端Session
                                 var session = new TSession
                                 {
                                     Socket = client,
                                     LocalEndPoint = client.LocalEndPoint,
                                     RemoteEndPoint = client.RemoteEndPoint
                                 };
+                                //非SSL
                                 if (ServerOption.Security == SslProtocols.None)
                                 {
+                                    //Socket转字节流对象
                                     session.Stream = new NetworkStream(session.Socket, true);
-                                    session.Reader = PipeReader.Create(session.Stream);
-                                    session.Writer = PipeWriter.Create(session.Stream);
+                                    //字节流绑定到Pipe管道（高性能缓冲区）
+                                    session.Reader = PipeReader.Create(session.Stream);//读取数据端
+                                    session.Writer = PipeWriter.Create(session.Stream);//发送数据端
 
+                                    //添加到Session容器
                                     SessionContainer.Add(session);
                                     OnConnected?.Invoke(session);
+                                    //开启一个线程异步接收这个连接的数据
                                     ProcessReadAsync(session);
                                 }
-                                else
+                                else//SSL
                                 {
+                                    //绑定SSL认证回调
                                     ServerOption.SslServerAuthenticationOptions.RemoteCertificateValidationCallback = SSLValidationCallback;
+                                    //加密传输字节流
                                     var sslStream = new SslStream(new NetworkStream(session.Socket, true), false);
                                     var cancelTokenSource = new CancellationTokenSource();
-                                    cancelTokenSource.CancelAfter(10000);
+                                    //SSL认证超时时间为5s
+                                    cancelTokenSource.CancelAfter(5000);
                                     await sslStream.AuthenticateAsServerAsync(ServerOption.SslServerAuthenticationOptions, cancelTokenSource.Token).ContinueWith(t =>
                                     {
                                         if (sslStream.IsAuthenticated)
                                         {
+                                            //验证成功
                                             session.Stream = sslStream;
-                                            session.Reader = PipeReader.Create(session.Stream);
-                                            session.Writer = PipeWriter.Create(session.Stream);
+                                            //字节流绑定到Pipe管道（高性能缓冲区）
+                                            session.Reader = PipeReader.Create(session.Stream);//读取数据端
+                                            session.Writer = PipeWriter.Create(session.Stream);//发送数据端
 
+                                            //添加到Session容器
                                             SessionContainer.Add(session);
                                             OnConnected?.Invoke(session);
+                                            //开启一个线程异步接收这个连接的数据
                                             ProcessReadAsync(session);
                                         }
                                         else
@@ -113,6 +169,7 @@ namespace SuperNAT.AsyncSocket
                             Socket = Socket,
                             LocalEndPoint = Socket.LocalEndPoint
                         };
+                        //异步接收这个连接的数据
                         Socket.BeginReceiveFrom(session.Data, 0, session.Data.Length, SocketFlags.None, ref remoteEP, UdpReceiveCallback, session);
                         #endregion
                     }
@@ -129,21 +186,42 @@ namespace SuperNAT.AsyncSocket
                 return isSuccess;
             });
         }
+        /// <summary>
+        /// 停止服务
+        /// </summary>
         public virtual void Stop()
         {
             Socket.Close();
         }
+        /// <summary>
+        /// Session容器
+        /// </summary>
         public SessionContainer<TSession> SessionContainer { get; set; } = new SessionContainer<TSession>();
+        /// <summary>
+        /// 下一个过滤器
+        /// </summary>
         public IReceiveFilter<TRequestInfo> NextReceiveFilter { get; set; }
+        /// <summary>
+        /// 获取Session列表
+        /// </summary>
+        /// <param name="predicate">查询条件</param>
         public List<TSession> GetSessionList(Predicate<TSession> predicate = null)
         {
             return predicate == null ? SessionContainer.SessionList : SessionContainer.SessionList.FindAll(predicate);
         }
+        /// <summary>
+        /// 获取单个Session
+        /// </summary>
+        /// <param name="predicate">查询条件</param>
+        /// <returns></returns>
         public TSession GetSingleSession(Predicate<TSession> predicate)
         {
             return SessionContainer.SessionList.Find(predicate);
         }
-        public long SessionCount { get; }
+        /// <summary>
+        /// 连接数
+        /// </summary>
+        public long SessionCount => SessionContainer.SessionCount;
 
         #region 接收数据
         /// <summary>
@@ -158,14 +236,17 @@ namespace SuperNAT.AsyncSocket
                 {
                     while (true)
                     {
+                        //数据来了会得到一个ReadResult
                         ReadResult result = await session.Reader.ReadAsync();
                         ReadOnlySequence<byte> buffer = result.Buffer;
 
+                        //开始位置和结束位置
                         SequencePosition consumed = buffer.Start;
                         SequencePosition examined = buffer.End;
 
                         try
                         {
+                            //如果超时了直接退出
                             if (result.IsCanceled)
                             {
                                 break;
@@ -194,6 +275,7 @@ namespace SuperNAT.AsyncSocket
                         }
                         finally
                         {
+                            //标记消费数据的位置
                             session.Reader.AdvanceTo(consumed, examined);
                         }
                     }
@@ -228,6 +310,7 @@ namespace SuperNAT.AsyncSocket
 
             var bytesConsumedTotal = 0L;
 
+            //最大请求（单位：字节）
             var maxPackageLength = ServerOption.MaxRequestLength;
             var seqReader = new SequenceReader<byte>(buffer);
 
@@ -237,10 +320,10 @@ namespace SuperNAT.AsyncSocket
                 //过滤解析
                 if (NextReceiveFilter != null)
                 {
-                    //如果修改了下一个过滤器则使用下一个过滤器
+                    //有可能切换了过滤器，当前过滤器自定为下一个过滤器
                     if (NextReceiveFilter.NextReceiveFilter != null)
                         NextReceiveFilter = NextReceiveFilter.NextReceiveFilter;
-
+                    //按用户指定的协议切割一个包
                     var packageInfo = NextReceiveFilter.Filter(ref seqReader);
                     var bytesConsumed = seqReader.Consumed;
                     bytesConsumedTotal += bytesConsumed;
@@ -262,7 +345,7 @@ namespace SuperNAT.AsyncSocket
                     //继续接收
                     if (packageInfo == null)
                     {
-                        //如果修下一个过滤器不为BULL切设置了，说明使用了多过滤器，packageInfo返回null表示需要重走过滤器
+                        //如果下一个过滤器不为空，但是有没有收到完整的包，重走过滤器（一般是使用了多过滤器）
                         if (NextReceiveFilter.NextReceiveFilter != null && NextReceiveFilter.NextReceiveFilter != NextReceiveFilter)
                             goto mark;
                         consumed = buffer.GetPosition(bytesConsumedTotal);
@@ -270,7 +353,7 @@ namespace SuperNAT.AsyncSocket
                     }
                     if (!packageInfo.Success)
                     {
-                        LogHelper.Info(packageInfo.Message);
+                        LogHelper.Error(packageInfo.Message);
                     }
                     else
                     {
@@ -287,6 +370,7 @@ namespace SuperNAT.AsyncSocket
                 }
                 else
                 {
+                    //没有过滤器来多少数据返回多少数据给用户
                     examined = consumed = buffer.End;
                     var packageInfo = new TRequestInfo
                     {
@@ -339,6 +423,10 @@ namespace SuperNAT.AsyncSocket
         }
         #endregion
 
+        /// <summary>
+        /// 关闭一个连接
+        /// </summary>
+        /// <param name="session"></param>
         private void Close(TSession session)
         {
             try
@@ -353,6 +441,14 @@ namespace SuperNAT.AsyncSocket
             }
         }
 
+        /// <summary>
+        /// SSL回调认证，这里免去认证，直接返回true
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="certificate"></param>
+        /// <param name="chain"></param>
+        /// <param name="sslPolicyErrors"></param>
+        /// <returns></returns>
         private bool SSLValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             return true;
