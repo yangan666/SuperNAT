@@ -44,10 +44,6 @@ namespace SuperNAT.AsyncSocket
         /// </summary>
         public PipeWriter Writer { get; set; }
         /// <summary>
-        /// 下一个过滤器
-        /// </summary>
-        IReceiveFilter<TRequestInfo> NextReceiveFilter { get; set; }
-        /// <summary>
         /// 本机Socket节点
         /// </summary>
         public EndPoint LocalEndPoint { get; set; }
