@@ -47,7 +47,7 @@ namespace SuperNAT.AsyncSocket
         /// <summary>
         /// 最大请求（单位：字节）
         /// </summary>
-        public int MaxRequestLength { get; set; } = 1024 * 1024 * 4;
+        public int MaxRequestLength { get; set; } = 1 * 1024 * 1024 * 1024;
         /// <summary>
         /// UDP接收缓冲区大小
         /// </summary>

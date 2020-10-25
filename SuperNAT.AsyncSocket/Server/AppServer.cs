@@ -103,6 +103,7 @@ namespace SuperNAT.AsyncSocket
                                 var session = new TSession
                                 {
                                     Socket = client,
+
                                     LocalEndPoint = client.LocalEndPoint,
                                     RemoteEndPoint = client.RemoteEndPoint
                                 };
@@ -317,14 +318,16 @@ namespace SuperNAT.AsyncSocket
             while (true)
             {
                 mark:
-                //过滤解析
+                //过滤器切割报文，解决粘包问题
                 if (NextReceiveFilter != null)
                 {
                     //有可能切换了过滤器，当前过滤器自定为下一个过滤器
                     if (NextReceiveFilter.NextReceiveFilter != null)
                         NextReceiveFilter = NextReceiveFilter.NextReceiveFilter;
+                    //动态重新实例化一个过滤器，多个连接不能共用服务的过滤器实例，会冲突。
+                    var _nextReceiveFilter = (IReceiveFilter<TRequestInfo>)Activator.CreateInstance(NextReceiveFilter.GetType());
                     //按用户指定的协议切割一个包
-                    var packageInfo = NextReceiveFilter.Filter(ref seqReader);
+                    var packageInfo = _nextReceiveFilter.Filter(ref seqReader);
                     var bytesConsumed = seqReader.Consumed;
                     bytesConsumedTotal += bytesConsumed;
 
