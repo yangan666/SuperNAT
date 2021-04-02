@@ -13,7 +13,7 @@
     "@icedesign/layout": "^1.x",
     "@icedesign/panel": "^1.x",
     "@icedesign/theme": "^1.x",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bizcharts": "^3.2.4",
     "classnames": "^2.2.5",
     "js-cookie": "^2.2.1",
