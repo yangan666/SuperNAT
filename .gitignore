@@ -339,3 +339,4 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /SuperNAT.Web/manage/dist
+/SuperNAT.Server/Properties/PublishProfiles
