@@ -1,5 +1,5 @@
 # SuperNAT
-SuperNAT是基于.NET 5.0开源跨平台的内网穿透程序，功能类似花生壳，可用于穿透内网web应用，微信公众号本地调试等，目前支持http穿透，tcp穿透。目前属于开发阶段，大家可自行注册免费使用，SuperNAT管理后台：http://www.supernat.cn:8088
+SuperNAT是基于.NET 5.0开源跨平台的内网穿透程序，功能类似花生壳，可用于穿透内网web应用，微信公众号本地调试等，目前支持http穿透，tcp穿透。
 <br/>
 <br/>
 SuperNAT.Server服务端部署：<br/>
@@ -34,7 +34,7 @@ docker run --name supernat-client -v /mnt/supernat/client/appsettings.json:/supe
 已发布测试版，大家可到release下载体验，客户端可使用SuperNAT服务器的配置：<br/>
 {<br/>
   "Secret": "您的主机密钥",<br/>
-  "ServerUrl": "www.supernat.cn:8088",//服务器域名或IP地址<br/>
+  "ServerUrl": "",//服务器域名或IP地址<br/>
   "NatPort": "10006"//服务端报文传输监听端口<br/>
 }<br/>
 服务器开放的端口有：<br/>http 211,2020,10001-10004,60009<br/>https 10005<br/>tcp 10007-10020<br/><br/>
