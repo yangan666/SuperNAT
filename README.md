@@ -1,5 +1,5 @@
 # SuperNAT
-SuperNAT是基于.NET 5.0开源跨平台的内网穿透程序，功能类似花生壳，可用于穿透内网web应用，微信公众号本地调试等，目前支持http穿透，tcp穿透。
+SuperNAT是基于.NET 5.0开源跨平台的内网穿透程序，功能类似花生壳，可用于穿透内网web应用，微信公众号本地调试等，目前支持http穿透，tcp穿透，websocket穿透。
 <br/>
 <br/>
 SuperNAT.Server服务端部署：<br/>
