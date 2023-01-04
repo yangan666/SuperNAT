@@ -28,10 +28,10 @@
   },
   "devDependencies": {
     "@mdi/font": "^4.4.95",
-    "@vue/cli-plugin-babel": "^3.2.0",
+    "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-eslint": "^3.2.0",
     "@vue/cli-plugin-pwa": "^3.2.0",
-    "@vue/cli-service": "^3.2.0",
+    "@vue/cli-service": "^5.0.8",
     "@vue/eslint-config-prettier": "^4.0.1",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.8.0",
